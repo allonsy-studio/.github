@@ -61,6 +61,25 @@ All projects follow the **Chicago Manual of Style** with the following exception
     - Incorrect: "January 2014 - July 2021" or "Jan 2014-Jul 2021"
 - **Serial comma**: Use the Oxford comma in lists.
 
+## Licensing
+
+Choose a license based on the project's scope & impact:
+
+- **MPL-2.0** — for open-source, small, low-impact, or non-monetizable projects.
+- **Apache-2.0** — for high-impact or monetizable projects (e.g., `envoy`, `opx`).
+
+### README License heading
+
+Under a `## License` heading in the README, use the default text matching the project's license:
+
+- **MPL-2.0**:
+
+  > [MPL-2.0](LICENSE) — use freely, modify as needed; changes to MPL-licensed files should be shared back under the same license.
+
+- **Apache-2.0**:
+
+  > [Apache-2.0](LICENSE) — use freely, modify as needed; includes an express patent grant from contributors. Retain the license & attribution notices when redistributing.
+
 ## Design aesthetics
 
 ### Brand colors
