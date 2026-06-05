@@ -2,6 +2,33 @@
 
 Guidance for working in this repository.
 
+## About the studio
+
+Allons-y Studio is a North Carolina–based design systems & front-end architecture consulting studio, serving clients remotely worldwide. Core services:
+
+- Design systems architecture & implementation
+- Front-end engineering
+- Accessibility
+- Open source community management
+- AI-augmented workflows
+- Training & enablement
+
+Studio experience includes leadership on Adobe's Spectrum design system, founding work on Red Hat's PatternFly Elements, W3C CSS Working Group invited-expert participation, & subject-matter authorship of documentation for Google Chrome's Modern Web Guidance (in collaboration with OddBird).
+
+> **Note:** Public attribution of collaborative or subcontractor work (e.g., the Google Chrome / OddBird engagement) should be verified before publishing.
+
+## Voice & tone
+
+Copy speaks to prospective clients & their outcomes — not the studio's own backstory.
+
+- **Pronoun-free voice**: Avoid first-person pronouns ("I", "we", "our"). This is a deliberate, strategic positioning choice — not an oversight — and must be preserved in future drafts. It sidesteps signaling either a solo practitioner or a multi-person studio.
+- **Preferred constructions**: Use the studio name, client-as-subject phrasing, & second-person "you / your" directed at the client.
+- **Client-outcome-oriented**: Frame copy around what the client gains, rather than narrating the founder's background.
+- **Accessibility is prominent**: Name accessibility explicitly in positioning — never bury or omit it.
+- **Avoid unproven framing**: Steer clear of language that reads as untested or speculative (e.g., "building from scratch").
+
+Iterative revision is the expected workflow; refined requirements may be introduced mid-draft.
+
 ## Style guide
 
 This project follows the **Chicago Manual of Style** with the following project-specific exceptions.
