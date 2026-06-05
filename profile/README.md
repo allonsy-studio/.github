@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="../assets/logo.svg" alt="Allons-y Studio" width="120" />
-
-  # Allons-y Studio
+  <img src="../assets/logo.svg" alt="Allons-y Studio" width="240" />
 
   **Open-source design systems & front-end tooling.** _Allons-y_ — let's go.
 </div>
