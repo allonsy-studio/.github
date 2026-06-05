@@ -42,9 +42,3 @@ The same care behind this open-source work goes into every client project. From 
 ### Support the work
 
 If these projects help you, consider [buying a coffee](https://www.buymeacoffee.com/castastrophe) ☕ — it keeps the work going.
-
----
-
-<div align="center">
-  <sub>Made with care by Allons-y Studio & contributors.</sub>
-</div>
