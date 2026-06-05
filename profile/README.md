@@ -8,42 +8,40 @@
 
 ---
 
-We build accessible, standards-first components, design tokens, & developer
-tooling for the web. Everything we ship is open by default & made to be
+Allons-y Studio builds accessible, standards-first components, design tokens, &
+developer tooling for the web. Everything here is open by default & made to be
 reused, remixed, & improved together.
 
-### What we're about
+### Focus areas
 
 - 🎨 **Design systems** — composable components & tokens that scale across products.
 - ♿ **Accessibility first** — WCAG-conformant by default, not as an afterthought.
-- 🌐 **Web standards** — we bet on the platform and contribute upstream.
+- 🌐 **Web standards** — built on the platform, with contributions upstream.
 - 🧰 **Developer experience** — tooling that makes the right thing the easy thing.
 
 ### Get involved
 
-- Browse our [repositories](https://github.com/orgs/Allons-y-Studio/repositories) to see what we're working on.
+- Browse the [repositories](https://github.com/orgs/Allons-y-Studio/repositories) to see what's in progress.
 - Read the [contributing guide](https://github.com/Allons-y-Studio/.github/blob/main/CONTRIBUTING.md) before opening a pull request.
 - Found a bug or have an idea? [Open an issue](https://github.com/Allons-y-Studio/.github/issues/new/choose).
-- Be excellent to each other — see our [Code of Conduct](https://github.com/Allons-y-Studio/.github/blob/main/CODE_OF_CONDUCT.md).
+- Be excellent to each other — see the [Code of Conduct](https://github.com/Allons-y-Studio/.github/blob/main/CODE_OF_CONDUCT.md).
 
 ### 🚀 Hire Allons-y Studio for your next project
 
-**Building something on the web? Let's build it right — together.**
+**Building something on the web? Build it right.**
 
-The same care we pour into our open-source work is what we bring to client projects. From accessible design systems to polished front-end tooling, we help teams ship products that are fast, inclusive, & built to last.
+The same care behind this open-source work goes into every client project. From accessible design systems to polished front-end tooling, Allons-y Studio helps teams ship products that are fast, inclusive, & built to last.
 
 - ✅ **Design systems & component libraries** that scale with your product.
 - ✅ **Accessibility audits & remediation** to meet WCAG & reach every user.
 - ✅ **Front-end architecture & tooling** that makes your team faster.
 - ✅ **Standards-first engineering** you won't have to rewrite next year.
 
-👉 **[Start a project with us](mailto:castastrophe@hey.com?subject=New%20project%20inquiry)** — or [open a conversation](https://github.com/orgs/Allons-y-Studio/discussions) & tell us what you're building. _Allons-y!_
+👉 **[Start a project](mailto:castastrophe@hey.com?subject=New%20project%20inquiry)** — or [open a conversation](https://github.com/orgs/Allons-y-Studio/discussions) & share what you're building. _Allons-y!_
 
----
+### Support the work
 
-### Support our work
-
-If our projects help you, consider [buying us a coffee](https://www.buymeacoffee.com/castastrophe) ☕ — it keeps the lights on.
+If these projects help you, consider [buying a coffee](https://www.buymeacoffee.com/castastrophe) ☕ — it keeps the work going.
 
 ---
 
