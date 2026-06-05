@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="../assets/logo.svg" alt="Allons-y Studio" width="120" />
-
-  # Allons-y Studio
+  <img src="../assets/logo.svg" alt="Allons-y Studio" width="240" />
 
   **Open-source design systems & front-end tooling.** _Allons-y_ — let's go.
 </div>
@@ -29,9 +27,3 @@ reused, remixed, and improved together.
 ### Support our work
 
 If our projects help you, consider [buying us a coffee](https://www.buymeacoffee.com/castastrophe) ☕ — it keeps the lights on.
-
----
-
-<div align="center">
-  <sub>Made with care by Allons-y Studio and contributors.</sub>
-</div>
