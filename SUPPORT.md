@@ -13,9 +13,9 @@ Need a hand with an Allons-y Studio project? Here's how to get help. 💜
 
 | I want to…                                  | Go to…                                                                            |
 | ------------------------------------------- | --------------------------------------------------------------------------------- |
-| Ask a question or get usage help            | [Discussions](https://github.com/orgs/Allons-y-Studio/discussions)                |
-| Report a reproducible bug                   | [Open an issue](https://github.com/Allons-y-Studio/.github/issues/new/choose)     |
-| Request a feature                           | [Open an issue](https://github.com/Allons-y-Studio/.github/issues/new/choose)     |
+| Ask a question or get usage help            | [Discussions](https://github.com/orgs/allonsy-studio/discussions)                |
+| Report a reproducible bug                   | [Open an issue](https://github.com/allonsy-studio/.github/issues/new/choose)     |
+| Request a feature                           | [Open an issue](https://github.com/allonsy-studio/.github/issues/new/choose)     |
 | Report a security vulnerability (privately) | [Security policy](SECURITY.md)                                                     |
 | Contribute a fix or feature                 | [Contributing guide](CONTRIBUTING.md)                                             |
 
