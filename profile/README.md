@@ -19,10 +19,10 @@ reused, remixed, & improved together.
 
 ### Get involved
 
-- Browse the [repositories](https://github.com/orgs/Allons-y-Studio/repositories) to see what's in progress.
-- Read the [contributing guide](https://github.com/Allons-y-Studio/.github/blob/main/CONTRIBUTING.md) before opening a pull request.
-- Found a bug or have an idea? [Open an issue](https://github.com/Allons-y-Studio/.github/issues/new/choose).
-- Be excellent to each other — see the [Code of Conduct](https://github.com/Allons-y-Studio/.github/blob/main/CODE_OF_CONDUCT.md).
+- Browse the [repositories](https://github.com/orgs/allonsy-studio/repositories) to see what's in progress.
+- Read the [contributing guide](https://github.com/allonsy-studio/.github/blob/main/CONTRIBUTING.md) before opening a pull request.
+- Found a bug or have an idea? [Open an issue](https://github.com/allonsy-studio/.github/issues/new/choose).
+- Be excellent to each other — see the [Code of Conduct](https://github.com/allonsy-studio/.github/blob/main/CODE_OF_CONDUCT.md).
 
 ### 🚀 Hire Allons-y Studio for your next project
 
@@ -35,7 +35,7 @@ The same care behind this open-source work goes into every client project. From 
 - ✅ **Front-end architecture & tooling** that makes your team faster.
 - ✅ **Standards-first engineering** you won't have to rewrite next year.
 
-👉 **[Start a project](mailto:castastrophe@hey.com?subject=New%20project%20inquiry)** — or [open a conversation](https://github.com/orgs/Allons-y-Studio/discussions) & share what you're building. _Allons-y!_
+👉 **[Start a project](mailto:castastrophe@hey.com?subject=New%20project%20inquiry)** — or [open a conversation](https://github.com/orgs/allonsy-studio/discussions) & share what you're building. _Allons-y!_
 
 ### Support the work
 

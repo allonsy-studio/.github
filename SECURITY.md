@@ -18,7 +18,7 @@ Instead, report them privately using one of the following:
 
 - **GitHub Security Advisories** (preferred): use the **"Report a vulnerability"**
   button under the **Security** tab of the affected repository, or
-  [open one here](https://github.com/Allons-y-Studio/.github/security/advisories/new).
+  [open one here](https://github.com/allonsy-studio/.github/security/advisories/new).
 - **Email**: **security@allons-y.studio**
 
 Please include as much of the following as you can:

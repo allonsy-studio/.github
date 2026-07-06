@@ -23,7 +23,7 @@ You don't have to write code to make a difference:
 
 ## Reporting bugs & requesting features
 
-Please use our [issue templates](https://github.com/Allons-y-Studio/.github/issues/new/choose).
+Please use our [issue templates](https://github.com/allonsy-studio/.github/issues/new/choose).
 Before opening a new issue, search existing ones to avoid duplicates.
 
 ## Development workflow
@@ -83,5 +83,5 @@ distributed under those terms.
 
 ## Questions?
 
-Open a [discussion](https://github.com/orgs/Allons-y-Studio/discussions) or see
+Open a [discussion](https://github.com/orgs/allonsy-studio/discussions) or see
 [SUPPORT.md](SUPPORT.md). Thanks again for contributing! 💜
