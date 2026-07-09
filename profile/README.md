@@ -1,4 +1,4 @@
-<div align="center"><style>@media (prefers-color-scheme: dark) { #logo { filter: invert(1) hue-rotate(180deg);} }</style>
+<div align="center">
   <img id="logo" src="https://github.com/allonsy-studio/.github/blob/main/assets/logo.svg" alt="Allons-y Studio" width="240" />
 
   **Open-source design systems & front-end tooling.** _Allons-y_ — let's go.
