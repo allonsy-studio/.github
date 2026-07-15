@@ -15,4 +15,6 @@ jobs:
               with:
                   token: ${{ secrets.PAT_GITHUB }}
                   templates: templates
+                  variables: |
+                    npm_org: "@allons-y"
             - run: echo '${{ steps.weaver.outputs.pull-requests }}'
