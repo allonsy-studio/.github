@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/allonsy-studio/.github/main/assets/png/banner_header_1500x500-dark.png" />
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/allonsy-studio/.github/main/assets/png/banner_header_1500x500.png" />
-    <img id="logo" src="https://raw.githubusercontent.com/allonsy-studio/.github/main/assets/png/banner_header_1500x500.png" alt="Allons-y Studio" width="240" />
+    <img id="logo" src="https://raw.githubusercontent.com/allonsy-studio/.github/main/assets/png/banner_header_1500x500.png" alt="Allons-y Studio" width="240" style="inline-size:100%"/>
   </picture>
 
   **Open-source design systems & front-end tooling.** _Allons-y_ — let's go.
