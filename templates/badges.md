@@ -1,10 +1,4 @@
-<div align="center">
-  <h1 style="--borderColor-muted: transparent">{{ repo.name }}</h1>
-  <img src="https://github.com/allonsy-studio/.github/blob/main/assets/tag-rule.gif" alt="" height="30" />
-
-  <p><b>{{ repo.description }}</b></p>
-
-  <p>
+<p align="center">
     <a href="{{ repo.url }}/actions/workflows/testing.yml">
       <img src="{{ repo.url }}/actions/workflows/testing.yml/badge.svg?branch={{ repo.default_branch }}" alt="Tests" height="20" />
     </a>
@@ -20,5 +14,4 @@
     <a href="https://allons-y.studio">
       <img src="https://github.com/allonsy-studio/.github/blob/main/assets/svg/badge.svg" alt="Brought to you by Allons-y Studio" height="20" />
     </a>
-  </p>
-</div>
+</p>
