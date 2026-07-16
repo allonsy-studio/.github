@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="125" height="20" viewBox="0 0 125 20" role="img" aria-label="Allons-y Studio">
+  <title>Allons-y Studio</title>
+  <clipPath id="ay-r"><rect width="125" height="20" rx="3"></rect></clipPath>
+  <g clip-path="url(#ay-r)">
+    <rect width="26" height="20" fill="#d22d6f"></rect>
+    <rect x="26" width="99" height="20" fill="#33394e"></rect>
+    <g transform="translate(5 2) scale(0.03125)" fill="none" stroke="#fff" stroke-linecap="round">
+    <g stroke-width="44">
+    <path d="M 439.6 150.0 A 212 212 0 0 0 233.8 45.2"></path>
+    <path d="M 204.7 50.3 A 212 212 0 0 0 44.0 259.7"></path>
+    <path d="M 46.6 289.2 A 212 212 0 0 0 197.6 459.8"></path>
+    <path d="M 226.5 465.9 A 212 212 0 0 0 423.1 386.5"></path>
+    </g>
+    <circle cx="256" cy="256" r="133" stroke-width="48"></circle>
+    <line x1="400" y1="256" x2="466" y2="256" stroke-width="80"></line>
+  </g>
+    <text x="33" y="14.5" font-family="Roboto, Verdana, Geneva, &#39;DejaVu Sans&#39;, sans-serif" font-size="11" font-weight="500" fill="#fff">Allons-y Studio</text>
+  </g>
+</svg>
