@@ -5,7 +5,10 @@
 </p>
 
 <h1 align="center" border="none">{{ repo.name }}</h1>
-<img align="center" src="https://github.com/allonsy-studio/.github/blob/main/assets/tag-rule.gif" alt="" height="30" />
+
+<p align="center">
+  <img src="https://github.com/allonsy-studio/.github/blob/main/assets/tag-rule.gif" alt="" height="30" />
+</p>
 
 <p align="center"><b>{{ repo.description }}</b></p>
 
