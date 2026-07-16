@@ -13,7 +13,11 @@
     <img src="{{ repo.url }}/actions/workflows/testing.yml/badge.svg?branch={{ repo.default_branch }}" alt="Tests" height="20" />
   </a>
   <a href="https://www.npmjs.com/package/{{#if npm_org}}{{ npm_org }}/{{/if}}{{ repo.name }}">
-  <img src="https://img.shields.io/npm/v/{{#if npm_org}}{{ npm_org }}/{{/if}}{{ repo.name }}.svg" alt="NPM version" height="20" />
+    <img src="https://img.shields.io/npm/v/{{#if npm_org}}{{ npm_org }}/{{/if}}{{ repo.name }}.svg" alt="NPM version" height="20" />
   </a>
 
+</p>
+
+<p align="center">
+  <img src="https://github.com/allonsy-studio/.github/blob/main/assets/tag-rule.gif" alt="" height="10" />
 </p>

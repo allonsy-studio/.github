@@ -6,9 +6,9 @@
   </picture>
 
   **Open-source design systems & front-end tooling.** _Allons-y_ — let's go.
-</div>
 
----
+  <img src="https://github.com/allonsy-studio/.github/blob/main/assets/tag-rule.gif" alt="" height="10" />
+</div>
 
 Allons-y Studio builds accessible, standards-first components, design tokens, &
 developer tooling for the web. Everything here is open by default & made to be
