@@ -1,7 +1,7 @@
-# Allons-y Studio — shared conventions
+# Allons-y Studio: shared conventions
 
 The studio-wide reference: voice, style, licensing, and brand. Individual repos carry
-their own `AGENTS.md` for their stack, commands, and testing — this file covers only
+their own `AGENTS.md` for their stack, commands, and testing: this file covers only
 what holds across all of them.
 
 ## About the studio
@@ -23,15 +23,15 @@ on Red Hat's PatternFly Elements, W3C CSS Working Group invited-expert participa
 
 ## Voice & tone
 
-Copy speaks to prospective clients & their outcomes — not the studio's own backstory.
+Copy speaks to prospective clients & their outcomes: not the studio's own backstory.
 
 - **Pronoun-free voice**: avoid first-person pronouns ("I", "we", "our"). This is a
-  deliberate positioning choice, not an oversight — preserve it in future drafts.
+  deliberate positioning choice, not an oversight: preserve it in future drafts.
 - **Preferred constructions**: the studio name, client-as-subject phrasing, & second
   person "you / your" directed at the client.
 - **Client-outcome-oriented**: frame copy around what the client gains, rather than
   narrating the founder's background.
-- **Accessibility is prominent**: name it explicitly in positioning — never bury or
+- **Accessibility is prominent**: name it explicitly in positioning; never bury or
   omit it.
 - **Avoid unproven framing**: steer clear of language that reads as untested or
   speculative (e.g. "building from scratch").
@@ -59,15 +59,15 @@ Oxford comma stays. Prefer `:` over em dashes.
 
 Pick by the project's scope & impact:
 
-- **MPL-2.0** — open-source, small, low-impact, or non-monetizable projects.
-- **Apache-2.0** — high-impact or monetizable projects (e.g. `envoy`, `opx`).
+- **MPL-2.0**: open-source, small, low-impact, or non-monetizable projects.
+- **Apache-2.0**: high-impact or monetizable projects (e.g. `envoy`, `opx`).
 
 Under a `## License` heading in the README, use the matching text:
 
-> [MPL-2.0](LICENSE) — use freely, modify as needed; changes to MPL-licensed files
+> [MPL-2.0](LICENSE): use freely, modify as needed; changes to MPL-licensed files
 > should be shared back under the same license.
 
-> [Apache-2.0](LICENSE) — use freely, modify as needed; includes an express patent
+> [Apache-2.0](LICENSE): use freely, modify as needed; includes an express patent
 > grant from contributors. Retain the license & attribution notices when
 > redistributing.
 
