@@ -1,7 +1,7 @@
 # Allons-y Studio: shared conventions
 
 The studio-wide reference: voice, style, licensing, and brand. Individual repos carry
-their own `AGENTS.md` for their stack, commands, and testing: this file covers only
+their own `AGENTS.md` for their stack, commands, and testing. This file covers only
 what holds across all of them.
 
 ## About the studio
@@ -23,10 +23,10 @@ on Red Hat's PatternFly Elements, W3C CSS Working Group invited-expert participa
 
 ## Voice & tone
 
-Copy speaks to prospective clients & their outcomes: not the studio's own backstory.
+Copy speaks to prospective clients & their outcomes, not the studio's own backstory.
 
 - **Pronoun-free voice**: avoid first-person pronouns ("I", "we", "our"). This is a
-  deliberate positioning choice, not an oversight: preserve it in future drafts.
+  deliberate positioning choice, not an oversight; preserve it in future drafts.
 - **Preferred constructions**: the studio name, client-as-subject phrasing, & second
   person "you / your" directed at the client.
 - **Client-outcome-oriented**: frame copy around what the client gains, rather than
