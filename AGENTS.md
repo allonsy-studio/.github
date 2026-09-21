@@ -53,7 +53,7 @@ Chicago Manual of Style, with these exceptions.
 | Date ranges         | "2014 January–2021 July"     | "January 2014 - July 2021"               |
 
 Dates are year-first in both forms. Ranges take an en dash (–), not a hyphen. The
-Oxford comma stays.
+Oxford comma stays. Prefer `:` over em dashes.
 
 ## Licensing
 
