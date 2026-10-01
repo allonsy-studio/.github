@@ -84,6 +84,25 @@ Reach for existing components & styles first; add new ones only when the design
 genuinely needs them. Capitalize visually with `text-transform: uppercase` rather than
 uppercasing the content in source.
 
+## Commits and pull requests
+
+Commit and PR bodies are a short note, not a report. Follow the repo's PR template: fill
+each section in a line, or remove it when it's optional and empty.
+
+- Pronoun-free, as in all studio copy: no "I", "we", or "our" in PR titles, descriptions,
+  PR comments, or commit bodies.
+- PR descriptions: 1 to 3 sentences of prose by default, ~100 words at most. Lead with a
+  verb; never open with "This PR".
+- Commit bodies: 1 to 2 sentences, or none for a small change.
+- Cover what changed, the why when the title doesn't already say it, and anything someone
+  must act on (a breaking change, a manual step).
+- Leave out environment or sandbox notes, after-merge process, file lists the diff already
+  shows, speculation about causes, side findings (open an issue instead), unfilled
+  template comments, and an empty `Closes #`.
+- Test plan: one line on what was actually checked.
+- Review replies: one sentence plus the commit SHA.
+- No headers beyond the template's, no bold-label bullets, no em dashes.
+
 ## Attribution
 
 Never add AI attribution to a commit or a PR in any studio repo: no `Co-Authored-By`
