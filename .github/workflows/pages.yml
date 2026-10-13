@@ -1,6 +1,3 @@
-# Save as: allonsy-studio/.github/.github/workflows/pages.yml
-# Reusable workflow. Callers: see caller-pages.yml.
-#
 # main push        -> publish to gh-pages root (preview/ is preserved)
 # PR opened/synced -> publish to gh-pages preview/<n>/ and comment the URL
 # PR closed        -> remove preview/<n>/
