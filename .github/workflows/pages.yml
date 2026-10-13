@@ -1,0 +1,202 @@
+# main push        -> publish to gh-pages root (preview/ is preserved)
+# PR opened/synced -> publish to gh-pages preview/<n>/ and comment the URL
+# PR closed        -> remove preview/<n>/
+#
+# The build must read PATH_PREFIX (e.g. Eleventy: pathPrefix: process.env.PATH_PREFIX ?? '/').
+
+name: Pages (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      build-command:
+        type: string
+        default: yarn ci
+      output-dir:
+        type: string
+        default: _site
+      node-version-file:
+        type: string
+        default: .nvmrc
+
+jobs:
+  publish:
+    name: Publish
+    # Skipped for forks and Dependabot: their tokens are read-only.
+    if: >-
+      (
+        github.event_name == 'pull_request' &&
+        github.event.action != 'closed' &&
+        github.actor != 'dependabot[bot]' &&
+        github.event.pull_request.head.repo.full_name == github.repository
+      ) || (
+        github.event_name != 'pull_request' &&
+        github.ref_name == github.event.repository.default_branch
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    # One run per PR (newest wins). Main deploys queue instead of cancelling.
+    concurrency:
+      group: pages-${{ github.repository }}-${{ github.event.pull_request.number || 'main' }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Resolve target
+        id: target
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          repo="${GITHUB_REPOSITORY#*/}"
+          if [ -n "$PR" ]; then
+            echo "dir=preview/$PR" >> "$GITHUB_OUTPUT"
+            echo "prefix=/$repo/preview/$PR/" >> "$GITHUB_OUTPUT"
+          else
+            echo "dir=." >> "$GITHUB_OUTPUT"
+            echo "prefix=/$repo/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node LTS version
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ${{ inputs.node-version-file }}
+          cache: yarn
+          registry-url: https://registry.npmjs.org
+
+      - name: Install Node dependencies
+        run: yarn install --immutable
+
+      - name: Run build
+        env:
+          PATH_PREFIX: ${{ steps.target.outputs.prefix }}
+        run: ${{ inputs.build-command }}
+
+      - name: Publish to gh-pages
+        env:
+          DIR: ${{ steps.target.outputs.dir }}
+          OUT: ${{ inputs.output-dir }}
+          REMOTE: https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
+          MESSAGE: Deploy ${{ steps.target.outputs.prefix }} (${{ github.sha }})
+        run: |
+          set -euo pipefail
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          site="$RUNNER_TEMP/site"
+          src="$PWD/$OUT"
+          heads="$(git ls-remote --heads "$REMOTE" gh-pages)"
+          if [ -n "$heads" ]; then
+            git clone --depth 1 --branch gh-pages "$REMOTE" "$site"
+          else
+            git init -q -b gh-pages "$site"
+            git -C "$site" remote add origin "$REMOTE"
+          fi
+          cd "$site"
+
+          for attempt in $(seq 1 10); do
+            if [ "$DIR" = "." ]; then
+              rsync -a --checksum --delete --exclude='/.git/' --exclude='/preview/' "$src"/ ./
+            else
+              mkdir -p "$DIR"
+              rsync -a --checksum --delete "$src"/ "$DIR"/
+            fi
+            touch .nojekyll
+            git add -A
+            if git diff --cached --quiet; then
+              echo "No changes to publish."
+              exit 0
+            fi
+            git commit -q -m "$MESSAGE"
+            if git push origin HEAD:gh-pages; then
+              exit 0
+            fi
+            echo "Push rejected (attempt $attempt). Refreshing and retrying."
+            sleep $((RANDOM % 4))
+            git fetch --depth 1 origin gh-pages
+            git reset -q --hard FETCH_HEAD
+          done
+          echo "Could not push after 10 attempts." >&2
+          exit 1
+
+      - name: Comment preview URL
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          URL: https://${{ github.repository_owner }}.github.io${{ steps.target.outputs.prefix }}
+        run: |
+          marker="<!-- pages-preview -->"
+          body="$marker
+          Preview: $URL
+          Commit: $SHA
+
+          It can take a minute or two to go live after a push."
+          id="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | contains(\"$marker\")) | .id" | sed -n 1p)"
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body" > /dev/null
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body" > /dev/null
+          fi
+
+  cleanup:
+    name: Remove preview
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.actor != 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: pages-${{ github.repository }}-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    steps:
+      - name: Remove preview from gh-pages
+        env:
+          PR: ${{ github.event.pull_request.number }}
+          REMOTE: https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
+        run: |
+          set -euo pipefail
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          heads="$(git ls-remote --heads "$REMOTE" gh-pages)"
+          if [ -z "$heads" ]; then
+            echo "No gh-pages branch. Nothing to remove."
+            exit 0
+          fi
+
+          site="$RUNNER_TEMP/site"
+          git clone --depth 1 --branch gh-pages "$REMOTE" "$site"
+          cd "$site"
+
+          for attempt in $(seq 1 10); do
+            if [ ! -d "preview/$PR" ]; then
+              echo "No preview for PR $PR."
+              exit 0
+            fi
+            git rm -r -q "preview/$PR"
+            git commit -q -m "Remove preview for PR #$PR"
+            if git push origin HEAD:gh-pages; then
+              exit 0
+            fi
+            echo "Push rejected (attempt $attempt). Refreshing and retrying."
+            sleep $((RANDOM % 4))
+            git fetch --depth 1 origin gh-pages
+            git reset -q --hard FETCH_HEAD
+          done
+          echo "Could not push after 10 attempts." >&2
+          exit 1
