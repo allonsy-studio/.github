@@ -39,7 +39,7 @@ The same care behind this open-source work goes into every client project. From 
 - ✅ **Front-end architecture & tooling** that makes your team faster.
 - ✅ **Standards-first engineering** you won't have to rewrite next year.
 
-👉 **[Start a project](mailto:castastrophe@hey.com?subject=New%20project%20inquiry)** — or [open a conversation](https://github.com/orgs/allonsy-studio/discussions) & share what you're building. _Allons-y!_
+👉 **[Start a project](mailto:contact@allons-y.studio?subject=New%20project%20inquiry)** — or [open a conversation](https://github.com/orgs/allonsy-studio/discussions) & share what you're building. _Allons-y!_
 
 ### Support the work
 
