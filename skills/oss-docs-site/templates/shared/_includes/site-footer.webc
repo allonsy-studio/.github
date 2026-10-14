@@ -1,8 +1,9 @@
-<!--- Footer block: project links, license, then the studio layer unless the project opts out. --->
+<!--- Footer block: the studio call to action, then the project lock-up: name, links, license, & the studio credit. --->
 <footer>
+	<studio-cta webc:if="$data.site.studio"></studio-cta>
 	<div>
 		<div>
-			<p><strong @text="$data.site.name"></strong></p>
+			<p><strong @text="$data.site.packageName || $data.site.name"></strong></p>
 			<p @text="$data.site.tagline + '.'"></p>
 			<p>
 				<small>
@@ -16,21 +17,18 @@
 			<ul>
 				<li><a :href="$data.site.repo"><fa-icon @name="brands/github"></fa-icon> GitHub</a></li>
 				<li webc:if="$data.site.npm"><a :href="$data.site.npm"><fa-icon @name="brands/npm"></fa-icon> npm</a></li>
-				<li><a :href="$data.site.changelogUrl">Changelog</a></li>
+				<li><a :href="$data.site.changelogUrl"><fa-icon @name="clock-rotate-left"></fa-icon> Changelog</a></li>
 			</ul>
 		</nav>
 		<nav aria-label="Help links">
 			<p><strong>Help</strong></p>
 			<ul>
-				<li><a :href="$data.site.issuesUrl">Report an issue</a></li>
-				<li><a :href="$data.site.contributingUrl">Contributing guide</a></li>
-				<li><a :href="$data.studio.conductUrl">Code of conduct</a></li>
-				<li><a :href="$data.studio.securityUrl">Security policy</a></li>
+				<li><a :href="$data.site.issuesUrl"><fa-icon @name="bug"></fa-icon> Report an issue</a></li>
+				<li><a :href="$data.site.contributingUrl"><fa-icon @name="book-open"></fa-icon> Contributing guide</a></li>
+				<li><a :href="$data.studio.conductUrl"><fa-icon @name="handshake"></fa-icon> Code of conduct</a></li>
+				<li><a :href="$data.studio.securityUrl"><fa-icon @name="shield-halved"></fa-icon> Security policy</a></li>
 			</ul>
 		</nav>
-	</div>
-	<div webc:if="$data.site.studio">
-		<studio-cta></studio-cta>
-		<studio-footer></studio-footer>
+		<studio-footer webc:if="$data.site.studio"></studio-footer>
 	</div>
 </footer>

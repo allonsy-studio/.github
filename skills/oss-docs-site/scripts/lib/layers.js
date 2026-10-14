@@ -25,6 +25,7 @@ export const FLAVORS = Object.freeze(["landing", "docs", "workspaces"]);
 
 /** Studio SVGs: site-relative destination to the file in ORG_ASSETS_DIR. */
 export const STUDIO_ASSETS = Object.freeze({
+	"content/assets/img/studio/mark.svg": "mark.svg",
 	"content/assets/img/studio/oss-banner.svg": "oss-banner.svg",
 	"content/assets/img/studio/oss-footer-dark.svg": "oss-footer-dark.svg",
 	"content/assets/img/studio/oss-footer-light.svg": "oss-footer-light.svg",
