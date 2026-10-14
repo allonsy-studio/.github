@@ -1,15 +1,18 @@
 // Studio layer data. Locked: do not edit in a project.
+// Fetched from the studio website & cached for a day; the bundled values fill any gaps or an offline build.
 
-export default Object.freeze({
+import Fetch from "@11ty/eleventy-fetch";
+
+const ENDPOINT = "https://allons-y.studio/api/meta.json";
+
+const bundled = Object.freeze({
 	name: "Allons-y Studio",
 	url: "https://allons-y.studio",
 	// Sales call to action, footer only.
 	contact: "contact@allons-y.studio",
 	// Conduct & vulnerability reports.
-	conductUrl:
-		"https://github.com/allonsy-studio/.github/blob/main/CODE_OF_CONDUCT.md",
-	securityUrl:
-		"https://github.com/allonsy-studio/.github/blob/main/SECURITY.md",
+	conductUrl: "https://github.com/allonsy-studio/.github/blob/main/CODE_OF_CONDUCT.md",
+	securityUrl: "https://github.com/allonsy-studio/.github/blob/main/SECURITY.md",
 	banner: Object.freeze({
 		src: "/assets/img/studio/oss-banner.svg",
 		alt: "Brought to you by Allons-y Studio",
@@ -28,3 +31,12 @@ export default Object.freeze({
 		body: "Design systems, front-end engineering, & accessibility consulting for teams that depend on open source.",
 	}),
 });
+
+export default async function () {
+	try {
+		return { ...bundled, ...(await Fetch(ENDPOINT, { duration: "1d", type: "json" })) };
+	} catch (error) {
+		console.warn(`Studio data: using the bundled values (${error.message})`);
+		return bundled;
+	}
+}

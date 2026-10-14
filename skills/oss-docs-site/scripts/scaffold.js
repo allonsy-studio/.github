@@ -265,7 +265,7 @@ function nextSteps({ siteRel, drift, orphans, projectProblems, movedFrom }) {
 			.map(([name, range]) => `${name}@${range}`)
 			.join(", ")}.`,
 		`Add scripts: ${JSON.stringify(scripts)}.`,
-		`Ignore ${siteRel}/${OUTPUT_DIR}, ${siteRel}/_a11y, and ${siteRel}/cypress/screenshots in .gitignore.`,
+		`Ignore ${siteRel}/${OUTPUT_DIR}, ${siteRel}/_a11y, ${siteRel}/cypress/screenshots, and .cache (fetched studio data) in .gitignore.`,
 		"Commit .nvmrc and yarn.lock: the shared Pages workflow reads the Node version from .nvmrc and installs with --immutable.",
 		`${siteRel}/_data/site.js holds the facts resolved from package.json (name, license, links): edit it there. After package.json changes, delete it & rerun, or pass --update.`,
 		`Fill ${siteRel}/_data/project.json (accent, lede, install, usage, features).`,

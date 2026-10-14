@@ -30,6 +30,8 @@ Locked files: any edit is reported as a locked-file edit on rerun, & `--update` 
 - `_data/studio.js`, `content/assets/styles/studio.css`
 - `content/assets/img/studio/*.svg`, copied from the org's `assets/svg/` (the single source: edit them there & list the change in the pull request)
 
+`_data/studio.js` fetches `https://allons-y.studio/api/meta.json` (cached for a day) & lets it override its bundled values, which stay as the fallback for a failed request or a missing key. The endpoint returns the same keys: `name`, `url`, `contact`, `conductUrl`, `securityUrl`, `banner`, `footer`, & `cta`.
+
 The banner comes before `main`; the call to action & footer credit sit in the footer. `contact@allons-y.studio` appears only in the call to action. The studio styles read only `--studio-*` tokens, so a project accent never changes them.
 
 Brand colors, voice, & style: `AGENTS.md`.
