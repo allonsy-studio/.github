@@ -26,9 +26,7 @@
 <link webc:if="!$data.project.favicon" rel="icon" href="data:," />
 <link webc:if="$data.project.appleTouchIcon" rel="apple-touch-icon" :href="'/assets/img/' + $data.project.appleTouchIcon" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link webc:keep rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" />
+<link rel="preload" href="/assets/fonts/pt-mono.woff2" as="font" type="font/woff2" crossorigin />
 
 <link webc:keep rel="stylesheet" href="/assets/styles/core.css" />
 <link webc:keep rel="stylesheet" href="/assets/styles/project.css" />

@@ -9,7 +9,7 @@ Self-hostable `woff2` files for studio projects. Each is a Latin subset.
 | `pt-mono.woff2` | PT Mono | 400 | [OFL-1.1](https://openfontlicense.org) |
 | `yellowtail.woff2` | Yellowtail | 400 | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 
-PT Mono is the studio's locked monospace. Yellowtail is the studio's cursive/signature font: a script face for sparing display use as an accent, not body text. Instrument Sans & Yellowtail are for projects that override `--font-sans` or `--font-display`.
+PT Mono is the studio's locked monospace; the `oss-docs-site` scaffold copies `pt-mono.woff2` into each project site, so edit the file here. Yellowtail is the studio's cursive/signature font: a script face for sparing display use as an accent, not body text. Instrument Sans & Yellowtail are for projects that override `--font-sans` or `--font-display`.
 
 ```css
 @font-face {

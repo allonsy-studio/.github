@@ -15,6 +15,7 @@ export const CORE_DIR = path.join(TEMPLATES_DIR, "shared");
 const posix = (p) => p.split(path.sep).join("/");
 
 export const ORG_ASSETS_DIR = path.resolve(SKILL_ROOT, "..", "..", "assets", "svg");
+export const ORG_FONTS_DIR = path.resolve(SKILL_ROOT, "..", "..", "assets", "fonts");
 export const WORKFLOW_TEMPLATE = path.join(TEMPLATES_DIR, "workflows", "pages.yml");
 
 /** The directory Eleventy writes the built site to, inside the site directory. */
@@ -29,6 +30,11 @@ export const STUDIO_ASSETS = Object.freeze({
 	"content/assets/img/studio/oss-banner.svg": "oss-banner.svg",
 	"content/assets/img/studio/oss-footer-dark.svg": "oss-footer-dark.svg",
 	"content/assets/img/studio/oss-footer-light.svg": "oss-footer-light.svg",
+});
+
+/** Self-hosted fonts: site-relative destination to the file in ORG_FONTS_DIR. */
+export const FONT_ASSETS = Object.freeze({
+	"content/assets/fonts/pt-mono.woff2": "pt-mono.woff2",
 });
 
 /** Site-relative paths of the locked studio layer. */
@@ -90,21 +96,31 @@ export function flavorFiles(flavor) {
  * Core, studio, & flavor template files.
  *
  * @param {string} flavor
- * @param {{ coreDir?: string, assetsDir?: string }} [dirs]
+ * @param {{ coreDir?: string, assetsDir?: string, fontsDir?: string }} [dirs]
  * @returns {{ rel: string, source: string, layer: "core" | "studio" | "flavor" }[]}
  */
 export function templateFiles(
 	flavor,
-	{ coreDir = CORE_DIR, assetsDir = ORG_ASSETS_DIR } = {},
+	{ coreDir = CORE_DIR, assetsDir = ORG_ASSETS_DIR, fontsDir = ORG_FONTS_DIR } = {},
 ) {
 	if (!existsSync(assetsDir)) {
 		throw new Error(
 			`The studio SVGs are read from ${assetsDir}. Run this skill from a checkout of allonsy-studio/.github, where assets/svg/ is the single source.`,
 		);
 	}
+	if (!existsSync(fontsDir)) {
+		throw new Error(
+			`The fonts are read from ${fontsDir}. Run this skill from a checkout of allonsy-studio/.github, where assets/fonts/ is the single source.`,
+		);
+	}
 	const files = listFiles(coreDir).map((rel) => ({
 		rel,
 		source: path.join(coreDir, rel),
+		layer: /** @type {const} */ ("core"),
+	}));
+	const fonts = Object.entries(FONT_ASSETS).map(([rel, name]) => ({
+		rel,
+		source: path.join(fontsDir, name),
 		layer: /** @type {const} */ ("core"),
 	}));
 	const flavorDir = path.join(TEMPLATES_DIR, flavor);
@@ -114,6 +130,7 @@ export function templateFiles(
 		layer: /** @type {const} */ ("studio"),
 	}));
 	return files.concat(
+		fonts,
 		assets,
 		listFiles(flavorDir).map((rel) => ({
 			rel,
