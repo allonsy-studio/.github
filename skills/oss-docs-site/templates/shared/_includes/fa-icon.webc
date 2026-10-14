@@ -1,0 +1,2 @@
+<!--- Font Awesome Free icon, inlined at build time. Prop: name ("rocket", "brands/github"). --->
+<template webc:nokeep @html="faIcon(name)"></template>

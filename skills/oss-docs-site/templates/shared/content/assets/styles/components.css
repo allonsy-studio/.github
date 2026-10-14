@@ -1,8 +1,18 @@
 /* Shared components. */
 @layer components {
+	/* Icons: inline SVG, sized & colored by the text around them */
+	svg[aria-hidden="true"] {
+		flex: none;
+		inline-size: 1em;
+		block-size: 1em;
+		fill: currentcolor;
+	}
+
 	/* Intro actions */
 	main > header nav a {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
 		padding: 0.6rem 1.1rem;
 		border: 2px solid var(--accent-text);
 		border-radius: var(--radius);
@@ -30,12 +40,18 @@
 
 	/* Chips */
 	main > header > ul > li {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
 		padding: 0.15rem 0.75rem;
 		border: 1px solid var(--border);
 		border-radius: 999px;
 		background: var(--bg-elev);
 		line-height: 1.5;
+	}
+
+	main > header > ul > li > svg {
+		color: var(--accent-text);
 	}
 
 	/* Cards */
@@ -45,12 +61,51 @@
 		gap: var(--space-m);
 	}
 
+	/* Each card takes the next accent. */
+	li {
+		--feature: var(--feature-1);
+	}
+
+	li:nth-child(4n + 2) {
+		--feature: var(--feature-2);
+	}
+
+	li:nth-child(4n + 3) {
+		--feature: var(--feature-3);
+	}
+
+	li:nth-child(4n + 4) {
+		--feature: var(--feature-4);
+	}
+
 	li > article {
+		position: relative;
 		block-size: 100%;
 		padding: var(--space-m);
 		border: 1px solid var(--border);
 		border-radius: var(--radius);
 		background: var(--bg-elev);
+	}
+
+	li > article::before {
+		content: "";
+		position: absolute;
+		inset: -1px;
+		inline-size: calc(100% + 2px);
+		block-size: 1em;
+		border-radius: var(--radius) var(--radius) 0 0;
+		background: var(--feature);
+	}
+
+	li > article > span[aria-hidden="true"] {
+		display: grid;
+		place-items: center;
+		justify-self: start;
+		inline-size: 3rem;
+		block-size: 3rem;
+		border-radius: var(--radius);
+		background: color-mix(in srgb, var(--feature) 28%, transparent);
+		font-size: 1.25rem;
 	}
 
 	li > article > h3 {
@@ -139,6 +194,42 @@
 		padding: 0;
 		background: none;
 		font-size: inherit;
+	}
+
+	/* Terminal chrome, set on a container with `--chrome: terminal`. */
+	@container style(--chrome: terminal) {
+		figure {
+			inline-size: min(100%, 40rem);
+			justify-self: start;
+			overflow: hidden;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow);
+		}
+
+		figure::before {
+			content: "";
+			grid-area: 1 / 1;
+			block-size: 2.25rem;
+			border-block-end: 1px solid var(--border);
+			background:
+				radial-gradient(circle 0.35rem at 1.1rem 50%, var(--studio-core) calc(100% - 1px), transparent),
+				radial-gradient(circle 0.35rem at 2.1rem 50%, var(--studio-orange) calc(100% - 1px), transparent),
+				radial-gradient(circle 0.35rem at 3.1rem 50%, var(--studio-yellow) calc(100% - 1px), transparent),
+				var(--bg-elev);
+		}
+
+		figcaption {
+			grid-area: 1 / 1;
+			align-self: center;
+			margin: 0;
+			padding-inline-start: 4.25rem;
+		}
+
+		figure pre {
+			border: 0;
+			border-radius: 0;
+		}
 	}
 
 	figcaption {

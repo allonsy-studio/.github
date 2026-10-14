@@ -9,19 +9,16 @@ layout: base.webc
 	<p @text="$data.project.lede || $data.site.description"></p>
 	<nav aria-label="Get started">
 		<ul>
-			<li><a href="#packages">Browse packages</a></li>
-			<li><a :href="$data.site.repo">View on GitHub</a></li>
+			<li><a href="#packages"><fa-icon @name="boxes-stacked"></fa-icon> Browse packages</a></li>
+			<li><a :href="$data.site.repo"><fa-icon @name="brands/github"></fa-icon> View on GitHub</a></li>
 		</ul>
 	</nav>
-</header>
-
-<section id="install" aria-labelledby="install-title">
-	<h2 id="install-title">Install</h2>
 	<code-sample
 		language="sh"
 		:@code="$data.project.install || 'npm install ' + $data.site.packageName"
+		@anchor="install"
 	></code-sample>
-</section>
+</header>
 
 <section id="packages" aria-labelledby="packages-title">
 	<h2 id="packages-title">Packages</h2>

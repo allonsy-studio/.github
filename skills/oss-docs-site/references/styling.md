@@ -53,6 +53,9 @@ Name tokens by role (`--accent`, `--fg`, `--fg-muted`, `--bg`), never by hue, so
 - Chips & tags are pill-shaped (`border-radius: 999px`), quiet, & small.
 - Tables use hairline rules only: `border-block` on the table, a bottom border per row, a tinted header, no vertical lines or box. Split a dense table into focused ones; put chips in cells for tags.
 - Contact details: an icon-led grid beats an inline string, when icons are available.
+- Icons: [Font Awesome Free](https://fontawesome.com) 7, inlined as SVG at build time (`<fa-icon @name="brands/github">`, solid by default, or `regular/name`), so they paint with the first frame & nothing blocks render. They are decorative (`aria-hidden`), sized & colored by the text around them: put one before link text, never in place of it. Cards take an optional `icon` in `project.json`.
+- Terminal chrome: a container sets `--chrome: terminal`; code samples inside it get the title bar. The home hero sets it.
+- Card accents cycle `--feature-1` to `--feature-4`: the project accent, then the studio orange, teal, & yellow. Override them in `project.css`.
 
 ## Font loading
 

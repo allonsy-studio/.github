@@ -66,14 +66,14 @@
 
 @layer layout {
 	/* One gap per context. */
-	:is(main > header, main > section, body > footer > div:first-child > *, li > article) {
+	:is(main > header, main > section, body > footer > div > *, li > article) {
 		display: grid;
 		grid-auto-flow: row;
 		align-content: start;
 		gap: var(--space-m);
 	}
 
-	:is(body > footer > div:first-child > *, li > article) {
+	:is(body > footer > div > *, li > article) {
 		gap: var(--space-xs);
 	}
 
@@ -107,6 +107,13 @@
 		font-size: 0.95rem;
 	}
 
+	/* Icon-led links */
+	:is(body > header nav, body > footer) a:has(> svg) {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+	}
+
 	/* Intro & sections */
 	:is(main > header, main > section) {
 		inline-size: min(100% - 2 * var(--space-m), 64rem);
@@ -138,13 +145,18 @@
 	}
 
 	main > header h1 > :last-child {
-		color: var(--fg-muted);
+		color: var(--accent-text);
 		font-weight: 400;
 	}
 
 	main > header > p {
 		max-inline-size: var(--measure);
 		font-size: 1.2rem;
+	}
+
+	/* Variant for the code sample: read by @container style() in components.css */
+	main > header {
+		--chrome: terminal;
 	}
 
 	main > header nav ul {
@@ -226,6 +238,8 @@
 		border-block-start: 1px solid var(--border);
 		color: var(--fg-muted);
 		font-size: 0.95rem;
+		display: grid;
+		gap: var(--space-l);
 	}
 
 	body > footer a {
@@ -236,22 +250,29 @@
 		color: var(--accent-text);
 	}
 
-	body > footer > div {
-		display: grid;
-		gap: var(--space-l);
+	body > footer > :is(div, section) {
 		inline-size: min(100%, 64rem);
 		margin-inline: auto;
 	}
 
-	body > footer > div:first-child {
-		grid-template-columns: 2fr 1fr 1fr;
+	/* Lock-up: name, link columns, & the studio credit */
+	body > footer > div {
+		display: flex;
+		flex-wrap: wrap;
 		align-items: start;
+		justify-content: space-between;
+		gap: var(--space-l);
 	}
 
-	body > footer > div + div {
-		grid-template-columns: 1fr auto;
-		align-items: center;
-		margin-block-start: var(--space-l);
+	body > footer > div > :first-child {
+		flex: 1 1 18rem;
+		max-inline-size: 28rem;
+	}
+
+	body > footer > div > :first-child strong {
+		color: var(--accent-text);
+		font-family: var(--font-mono);
+		font-size: 1.2rem;
 	}
 
 	body > footer strong {
@@ -272,10 +293,6 @@
 		main > div:has(> nav[aria-label="Documentation"]) {
 			grid-template-columns: minmax(0, 1fr);
 		}
-
-		body > footer > div:is(:first-child, div) {
-			grid-template-columns: 1fr;
-		}
 	}
 }
 
@@ -288,12 +305,13 @@
 		a[href="#main"],
 		body > header nav,
 		main > header nav,
+		[data-studio="cta"],
 		nav[aria-label="Documentation"],
 		figure > button {
 			display: none;
 		}
 
-		:is(main > header, main > section, body > footer > div:first-child > *, li > article) {
+		:is(main > header, main > section, body > footer > div > *, li > article) {
 			gap: var(--space-s);
 		}
 

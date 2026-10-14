@@ -10,6 +10,7 @@
 			:alt="$data.studio.footer.alt"
 			:width="$data.studio.footer.width"
 			:height="$data.studio.footer.height"
+			loading="lazy"
 		/>
 	</picture>
 	<img
@@ -18,5 +19,6 @@
 		:alt="$data.studio.footer.alt"
 		:width="$data.studio.footer.width"
 		:height="$data.studio.footer.height"
+		loading="lazy"
 	/>
 </a>

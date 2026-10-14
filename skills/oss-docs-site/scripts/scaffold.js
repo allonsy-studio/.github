@@ -59,6 +59,9 @@ const render = (content, facts = {}, accent = PLACEHOLDER_ACCENT) => {
 	return Buffer.from(text);
 };
 
+/** Files copied as bytes, never filled with placeholders. */
+const BINARY = /\.(woff2?|png|jpe?g|webp|ico)$/i;
+
 const hasFiles = (dir) => existsSync(dir) && readdirSync(dir).length > 0;
 
 /**
@@ -175,7 +178,7 @@ export async function scaffold({
 			actions.push({ path: posix(path.relative(repoRoot, dest)), status: "kept (project file)" });
 			continue;
 		}
-		put(dest, render(readFileSync(source), facts, accent), {
+		put(dest, BINARY.test(rel) ? readFileSync(source) : render(readFileSync(source), facts, accent), {
 			locked: studio.has(rel),
 			rel,
 			layer,

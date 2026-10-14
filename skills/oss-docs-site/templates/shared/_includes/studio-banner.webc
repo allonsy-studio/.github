@@ -5,5 +5,6 @@
 		:alt="$data.studio.banner.alt"
 		:width="$data.studio.banner.width"
 		:height="$data.studio.banner.height"
+		fetchpriority="high"
 	/>
 </a>

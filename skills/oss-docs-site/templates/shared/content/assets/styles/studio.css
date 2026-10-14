@@ -12,31 +12,95 @@
 		block-size: auto;
 	}
 
+	/* Four-color stripe under the header, shown with the banner */
+	body > header:has(> [data-studio="banner"]) > div {
+		position: relative;
+	}
+
+	body > header:has(> [data-studio="banner"]) > div::after {
+		content: "";
+		position: absolute;
+		inset: auto 0 -1px;
+		block-size: 3px;
+		background: linear-gradient(
+			90deg,
+			var(--studio-core) 0 25%,
+			var(--studio-orange) 25% 50%,
+			var(--studio-yellow) 50% 75%,
+			var(--studio-teal) 75%
+		);
+	}
+
 	[data-studio="cta"] {
-		display: flex;
-		flex-direction: column;
-		gap: 0.4rem;
-		max-inline-size: 36rem;
-		padding: var(--space-m);
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: var(--space-m) var(--space-l);
+		padding: var(--space-l);
 		border-radius: var(--radius);
 		background: var(--studio-navy);
 		color: var(--studio-ink);
 	}
 
-	[data-studio="cta"] > p:first-child {
+	[data-studio="cta"] > img {
+		inline-size: 4.5rem;
+	}
+
+	[data-studio="cta"] > div {
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	[data-studio="cta"] > div > p:first-child {
+		color: var(--studio-link);
+		font-size: 0.8rem;
 		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	[data-studio="cta"] h2 {
+		font-size: clamp(1.35rem, 3vw, 1.75rem);
+	}
+
+	[data-studio="cta"] ul {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: var(--space-s);
 	}
 
 	[data-studio="cta"] a {
+		display: inline-block;
+		padding: 0.6rem 1.1rem;
+		border: 2px solid var(--studio-link);
+		border-radius: var(--radius);
 		color: var(--studio-link);
 		font-weight: 700;
+		text-decoration: none;
+	}
+
+	[data-studio="cta"] li:first-child a {
+		background: var(--studio-link);
+		color: var(--studio-navy);
+	}
+
+	[data-studio="cta"] a:is(:hover, :focus-visible) {
+		text-decoration: underline;
 	}
 
 	[data-studio="cta"] :focus-visible {
 		outline-color: var(--studio-link);
 	}
 
+	@media (max-width: 40rem) {
+		[data-studio="cta"] {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
 	[data-studio="footer"] {
 		display: block;
+		max-inline-size: 100%;
+		margin-inline-start: auto;
 	}
 }

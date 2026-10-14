@@ -2,6 +2,23 @@
 /* Cascade order for every sheet; project styles outside a layer win. */
 @layer reset, tokens, base, layout, components, studio, print;
 
+/* PT Mono, self-hosted; the fallback matches its metrics (advance 0.6em, ascent 88.5%, descent 23.5%). */
+@font-face {
+	font-family: "PT Mono";
+	src: url("../fonts/pt-mono.woff2") format("woff2");
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "PT Mono Fallback";
+	src: local("Courier New"), local("CourierNewPSMT"), local("Courier");
+	size-adjust: 100%;
+	ascent-override: 88.5%;
+	descent-override: 23.5%;
+	line-gap-override: 0%;
+}
+
 @layer tokens {
 	:root {
 		color-scheme: light dark;
@@ -29,7 +46,7 @@
 		--font-sans: var(--sans-stack);
 		--font-display: var(--font-sans);
 		--font-mono:
-			"PT Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			"PT Mono", "PT Mono Fallback", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
 		/* Syntax highlighting, measured against --code-bg. */
 		--tok-comment: light-dark(#566070, #9aa3b5);
@@ -42,6 +59,16 @@
 		--studio-navy: #33394e;
 		--studio-ink: #ffffff;
 		--studio-link: #ffd36b;
+		--studio-core: #d22d6f;
+		--studio-orange: #ff944d;
+		--studio-teal: #1f91ad;
+		--studio-yellow: #ffd36b;
+
+		/* Card accents, in order: the project color, then the studio palette. */
+		--feature-1: var(--accent);
+		--feature-2: var(--studio-orange);
+		--feature-3: var(--studio-teal);
+		--feature-4: var(--studio-yellow);
 
 		/* Shape & rhythm */
 		--radius: 0.5rem;

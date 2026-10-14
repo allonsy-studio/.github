@@ -16,7 +16,7 @@
         "Did not apply the flavor until the maintainer confirmed it, or listed it as applied unattended",
         "Asked whether a website already exists that isn't built with 11ty",
         "docs/ holds the landing flavor & package.json records oss-docs with site & flavor",
-        "contact@allons-y.studio appears only in the footer call to action",
+        "consulting@allons-y.studio appears only in the footer call to action",
         "No license identifier or personal email address was hand-written into docs/: the license appears only as resolved from package.json in _data/site.js",
         "Told the maintainer the project needs its own wordmark & favicon",
         "Ran yarn docs:build & yarn docs:test & reported the result"

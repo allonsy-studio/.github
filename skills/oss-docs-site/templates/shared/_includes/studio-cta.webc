@@ -1,9 +1,20 @@
-<!--- Studio layer: locked. Shown only inside the footer block. --->
-<div data-studio="cta">
-	<p @text="$data.studio.cta.title"></p>
-	<p @text="$data.studio.cta.body"></p>
-	<a
-		:href="'mailto:' + $data.studio.contact"
-		@text="$data.studio.contact"
-	></a>
-</div>
+<!--- Studio layer: locked. Renders from site data; takes no props or slots. --->
+<section data-studio="cta">
+	<img
+		:src="$data.studio.mark.src"
+		alt=""
+		:width="$data.studio.mark.width"
+		:height="$data.studio.mark.height"
+		loading="lazy"
+	/>
+	<div>
+		<p @text="$data.studio.cta.eyebrow"></p>
+		<h2 @text="$data.studio.cta.title"></h2>
+		<p @text="$data.studio.cta.body"></p>
+	</div>
+	<ul>
+		<li webc:for="action of $data.studio.cta.actions">
+			<a :href="action.href" @text="action.label"></a>
+		</li>
+	</ul>
+</section>

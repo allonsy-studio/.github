@@ -5,23 +5,30 @@
 <meta name="description" :content="$data.site.description" />
 <link rel="canonical" :href="$data.site.url" />
 <meta name="color-scheme" content="light dark" />
+<!--- Studio navy under the banner; else the page surface in each scheme (tokens.css --bg). --->
+<meta webc:if="$data.site.studio" name="theme-color" content="#33394e" />
+<meta webc:else name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta webc:if="!$data.site.studio" name="theme-color" content="#101216" media="(prefers-color-scheme: dark)" />
 
 <meta property="og:type" content="website" />
+<meta property="og:site_name" :content="$data.site.name" />
+<meta property="og:locale" content="en_US" />
 <meta property="og:title" :content="$data.site.name + ': ' + $data.site.tagline" />
 <meta property="og:description" :content="$data.site.description" />
 <meta property="og:url" :content="$data.site.url" />
 
-<link webc:if="$data.project.favicon" rel="icon" :href="'/assets/img/' + $data.project.favicon" />
+<link
+	webc:if="$data.project.favicon"
+	rel="icon"
+	:href="'/assets/img/' + $data.project.favicon"
+	:type="iconType($data.project.favicon)"
+/>
+<link webc:if="!$data.project.favicon" rel="icon" href="data:," />
+<link webc:if="$data.project.appleTouchIcon" rel="apple-touch-icon" :href="'/assets/img/' + $data.project.appleTouchIcon" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link webc:keep rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" />
+<link rel="preload" href="/assets/fonts/pt-mono.woff2" as="font" type="font/woff2" crossorigin />
 
-<link webc:keep rel="stylesheet" href="/assets/styles/tokens.css" />
-<link webc:keep rel="stylesheet" href="/assets/styles/reset.css" />
-<link webc:keep rel="stylesheet" href="/assets/styles/layout.css" />
-<link webc:keep rel="stylesheet" href="/assets/styles/components.css" />
-<link webc:keep rel="stylesheet" href="/assets/styles/studio.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/core.css" />
 <link webc:keep rel="stylesheet" href="/assets/styles/project.css" />
 <script webc:keep type="module" src="/assets/scripts/copy-code.js"></script>
 <script webc:keep type="module" src="/assets/scripts/code-highlight.js"></script>
