@@ -25,18 +25,18 @@ export const FLAVORS = Object.freeze(["landing", "docs", "workspaces"]);
 
 /** Studio SVGs: site-relative destination to the file in ORG_ASSETS_DIR. */
 export const STUDIO_ASSETS = Object.freeze({
-	"src/assets/img/studio/oss-banner.svg": "oss-banner.svg",
-	"src/assets/img/studio/oss-footer-dark.svg": "oss-footer-dark.svg",
-	"src/assets/img/studio/oss-footer-light.svg": "oss-footer-light.svg",
+	"content/assets/img/studio/oss-banner.svg": "oss-banner.svg",
+	"content/assets/img/studio/oss-footer-dark.svg": "oss-footer-dark.svg",
+	"content/assets/img/studio/oss-footer-light.svg": "oss-footer-light.svg",
 });
 
 /** Site-relative paths of the locked studio layer. */
 export const STUDIO_FILES = Object.freeze([
-	"src/_components/studio-banner.webc",
-	"src/_components/studio-cta.webc",
-	"src/_components/studio-footer.webc",
-	"src/_data/studio.js",
-	"src/assets/css/studio.css",
+	"_includes/studio-banner.webc",
+	"_includes/studio-cta.webc",
+	"_includes/studio-footer.webc",
+	"_data/studio.js",
+	"content/assets/styles/studio.css",
 	...Object.keys(STUDIO_ASSETS),
 ]);
 

@@ -1,6 +1,6 @@
 # Site settings
 
-A project records how its site is built under the `oss-docs` key of its own `package.json`. The scaffold writes the key; the maintainer edits it. The key's name lives in this skill's `package.json` (`skill.settingsKey`), & the scaffold fills it into the project's `lib/site-config.js`. Content & brand (accent, copy, fonts) stay in `src/_data/project.json` (`references/project-layer.md`).
+A project records how its site is built under the `oss-docs` key of its own `package.json`. The scaffold writes the key; the maintainer edits it. The key's name lives in this skill's `package.json` (`skill.settingsKey`), & the scaffold fills it into the project's `utilities/site.js`. Content & brand (accent, copy, fonts) stay in `_data/project.json` (`references/project-layer.md`).
 
 ```json
 {
@@ -51,4 +51,4 @@ A file that still matches any flavor's template byte for byte was never edited, 
 
 ## JSON Schema
 
-`oss-docs.schema.json` at the root of this skill (draft 2020-12) defines the settings. It is hosted here & not shipped into projects: the scaffold reads it to decide what to record (`site` & `flavor`, with the default site), & other tools can validate the `oss-docs` key against its `$id`, the file's URL in the org's `.github` repository. `project.schema.json` does the same for `project.json` (`references/project-layer.md`).
+`schema/oss-docs.schema.json` (draft 2020-12) defines the settings. It is hosted here & not shipped into projects: the scaffold reads it to decide what to record (`site` & `flavor`, with the default site), & other tools can validate the `oss-docs` key against its `$id`, the file's URL in the org's `.github` repository. `schema/project.schema.json` does the same for `project.json` (`references/project-layer.md`).

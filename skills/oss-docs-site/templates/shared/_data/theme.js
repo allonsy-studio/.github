@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { computeTheme } from "../../lib/theme.js";
+import { computeTheme } from "../utilities/theme.js";
 
 export default function () {
 	const project = JSON.parse(readFileSync(path.join(import.meta.dirname, "project.json"), "utf8"));

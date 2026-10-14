@@ -1,5 +1,5 @@
 ---
-name: oss-site-brand
+name: oss-docs-site
 description: "Scaffold, rework, or migrate a project site for an Allons-y Studio open source repository: a shared core, a flavor (Landing, Docs, or Workspaces), the project's own accent & fonts, and a locked studio banner, call to action, & footer credit. Use whenever the user asks to build, rework, migrate, brand, or audit a site, landing page, or GitHub Pages docs for an allonsy-studio project, to change its flavor, to pick which flavor fits a repo, or to check the studio brand, contrast, or accessibility baseline. Do not trigger for general web design, other brands, or sites that are not Allons-y Studio open source projects."
 ---
 
@@ -34,8 +34,8 @@ Needs Node 24+ & `yarn install` in this directory. Run the scripts from the proj
 
 1. **Suggest, then confirm.** `node scripts/suggest.js --repo <repo-root>` prints a suggestion & applies nothing. A recorded flavor is used without asking or scanning (`--reconsider` scans & asks again). Ask the maintainer to confirm or pick another, then rerun with `--choose <flavor>`. With nobody to ask, use `--unattended` & list the suggestion in the report. For a judgment call (nested docs pages, single action), read the README & pass `--nested-docs yes|no` or `--single-action yes|no`. Detail: `references/flavors.md`.
 2. **Scaffold.** `node scripts/scaffold.js --target docs --flavor landing`. It records the site & flavor in `package.json`, reports drift, never overwrites the project layer, & flags edits to studio files: fix those with `--update`, never keep them. Changing flavors, previews (`--dry-run`), & cleanup (`--prune`): `references/site-config.md`. Layer rules: `references/architecture.md`.
-3. **Project layer.** Edit `docs/src/_data/project.json`; ask for the accent if the project has none. Fields: `references/project-layer.md`; rerunning the scaffold checks the file once. Color & fonts: `references/typography-and-color.md`.
-4. **Wordmark.** The skill does not make marks: tell the maintainer the project needs its own wordmark (logo) & favicon in `docs/src/assets/img/`, set as `logo` & `favicon` in `project.json`. Never block on this.
+3. **Project layer.** Edit `docs/_data/project.json`; ask for the accent if the project has none. Fields: `references/project-layer.md`; rerunning the scaffold checks the file once. Color & fonts: `references/typography-and-color.md`.
+4. **Wordmark.** The skill does not make marks: tell the maintainer the project needs its own wordmark (logo) & favicon in `docs/content/assets/img/`, set as `logo` & `favicon` in `project.json`. Never block on this.
 5. **Wire package.json.** Add the devDependencies & scripts the scaffold prints. Never write a license, license URL, or contact address into a template: the license is read from `package.json`.
 6. **Build & check.** `yarn docs:build`, then `yarn docs:test`: Cypress runs axe (WCAG 2.2 AA) on every built page in light, dark, & forced-colors. Fix every failure; never loosen the config or edit a locked file to pass. Detail: `references/testing.md`.
 7. **Report.** The flavor & whether it was confirmed or applied unattended, the tooling suggestions (typedoc for TypeScript, jsdoc for JavaScript), that the project still needs a wordmark, any drift or locked-file edits, & the Cypress result.

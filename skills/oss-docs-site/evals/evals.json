@@ -1,5 +1,5 @@
 {
-  "skill_name": "oss-site-brand",
+  "skill_name": "oss-docs-site",
   "evals": [
     {
       "id": 1,
@@ -72,7 +72,7 @@
       "files": [
         "evals/files/example-cli-landing/README.md",
         "evals/files/example-cli-landing/cli.js",
-        "evals/files/example-cli-landing/docs/src/_data/project.json",
+        "evals/files/example-cli-landing/docs/_data/project.json",
         "evals/files/example-cli-landing/package.json"
       ],
       "expectations": [

@@ -1,5 +1,5 @@
 // Build-time tokenizing with Prism. The page colors the ranges with the CSS
-// Custom Highlight API (assets/js/code-highlight.js), styled by the --tok-* tokens.
+// Custom Highlight API (assets/scripts/code-highlight.js), styled by the --tok-* tokens.
 
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";

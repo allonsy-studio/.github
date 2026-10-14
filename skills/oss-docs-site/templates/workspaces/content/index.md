@@ -1,4 +1,4 @@
 ---
-layout: layouts/workspaces-home.webc
+layout: workspaces-home.webc
 permalink: /index.html
 ---

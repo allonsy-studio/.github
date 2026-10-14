@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/allonsy-studio/.github/main/skills/oss-site-brand/oss-docs.schema.json",
+  "$id": "https://raw.githubusercontent.com/allonsy-studio/.github/main/skills/oss-docs-site/schema/oss-docs.schema.json",
   "title": "oss-docs settings",
   "description": "How a project's site is built: the value of the `oss-docs` key in its package.json.",
   "type": "object",

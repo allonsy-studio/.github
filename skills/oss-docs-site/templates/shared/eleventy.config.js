@@ -30,19 +30,29 @@ export default function (config) {
 	config.addJavaScriptFunction("tokenRanges", tokenRanges);
 	config.amendLibrary("md", highlightFences);
 
+	// Pages on the docs layout, in order, & the pages around one.
+	config.addCollection("docs", (api) =>
+		api
+			.getAll()
+			.filter((page) => page.data.layout === "docs.webc")
+			.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0) || a.inputPath.localeCompare(b.inputPath)),
+	);
 	config.addJavaScriptFunction("adjacent", (pages, current) => {
 		const index = pages.findIndex((page) => page.url === current.url);
 		return { prev: pages[index - 1], next: pages[index + 1] };
 	});
+
+	config.addPassthroughCopy({ [at("content/assets")]: "assets" });
 
 	return {
 		pathPrefix,
 		dir: {
 			input: at("content"),
 			output: at("{{OUTPUT_DIR}}"),
-			includes: at("_includes"),
-			layouts: at("_layouts"),
-			data: at("_data"),
+			// Relative to the input directory.
+			includes: "../_includes",
+			layouts: "../_layouts",
+			data: "../_data",
 		},
 		templateFormats: ["md", "webc"],
 	};

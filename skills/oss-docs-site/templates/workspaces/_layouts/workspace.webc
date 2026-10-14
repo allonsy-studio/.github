@@ -1,5 +1,5 @@
 ---
-layout: layouts/base.webc
+layout: base.webc
 ---
 <docs-shell :@items="$data.workspaces" :@heading="$data.workspace.name">
 	<p webc:if="$data.workspace.description" @text="$data.workspace.description"></p>

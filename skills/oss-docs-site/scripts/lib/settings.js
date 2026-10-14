@@ -12,7 +12,7 @@ const read = (file) => JSON.parse(readFileSync(path.join(SKILL_ROOT, file), "utf
 export const CONFIG_KEY = read("package.json").skill.settingsKey;
 
 /** The settings the schema defines, by key. */
-export const SETTINGS = read("oss-docs.schema.json").properties;
+export const SETTINGS = read("schema/oss-docs.schema.json").properties;
 
 export const DEFAULT_SITE = SETTINGS.site.default;
 

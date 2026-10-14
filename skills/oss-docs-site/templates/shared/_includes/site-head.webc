@@ -18,11 +18,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link webc:keep rel="stylesheet" :href="$data.theme.fontsUrl" />
 
-<link webc:keep rel="stylesheet" href="/assets/css/tokens.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/tokens.css" />
 <style webc:keep @raw="$data.theme.css"></style>
-<link webc:keep rel="stylesheet" href="/assets/css/reset.css" />
-<link webc:keep rel="stylesheet" href="/assets/css/layout.css" />
-<link webc:keep rel="stylesheet" href="/assets/css/components.css" />
-<link webc:keep rel="stylesheet" href="/assets/css/studio.css" />
-<script webc:keep type="module" src="/assets/js/copy-code.js"></script>
-<script webc:keep type="module" src="/assets/js/code-highlight.js"></script>
+<link webc:keep rel="stylesheet" href="/assets/styles/reset.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/layout.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/components.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/studio.css" />
+<script webc:keep type="module" src="/assets/scripts/copy-code.js"></script>
+<script webc:keep type="module" src="/assets/scripts/code-highlight.js"></script>

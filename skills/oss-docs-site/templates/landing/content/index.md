@@ -1,5 +1,5 @@
 ---
-layout: layouts/landing.webc
+layout: landing.webc
 permalink: /index.html
 anchors: true
 ---

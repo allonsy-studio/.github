@@ -49,7 +49,7 @@ Ask in one message: the flavor, the reason, & the tooling. Accept a yes or anoth
 | Flavor | Pages | Content comes from |
 | --- | --- | --- |
 | Landing | One page: hero, install, usage, features | `project.json` |
-| Docs | A home page plus a sidebar & pager over `src/docs/*.md` | Markdown files; front matter `title`, `description`, & `order` |
+| Docs | A home page plus a sidebar & pager over `content/*.md` | Markdown files; front matter `title`, `description`, & `order` |
 | Workspaces | A home page indexing the packages, plus one page per workspace | Each workspace's `SKILL.md`, else its `README.md` |
 
 Workspaces read the root `package.json` `workspaces` globs, honoring `!` exclusions. A page drops the file's front matter & its first heading, & takes its title & description from the workspace's `package.json`.

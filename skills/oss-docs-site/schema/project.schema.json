@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/allonsy-studio/.github/main/skills/oss-site-brand/project.schema.json",
+  "$id": "https://raw.githubusercontent.com/allonsy-studio/.github/main/skills/oss-docs-site/schema/project.schema.json",
   "title": "oss-docs project layer",
   "description": "A project's customization layer.",
   "type": "object",
@@ -59,11 +59,11 @@
       }
     },
     "logo": {
-      "description": "The project's wordmark: a file in src/assets/img/. Without it the header shows the name.",
+      "description": "The project's wordmark: a file in content/assets/img/. Without it the header shows the name.",
       "type": "string"
     },
     "favicon": {
-      "description": "A file in src/assets/img/. Without it the page has no icon link.",
+      "description": "A file in content/assets/img/. Without it the page has no icon link.",
       "type": "string"
     },
     "url": {

@@ -1,5 +1,5 @@
 ---
-layout: layouts/base.webc
+layout: base.webc
 ---
 <docs-shell
 	:@items="$data.collections.docs.map((page) => ({ url: page.url, title: page.data.title }))"

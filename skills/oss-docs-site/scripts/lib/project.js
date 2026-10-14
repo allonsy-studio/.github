@@ -1,5 +1,5 @@
-// One-time check of the project layer (src/_data/project.json) when the scaffold runs,
-// against project.schema.json. Projects own the file afterward & may deviate.
+// One-time check of the project layer (_data/project.json) when the scaffold runs,
+// against schema/project.schema.json. Projects own the file afterward & may deviate.
 
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -9,7 +9,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import { SKILL_ROOT } from "./layers.js";
 import { CONFIG_KEY } from "./settings.js";
 
-const schema = JSON.parse(readFileSync(path.join(SKILL_ROOT, "project.schema.json"), "utf8"));
+const schema = JSON.parse(readFileSync(path.join(SKILL_ROOT, "schema", "project.schema.json"), "utf8"));
 const validate = new Ajv2020({ allErrors: true, verbose: true }).compile(schema);
 
 /**

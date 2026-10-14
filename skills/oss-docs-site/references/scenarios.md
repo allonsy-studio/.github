@@ -14,7 +14,7 @@ The scaffold never writes into a directory that has files but was never scaffold
 
 1. **Inventory it.** Pages, copy, install & usage snippets, logo & favicon, fonts, custom domain (`CNAME`), & the URLs other sites link to.
 2. **Scaffold into a new directory.** `node scripts/scaffold.js --target website`. Use `--adopt` only to merge deliberately into the old directory: differing files are kept as drift, so the two sites stay mixed.
-3. **Move the content.** Install & usage commands, the lede, & features go into `src/_data/project.json` (`references/project-layer.md`). Reuse the existing logo & favicon (`logo`, `favicon`). Pages the new flavor has no place for are linked from the README, not rebuilt.
+3. **Move the content.** Install & usage commands, the lede, & features go into `_data/project.json` (`references/project-layer.md`). Reuse the existing logo & favicon (`logo`, `favicon`). Pages the new flavor has no place for are linked from the README, not rebuilt.
 4. **Keep URLs working.** Redirect or recreate anything linked from elsewhere, & keep the custom domain.
 5. **Switch the deploy.** A repository has one Pages workflow. If an old `.github/workflows/pages.yml` differs, it is reported as drift & kept: replace it by hand with the scaffolded one.
 6. **Check, then retire.** `yarn docs:build` & `yarn docs:test` pass; delete the old directory & its dependencies in a separate change, after the new site is live.

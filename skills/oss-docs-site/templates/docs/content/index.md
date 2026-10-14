@@ -1,4 +1,4 @@
 ---
-layout: layouts/docs-home.webc
+layout: docs-home.webc
 permalink: /index.html
 ---

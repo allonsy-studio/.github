@@ -6,10 +6,10 @@ import path from "node:path";
 
 import markdownIt from "markdown-it";
 
-import { highlightFences } from "../../lib/highlight.js";
+import { highlightFences } from "../utilities/highlight.js";
 
-// Three levels up from docs/src/_data.
-const root = path.resolve(import.meta.dirname, "..", "..", "..");
+// Two levels up from <site>/_data.
+const root = path.resolve(import.meta.dirname, "..", "..");
 const md = markdownIt();
 highlightFences(md);
 

@@ -187,7 +187,7 @@
 		white-space: nowrap;
 	}
 
-	/* Syntax colors: ranges registered by assets/js/code-highlight.js */
+	/* Syntax colors: ranges registered by assets/scripts/code-highlight.js */
 	::highlight(tok-comment) {
 		color: var(--tok-comment);
 	}

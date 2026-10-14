@@ -27,10 +27,10 @@ import { checkProject } from "./lib/project.js";
 import { CONFIG_KEY, DEFAULT_SITE, readSiteConfig } from "./lib/settings.js";
 import { assertInScope } from "./lib/scope.js";
 
-const CYPRESS_CONFIG = "cypress.config.mjs";
+const CYPRESS_CONFIG = "cypress.config.js";
 
 /** `.js` in an ESM package, `.mjs` elsewhere. */
-const cypressConfigName = (pkg) => (pkg.type === "module" ? "cypress.config.js" : CYPRESS_CONFIG);
+const cypressConfigName = (pkg) => (pkg.type === "module" ? CYPRESS_CONFIG : "cypress.config.mjs");
 
 /** Starter accent for a new project.json. */
 export const PLACEHOLDER_ACCENT = "#2346d4";
@@ -188,7 +188,7 @@ export async function scaffold({
 	);
 
 	// Project layer: created once, then the maintainer's.
-	const projectFile = path.join(siteDir, "src", "_data", "project.json");
+	const projectFile = path.join(siteDir, "_data", "project.json");
 	const projectRel = posix(path.relative(repoRoot, projectFile));
 	let projectProblems = [];
 	if (existsSync(projectFile)) {
@@ -244,7 +244,7 @@ function nextSteps({ siteRel, drift, orphans, projectProblems, movedFrom }) {
 		orphans.length &&
 			`${plural(orphans.length, "unused file")} from another flavor: ${orphans.join(", ")}. Rerun with --prune to remove them.`,
 		projectProblems.length &&
-			`${siteRel}/src/_data/project.json has ${plural(projectProblems.length, "problem")}: ${projectProblems.join(" ")}`,
+			`${siteRel}/_data/project.json has ${plural(projectProblems.length, "problem")}: ${projectProblems.join(" ")}`,
 		movedFrom && `The site moved from ${movedFrom} to ${siteRel}: ${movedFrom} is left as it was.`,
 		`Add devDependencies: ${Object.entries({ ...SITE_DEV_DEPENDENCIES, ...REPO_DEV_DEPENDENCIES })
 			.map(([name, range]) => `${name}@${range}`)
@@ -252,8 +252,8 @@ function nextSteps({ siteRel, drift, orphans, projectProblems, movedFrom }) {
 		`Add scripts: ${JSON.stringify(scripts)}.`,
 		`Ignore ${siteRel}/${OUTPUT_DIR}, ${siteRel}/_a11y, and ${siteRel}/cypress/screenshots in .gitignore.`,
 		"Commit .nvmrc and yarn.lock: the shared Pages workflow reads the Node version from .nvmrc and installs with --immutable.",
-		`Fill ${siteRel}/src/_data/project.json (accent, lede, install, usage, features).`,
-		`Add a wordmark: the project supplies its own logo & favicon in ${siteRel}/src/assets/img/ (set \`logo\` & \`favicon\` in project.json). The skill does not make marks.`,
+		`Fill ${siteRel}/_data/project.json (accent, lede, install, usage, features).`,
+		`Add a wordmark: the project supplies its own logo & favicon in ${siteRel}/content/assets/img/ (set \`logo\` & \`favicon\` in project.json). The skill does not make marks.`,
 		"Check accessibility: yarn docs:test runs Cypress with axe (WCAG 2.2 AA) in light, dark, & forced-colors. Cypress downloads its own browser on install.",
 	].filter(Boolean);
 }

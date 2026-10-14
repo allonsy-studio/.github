@@ -1,4 +1,4 @@
-# oss-site-brand
+# oss-docs-site
 
 A skill that scaffolds, reworks, & checks project sites for Allons-y Studio open source repositories. Each site is built with Eleventy & WebC from one shared core: the project keeps its own accent, fonts, & copy, while a small locked studio layer (banner, call to action, footer credit) stays identical everywhere.
 
@@ -23,7 +23,7 @@ The scaffold records the site directory & flavor under `oss-docs` in the project
 | Flavor | Pages | Content comes from |
 | --- | --- | --- |
 | Landing | One page: hero, install, usage, features | `project.json` |
-| Docs | A home page plus a sidebar & pager over Markdown | `src/docs/*.md` |
+| Docs | A home page plus a sidebar & pager over Markdown | `content/*.md` |
 | Workspaces | A home page indexing the packages, plus one page per workspace | Each workspace's `SKILL.md` or `README.md` |
 
 ## Layout
@@ -35,8 +35,7 @@ The scaffold records the site directory & flavor under `oss-docs` in the project
 | `templates/shared/` | The core copied into every site: CSS, JS, components, Eleventy config, Cypress audit |
 | `templates/<flavor>/` | Page templates for each flavor |
 | `templates/workflows/` | The Pages workflow |
-| `oss-docs.schema.json` | Schema for the `oss-docs` settings in `package.json` |
-| `project.schema.json` | Schema for a site's `project.json` |
+| `schema/` | `oss-docs.schema.json` for the `oss-docs` settings in `package.json`, & `project.schema.json` for a site's `project.json` |
 | `evals/` | Task evals & trigger queries |
 
 The schemas are hosted here & not shipped into projects.

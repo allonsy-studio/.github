@@ -24,7 +24,7 @@
     "should_trigger": true
   },
   {
-    "query": "somebody edited the studio banner in docs/src/_components on our project site. put it back to the locked version and rerun the accessibility check",
+    "query": "somebody edited the studio banner in docs/_includes on our project site. put it back to the locked version and rerun the accessibility check",
     "should_trigger": true
   },
   {

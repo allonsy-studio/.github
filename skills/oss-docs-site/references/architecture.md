@@ -19,16 +19,16 @@ See `REPO_DEV_DEPENDENCIES` in `scripts/lib/layers.js` for what default dependen
 | --- | --- |
 | CSS | Reset, tokens (`--accent`, text-safe shades, `--font-*`), layout, base components, & a print block, each in a cascade layer (`references/styling.md`). Light & dark via `light-dark()`. A project overrides tokens only |
 | JS | Small dependency-free modules (the code copy button, syntax highlight ranges). Progressive enhancement: every page works without them |
-| WebC components | In `templates/shared/src/_components/`. The `studio-*` components are locked (`Studio layer`); the rest are customizable |
+| WebC components | In `templates/shared/_includes/`. The `studio-*` components are locked (`Studio layer`); the rest are customizable |
 | Eleventy | Base & flavor layouts, head partial (meta, Open Graph, favicon link), site data derived from `package.json`, plugins (HtmlBasePlugin, WebC), Prism tokenizing, Pages workflow |
 
 ## Studio layer
 
 Locked files: any edit is reported as a locked-file edit on rerun, & `--update` restores it.
 
-- `src/_components/studio-*.webc`
-- `src/_data/studio.js`, `src/assets/css/studio.css`
-- `src/assets/img/studio/*.svg`, copied from the org's `assets/svg/` (the single source: edit them there & list the change in the pull request)
+- `_includes/studio-*.webc`
+- `_data/studio.js`, `content/assets/styles/studio.css`
+- `content/assets/img/studio/*.svg`, copied from the org's `assets/svg/` (the single source: edit them there & list the change in the pull request)
 
 The banner comes before `main`; the call to action & footer credit sit in the footer. `contact@allons-y.studio` appears only in the call to action. The studio styles read only `--studio-*` tokens, so a project accent never changes them.
 
@@ -40,4 +40,4 @@ Which license a project takes is set in `AGENTS.md` (Licensing). Sites never har
 
 ## Template layout
 
-`templates/shared/` & `templates/<flavor>/` mirror the site directory, so `templates/shared/src/assets/css/tokens.css` becomes `docs/src/assets/css/tokens.css`. The Pages workflow, `templates/workflows/pages.yml`, lands in `.github/workflows/`.
+`templates/shared/` & `templates/<flavor>/` mirror the site directory, so `templates/shared/content/assets/styles/tokens.css` becomes `docs/content/assets/styles/tokens.css`. The Pages workflow, `templates/workflows/pages.yml`, lands in `.github/workflows/`.

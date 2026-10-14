@@ -1,5 +1,5 @@
 ---
-layout: layouts/workspace.webc
+layout: workspace.webc
 pagination:
   data: workspaces
   size: 1

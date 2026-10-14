@@ -1,4 +1,4 @@
-// Site facts derived from the project's package.json. In lib/, not _data/:
+// Site facts derived from the project's package.json. In utilities/, not _data/:
 // Eleventy merges a data file's named exports into the data.
 
 import { readFileSync } from "node:fs";
@@ -70,7 +70,7 @@ export function buildSite({ packagePath, projectPath }) {
 		packageName: pkg.name,
 		tagline: project.tagline ?? firstSentence(pkg.description),
 		description: pkg.description,
-		studio: pkg?.["oss-docs"]?.studio !== false,
+		studio: pkg?.["{{SETTINGS_KEY}}"]?.studio !== false,
 		license: pkg.license,
 		licenseUrl: `${repo}/blob/main/LICENSE`,
 		repo,
