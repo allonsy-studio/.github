@@ -12,6 +12,25 @@
 		block-size: auto;
 	}
 
+	/* Four-color stripe under the header, shown with the banner */
+	body > header:has(> [data-studio="banner"]) > div {
+		position: relative;
+	}
+
+	body > header:has(> [data-studio="banner"]) > div::after {
+		content: "";
+		position: absolute;
+		inset: auto 0 -1px;
+		block-size: 3px;
+		background: linear-gradient(
+			90deg,
+			var(--studio-core) 0 25%,
+			var(--studio-orange) 25% 50%,
+			var(--studio-yellow) 50% 75%,
+			var(--studio-teal) 75%
+		);
+	}
+
 	[data-studio="cta"] {
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr) auto;

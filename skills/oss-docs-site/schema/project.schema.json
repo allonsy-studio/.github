@@ -57,7 +57,11 @@
       "type": "string"
     },
     "favicon": {
-      "description": "A file in content/assets/img/. Without it the page has no icon link.",
+      "description": "A file in content/assets/img/ (svg, png, ico, or webp). Without it the page links an empty icon, so browsers skip the /favicon.ico request.",
+      "type": "string"
+    },
+    "appleTouchIcon": {
+      "description": "A 180px png in content/assets/img/ for home screens. Optional.",
       "type": "string"
     },
     "url": {
