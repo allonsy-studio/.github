@@ -79,12 +79,22 @@
 	}
 
 	li > article {
+		position: relative;
 		block-size: 100%;
 		padding: var(--space-m);
 		border: 1px solid var(--border);
-		border-block-start: 4px solid var(--feature);
 		border-radius: var(--radius);
 		background: var(--bg-elev);
+	}
+
+	li > article::before {
+		content: "";
+		position: absolute;
+		inset: -1px;
+		inline-size: calc(100% + 2px);
+		block-size: 1em;
+		border-radius: 3px;
+		background: var(--feature);
 	}
 
 	li > article > span[aria-hidden="true"] {
