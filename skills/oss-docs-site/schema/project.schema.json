@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/allonsy-studio/.github/main/skills/oss-site-brand/project.schema.json",
   "title": "oss-docs project layer",
-  "description": "A project's content & brand: src/_data/project.json in its site directory. Settings (flavor, site, studio) live in package.json under `oss-docs`; name, license, repository, & links are derived from package.json.",
+  "description": "A project's customization layer.",
   "type": "object",
   "required": ["accent"],
   "properties": {

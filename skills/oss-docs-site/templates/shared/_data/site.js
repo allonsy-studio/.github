@@ -1,8 +1,8 @@
-// Site facts; logic lives in lib/site.js.
+// Site facts; logic lives in utilities/site.js.
 
 import path from "node:path";
 
-import { buildSite } from "../../lib/site.js";
+import { buildSite } from "../utilities/site.js";
 
 export default function () {
 	// Three levels up to the project root.

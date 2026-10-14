@@ -6,8 +6,6 @@ import { readFileSync } from "node:fs";
 import hostedGitInfo from "hosted-git-info";
 import { minVersion, validRange } from "semver";
 
-import { studioEnabled } from "./site-config.js";
-
 /** Host serving every studio project site, one path per repo. */
 const PAGES_HOST = "https://projects.allons-y.studio";
 
@@ -72,7 +70,7 @@ export function buildSite({ packagePath, projectPath }) {
 		packageName: pkg.name,
 		tagline: project.tagline ?? firstSentence(pkg.description),
 		description: pkg.description,
-		studio: studioEnabled(pkg),
+		studio: pkg?.["oss-docs"]?.studio !== false,
 		license: pkg.license,
 		licenseUrl: `${repo}/blob/main/LICENSE`,
 		repo,

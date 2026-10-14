@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "@allons-y/skill-oss-site-brand",
+  "name": "@allons-y/skill-oss-docs-site",
   "version": "0.0.0",
-  "description": "Scaffold and check single-page landing sites for Allons-y Studio open source projects: each project keeps its own accent, logo, and fonts, while a small locked studio layer stays identical everywhere.",
+  "description": "Scaffold and check single-page landing sites for Allons-y Studio open source projects.",
   "type": "module",
   "skill": {
     "category": "Documentation",
