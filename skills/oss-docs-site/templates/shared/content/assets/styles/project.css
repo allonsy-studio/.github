@@ -1,7 +1,7 @@
 /* Project styles: the accent & fonts. Edit freely; the scaffold never overwrites this file. */
 :root {
 	--accent: {{ACCENT}};
-	/* Fonts: load your own (@font-face or @import), then put the family first.
-	--font-sans: "Your Sans", var(--sans-stack);
-	--font-display: "Your Display", var(--font-sans); */
+	/* Fonts: the studio pairing is bundled; uncomment it, or load your own (@font-face or @import) & put the family first.
+	--font-sans: "Instrument Sans", "Instrument Sans Fallback", var(--sans-stack);
+	--font-display: "Yellowtail", "Yellowtail Fallback", var(--font-sans); */
 }

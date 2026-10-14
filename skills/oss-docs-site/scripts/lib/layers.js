@@ -34,7 +34,10 @@ export const STUDIO_ASSETS = Object.freeze({
 
 /** Self-hosted fonts: site-relative destination to the file in ORG_FONTS_DIR. */
 export const FONT_ASSETS = Object.freeze({
+	"content/assets/fonts/instrument-sans-italic-var.woff2": "instrument-sans-italic-var.woff2",
+	"content/assets/fonts/instrument-sans-var.woff2": "instrument-sans-var.woff2",
 	"content/assets/fonts/pt-mono.woff2": "pt-mono.woff2",
+	"content/assets/fonts/yellowtail.woff2": "yellowtail.woff2",
 });
 
 /** Site-relative paths of the locked studio layer. */
