@@ -10,11 +10,11 @@ A project may bring its own font families, but the monospace is the same everywh
 | `--font-display` | Optional; unset inherits `--font-sans` |
 | `--font-mono` | Locked: PT Mono, then the platform monospace fonts. Not overridable |
 
-Self-hostable `woff2` files for PT Mono, Instrument Sans, & Yellowtail are in the org's `assets/fonts/`; load them per `references/styling.md`. Set project fonts in `project.json` (`fonts.sans`, `fonts.display`): the build puts them ahead of the default stack & builds the Google Fonts URL with `display=swap`. It always loads PT Mono & never redeclares `--font-mono`.
+Self-hostable `woff2` files for PT Mono, Instrument Sans, & Yellowtail are in the org's `assets/fonts/`; load them per `references/styling.md`. A project sets its fonts in `content/assets/styles/project.css`: load the family there (`@font-face` or `@import`, with `font-display: swap`), then put it first in `--font-sans` or `--font-display`. The head always loads PT Mono; nothing redeclares `--font-mono`.
 
 ## Accent
 
-Set one hex `accent`. The build writes it as `--accent` & `tokens.css` derives the rest in CSS, so there is no per-project color math:
+Set one `--accent` in `content/assets/styles/project.css` (any CSS color; the scaffold's `--accent` option seeds it). `tokens.css` derives the rest in CSS, so there is no per-project color math:
 
 - `--accent-text`: `color-mix(in oklab, var(--accent) 45%, var(--fg))`. `--fg` is dark in light mode & light in dark mode, so one expression pulls the accent toward readable text on either surface.
 - `--on-accent`: `oklab(from var(--accent) clamp(0, calc((0.58 - l) * 1000), 1) 0 0)`. Relative color syntax turns the accent's lightness into black or white; `color-mix()` alone cannot choose between two colors.

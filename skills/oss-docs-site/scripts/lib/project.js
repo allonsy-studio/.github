@@ -7,7 +7,6 @@ import path from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 
 import { SKILL_ROOT } from "./layers.js";
-import { CONFIG_KEY } from "./settings.js";
 
 const schema = JSON.parse(readFileSync(path.join(SKILL_ROOT, "schema", "project.schema.json"), "utf8"));
 const validate = new Ajv2020({ allErrors: true, verbose: true }).compile(schema);
@@ -19,7 +18,7 @@ const validate = new Ajv2020({ allErrors: true, verbose: true }).compile(schema)
 function describe({ keyword, instancePath, params, parentSchema, data, message }) {
 	const where = instancePath.split("/").slice(1).join(".");
 	if (keyword === "required") return `${[where, params.missingProperty].filter(Boolean).join(".")} is required.`;
-	if (keyword === "not") return `${where} is a site setting: set it in package.json under "${CONFIG_KEY}", not here.`;
+	if (keyword === "not") return `${where} is not set here. ${parentSchema.description}`;
 	if (keyword === "additionalProperties") return `${[where, params.additionalProperty].filter(Boolean).join(".")} is not allowed: ${parentSchema.description}`;
 	// A pattern has no readable message of its own: use the schema's description.
 	const reason = keyword === "pattern" ? `must be ${parentSchema.description.split(/(?<=\.)\s/)[0].replace(/^A /, "a ").replace(/\.$/, "")}` : message;

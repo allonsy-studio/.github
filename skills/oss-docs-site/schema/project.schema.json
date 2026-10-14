@@ -4,13 +4,7 @@
   "title": "oss-docs project layer",
   "description": "A project's customization layer.",
   "type": "object",
-  "required": ["accent"],
   "properties": {
-    "accent": {
-      "description": "A hex color such as #2346d4. The text-safe shade & on-accent color derive from it in CSS.",
-      "type": "string",
-      "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
-    },
     "tagline": {
       "description": "Defaults to the first sentence of the package.json description.",
       "type": "string"
@@ -70,31 +64,10 @@
       "description": "Overrides the default https://projects.allons-y.studio/<repo>/.",
       "type": "string"
     },
-    "fonts": {
-      "description": "Font overrides for sans & display. Mono is locked to PT Mono.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "sans": { "$ref": "#/$defs/font" },
-        "display": { "$ref": "#/$defs/font" }
-      }
-    },
+    "accent": { "not": {}, "description": "A style setting: set it in `content/assets/styles/project.css`." },
+    "fonts": { "not": {}, "description": "A style setting: set it in `content/assets/styles/project.css`." },
     "flavor": { "not": {}, "description": "A site setting: set it in package.json under `oss-docs`." },
     "site": { "not": {}, "description": "A site setting: set it in package.json under `oss-docs`." },
     "studio": { "not": {}, "description": "A site setting: set it in package.json under `oss-docs`." }
-  },
-  "$defs": {
-    "font": {
-      "type": "object",
-      "required": ["family"],
-      "properties": {
-        "family": { "type": "string", "minLength": 1 },
-        "weights": {
-          "description": "Integers from 100 to 900.",
-          "type": "array",
-          "items": { "type": "integer", "minimum": 100, "maximum": 900 }
-        }
-      }
-    }
   }
 }

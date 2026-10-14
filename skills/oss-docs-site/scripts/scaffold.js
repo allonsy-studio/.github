@@ -33,27 +33,28 @@ const CYPRESS_CONFIG = "cypress.config.js";
 /** `.js` in an ESM package, `.mjs` elsewhere. */
 const cypressConfigName = (pkg) => (pkg.type === "module" ? CYPRESS_CONFIG : "cypress.config.mjs");
 
-/** Starter accent for a new project.json. */
+/** Starter accent for a new project.css. */
 export const PLACEHOLDER_ACCENT = "#2346d4";
 
 const DEFAULT_FLAVOR = "landing";
 
 const posix = (p) => p.split(path.sep).join("/");
 
-/** Site-relative file holding the facts resolved from package.json: created once, then the project's. */
-const RESOLVED_FILE = "_data/site.js";
+/** Site-relative files created once, then the project's: resolved site facts & the project's styles. */
+const PROJECT_FILES = new Set(["_data/site.js", "content/assets/styles/project.css"]);
 
 /**
- * Fill a template's placeholders: `{{OUTPUT_DIR}}` as text, & each quoted `"{{FACT}}"` with its value as a JS literal.
+ * Fill a template's placeholders: `{{OUTPUT_DIR}}` & `{{ACCENT}}` as text, & each quoted `"{{FACT}}"` with its value as a JS literal.
  *
  * @param {Buffer | string} content
  * @param {Record<string, string | boolean | null>} [facts]
+ * @param {string} [accent]
  * @returns {Buffer}
  */
-const render = (content, facts = {}) => {
+const render = (content, facts = {}, accent = PLACEHOLDER_ACCENT) => {
 	const text = Object.entries(facts).reduce(
 		(out, [name, value]) => out.replaceAll(`"{{${name}}}"`, JSON.stringify(value)),
-		content.toString().replaceAll("{{OUTPUT_DIR}}", OUTPUT_DIR),
+		content.toString().replaceAll("{{OUTPUT_DIR}}", OUTPUT_DIR).replaceAll("{{ACCENT}}", accent),
 	);
 	return Buffer.from(text);
 };
@@ -170,11 +171,11 @@ export async function scaffold({
 	const incoming = templateFiles(flavor, { coreDir });
 	for (const { rel, source, layer } of incoming) {
 		const dest = path.join(siteDir, rel === CYPRESS_CONFIG ? cypressConfigName(pkg) : rel);
-		if (rel === RESOLVED_FILE && existsSync(dest) && !update) {
-			actions.push({ path: posix(path.relative(repoRoot, dest)), status: "kept (resolved site facts)" });
+		if (PROJECT_FILES.has(rel) && existsSync(dest) && !update) {
+			actions.push({ path: posix(path.relative(repoRoot, dest)), status: "kept (project file)" });
 			continue;
 		}
-		put(dest, render(readFileSync(source), facts), {
+		put(dest, render(readFileSync(source), facts, accent), {
 			locked: studio.has(rel),
 			rel,
 			layer,
@@ -210,7 +211,7 @@ export async function scaffold({
 		projectProblems = checkProject(projectFile);
 		actions.push({ path: projectRel, status: "kept (project layer)" });
 	} else {
-		const starter = { accent, features: [] };
+		const starter = { features: [] };
 		write(
 			projectFile,
 			Buffer.from(JSON.stringify(starter, null, "\t") + "\n"),
@@ -268,7 +269,7 @@ function nextSteps({ siteRel, drift, orphans, projectProblems, movedFrom }) {
 		`Ignore ${siteRel}/${OUTPUT_DIR}, ${siteRel}/_a11y, ${siteRel}/cypress/screenshots, and .cache (fetched studio data) in .gitignore.`,
 		"Commit .nvmrc and yarn.lock: the shared Pages workflow reads the Node version from .nvmrc and installs with --immutable.",
 		`${siteRel}/_data/site.js holds the facts resolved from package.json (name, license, links): edit it there. After package.json changes, delete it & rerun, or pass --update.`,
-		`Fill ${siteRel}/_data/project.json (accent, lede, install, usage, features).`,
+		`Fill ${siteRel}/_data/project.json (lede, install, usage, features) & set the accent & fonts in ${siteRel}/content/assets/styles/project.css.`,
 		`Add a wordmark: the project supplies its own logo & favicon in ${siteRel}/content/assets/img/ (set \`logo\` & \`favicon\` in project.json). The skill does not make marks.`,
 		"Check accessibility: yarn docs:test runs Cypress with axe (WCAG 2.2 AA) in light, dark, & forced-colors. Cypress downloads its own browser on install.",
 	].filter(Boolean);
