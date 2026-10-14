@@ -1,4 +1,4 @@
-<!-- Card. Props: title, body, href (optional). -->
+<!--- Card. Props: title, body, href (optional). --->
 <article>
 	<h3>
 		<a webc:if="href" :href="href" @text="title"></a>

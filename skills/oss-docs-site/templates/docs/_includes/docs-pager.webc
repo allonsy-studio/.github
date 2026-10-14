@@ -1,4 +1,4 @@
-<!-- Links to the pages before & after this one. -->
+<!--- Links to the pages before & after this one. --->
 <nav
 	aria-label="Pager"
 	webc:if="adjacent($data.collections.docs, $data.page).prev || adjacent($data.collections.docs, $data.page).next"

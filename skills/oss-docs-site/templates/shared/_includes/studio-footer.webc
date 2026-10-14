@@ -1,4 +1,4 @@
-<!-- Studio layer: locked. Prop: scheme = "auto" (default), "light", or "dark". -->
+<!--- Studio layer: locked. Prop: scheme = "auto" (default), "light", or "dark". --->
 <a data-studio="footer" :href="$data.studio.url">
 	<picture webc:if="!scheme || scheme === 'auto'">
 		<source

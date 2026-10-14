@@ -1,4 +1,4 @@
-<!-- Head partial: document metadata, Open Graph, favicon, fonts, & styles. -->
+<!--- Head partial: document metadata, Open Graph, favicon, fonts, & styles. --->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title @text="$data.title ? $data.title + ': ' + $data.site.name : $data.site.name + ': ' + $data.site.tagline"></title>

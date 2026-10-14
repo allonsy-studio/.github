@@ -1,4 +1,4 @@
-<!-- Props: items, an array of { url, title }. Marks the current page. -->
+<!--- Props: items, an array of { url, title }. Marks the current page. --->
 <nav aria-label="Documentation">
 	<ul>
 		<li webc:for="item of items">

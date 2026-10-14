@@ -1,4 +1,4 @@
-<!-- Studio layer: locked. Renders from site data; takes no props or slots. -->
+<!--- Studio layer: locked. Renders from site data; takes no props or slots. --->
 <a data-studio="banner" :href="$data.studio.url">
 	<img
 		:src="$data.studio.banner.src"

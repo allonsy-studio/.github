@@ -1,4 +1,4 @@
-<!-- Prop: packages, an array of { name, description, href }. -->
+<!--- Prop: packages, an array of { name, description, href }. --->
 <ul style="--title-face: mono">
 	<li webc:for="pkg of packages">
 		<project-card
