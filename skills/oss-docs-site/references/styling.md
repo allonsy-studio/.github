@@ -5,7 +5,7 @@ Defaults the core CSS follows, & the rules for anything added to a project site.
 ## Type
 
 - 16px root, `rem` & `em` for everything else. No `px` type sizes: one root value rescales the page.
-- One body sans plus one display face, the display face used sparingly (the project name or hero only). The studio pairing is Instrument Sans & Yellowtail; the files are in the org's `assets/fonts/`.
+- One body sans plus one display face, the display face used sparingly (the project name or hero only). The studio pairing is Instrument Sans & Yellowtail, bundled & self-hosted in every site (`references/typography-and-color.md`).
 - `text-wrap: balance` on headings, `text-wrap: pretty` on paragraphs & list items.
 - Headings: tight `line-height`, no margin.
 
@@ -59,8 +59,9 @@ Name tokens by role (`--accent`, `--fg`, `--fg-muted`, `--bg`), never by hue, so
 
 ## Font loading
 
-- Variable fonts, subset with `unicode-range`, `font-display: swap`.
-- A metric-matched fallback `@font-face` (`size-adjust`, `ascent-override`, `descent-override`) so text does not reflow when the font arrives. Compute the values with Capsize or Fontaine.
+- Set the line measure in `em`, never `ch`: `ch` is the width of a zero, which differs between a font & its fallback, so a swap would rewrap every paragraph.
+- Self-host `woff2`: variable fonts, subset (the bundled files are Latin subsets; `unicode-range` for any family that is not), `font-display: swap`.
+- A metric-matched fallback `@font-face` (`size-adjust`, `ascent-override`, `descent-override`) so text does not reflow when the font arrives. Compute the values with Capsize or Fontaine; the bundled ones use Capsize's method against Arial (Courier New for PT Mono).
 
 ## Print
 

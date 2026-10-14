@@ -10,7 +10,7 @@ A project may bring its own font families, but the monospace is the same everywh
 | `--font-display` | Optional; unset inherits `--font-sans` |
 | `--font-mono` | Locked: PT Mono, then the platform monospace fonts. Not overridable |
 
-Self-hostable `woff2` files for PT Mono, Instrument Sans, & Yellowtail are in the org's `assets/fonts/`; load them per `references/styling.md`. A project sets its fonts in `content/assets/styles/project.css`: load the family there (`@font-face` or `@import`, with `font-display: swap`), then put it first in `--font-sans` or `--font-display`. The core CSS self-hosts PT Mono (preloaded in the head, with a metric-matched `PT Mono Fallback`), so it makes no font request to another host; nothing redeclares `--font-mono`.
+Every site self-hosts its fonts from `content/assets/fonts/`, copied from the org's `assets/fonts/`, & `tokens.css` declares them, each with a metric-matched fallback face: PT Mono (preloaded in the head), Instrument Sans (regular & italic, 400 to 700), & Yellowtail. A face downloads only when text uses it, so unused ones cost nothing. A project sets its fonts in `content/assets/styles/project.css`: put the bundled family first, as `--font-sans: "Instrument Sans", "Instrument Sans Fallback", var(--sans-stack);` or `--font-display: "Yellowtail", "Yellowtail Fallback", var(--font-sans);`, or load another family there (`@font-face` or `@import`, with `font-display: swap`). No font request goes to another host; nothing redeclares `--font-mono`.
 
 ## Accent
 

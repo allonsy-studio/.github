@@ -2,7 +2,8 @@
 /* Cascade order for every sheet; project styles outside a layer win. */
 @layer reset, tokens, base, layout, components, studio, print;
 
-/* PT Mono, self-hosted; the fallback matches its metrics (advance 0.6em, ascent 88.5%, descent 23.5%). */
+/* Self-hosted fonts. Each fallback matches its font's metrics against Arial (Courier New for PT Mono), so text keeps its size & line height when the font arrives. */
+/* PT Mono: advance 0.6em, ascent 88.5%, descent 23.5%. */
 @font-face {
 	font-family: "PT Mono";
 	src: url("../fonts/pt-mono.woff2") format("woff2");
@@ -12,11 +13,62 @@
 
 @font-face {
 	font-family: "PT Mono Fallback";
-	src: local("Courier New"), local("CourierNewPSMT"), local("Courier");
+	src: local("Courier New"), local("CourierNewPSMT"), local("Liberation Mono"), local("Courier");
 	size-adjust: 100%;
 	ascent-override: 88.5%;
 	descent-override: 23.5%;
 	line-gap-override: 0%;
+}
+
+/* The studio pairing: set it in project.css (`--font-sans`, `--font-display`). A face is fetched only when text uses it. */
+@font-face {
+	font-family: "Instrument Sans";
+	src: url("../fonts/instrument-sans-var.woff2") format("woff2");
+	font-weight: 400 700;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Instrument Sans";
+	src: url("../fonts/instrument-sans-italic-var.woff2") format("woff2");
+	font-style: italic;
+	font-weight: 400 700;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Instrument Sans Fallback";
+	src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica");
+	size-adjust: 102.6%;
+	ascent-override: 94.54%;
+	descent-override: 24.37%;
+	line-gap-override: 0%;
+}
+
+@font-face {
+	font-family: "Instrument Sans Fallback";
+	src: local("Arial Italic"), local("Arial-ItalicMT"), local("Liberation Sans Italic"), local("Helvetica Oblique");
+	font-style: italic;
+	size-adjust: 102.52%;
+	ascent-override: 94.61%;
+	descent-override: 24.39%;
+	line-gap-override: 0%;
+}
+
+@font-face {
+	font-family: "Yellowtail";
+	src: url("../fonts/yellowtail.woff2") format("woff2");
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Yellowtail Fallback";
+	src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica");
+	size-adjust: 73.65%;
+	ascent-override: 131.93%;
+	descent-override: 40.91%;
+	line-gap-override: 12.2%;
 }
 
 @layer tokens {
@@ -77,7 +129,7 @@
 		--space-m: 1.25rem;
 		--space-l: 2rem;
 		--space-xl: 4rem;
-		--measure: 66ch;
+		--measure: 40em;
 		--shadow: 0 6px 20px light-dark(rgb(22 24 29 / 0.08), rgb(0 0 0 / 0.4));
 	}
 }
