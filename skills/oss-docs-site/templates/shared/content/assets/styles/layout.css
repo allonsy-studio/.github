@@ -108,7 +108,7 @@
 	}
 
 	/* Icon-led links */
-	:is(body > header, body > footer) nav a:has(> i) {
+	:is(body > header, body > footer) nav a:has(> svg) {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4em;

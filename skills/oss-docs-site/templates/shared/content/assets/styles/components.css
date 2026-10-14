@@ -1,5 +1,13 @@
 /* Shared components. */
 @layer components {
+	/* Icons: inline SVG, sized & colored by the text around them */
+	svg[aria-hidden="true"] {
+		flex: none;
+		inline-size: 1em;
+		block-size: 1em;
+		fill: currentcolor;
+	}
+
 	/* Intro actions */
 	main > header nav a {
 		display: inline-block;

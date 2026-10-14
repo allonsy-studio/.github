@@ -9,6 +9,7 @@ import { HtmlBasePlugin } from "@11ty/eleventy";
 import webc from "@11ty/eleventy-plugin-webc";
 
 import { highlightFences, tokenRanges } from "./utilities/highlight.js";
+import { icon, iconType } from "./utilities/icons.js";
 
 // Anchored to this file so the build runs from the repository root or docs/.
 const here = path.relative(process.cwd(), import.meta.dirname) || ".";
@@ -28,6 +29,8 @@ export default function (config) {
 	config.addPlugin(HtmlBasePlugin);
 
 	config.addJavaScriptFunction("tokenRanges", tokenRanges);
+	config.addJavaScriptFunction("icon", icon);
+	config.addJavaScriptFunction("iconType", iconType);
 	config.amendLibrary("md", highlightFences);
 
 	// Pages on the docs layout, in order, & the pages around one.

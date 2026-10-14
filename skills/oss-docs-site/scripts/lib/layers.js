@@ -45,6 +45,7 @@ export const SITE_DEV_DEPENDENCIES = Object.freeze({
 	"@11ty/eleventy": "^3.1.5",
 	"@11ty/eleventy-fetch": "^5.1.0",
 	"@11ty/eleventy-plugin-webc": "^0.11.2",
+	"@fortawesome/fontawesome-free": "^7.3.1",
 	"axe-core": "^4.11.0",
 	cypress: "^15.21.1",
 	"cypress-axe": "^1.7.0",

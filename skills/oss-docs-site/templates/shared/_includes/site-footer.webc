@@ -14,8 +14,8 @@
 		<nav aria-label="Project links">
 			<p><strong>Project</strong></p>
 			<ul>
-				<li><a :href="$data.site.repo"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a></li>
-				<li webc:if="$data.site.npm"><a :href="$data.site.npm"><i class="fa-brands fa-npm" aria-hidden="true"></i> npm</a></li>
+				<li><a :href="$data.site.repo"><fa-icon @name="brands/github"></fa-icon> GitHub</a></li>
+				<li webc:if="$data.site.npm"><a :href="$data.site.npm"><fa-icon @name="brands/npm"></fa-icon> npm</a></li>
 				<li><a :href="$data.site.changelogUrl">Changelog</a></li>
 			</ul>
 		</nav>
