@@ -1,0 +1,48 @@
+---
+layout: base.webc
+---
+<header>
+	<h1>
+		<span @text="$data.site.name"></span>
+		<span @text="$data.site.tagline"></span>
+	</h1>
+	<p @text="$data.project.lede || $data.site.description"></p>
+	<nav aria-label="Get started">
+		<ul>
+			<li><a href="#install">Get started</a></li>
+			<li><a :href="$data.site.repo">View on GitHub</a></li>
+		</ul>
+	</nav>
+	<ul>
+		<li>Free & open source</li>
+		<li>License: <span data-license @text="$data.site.license"></span></li>
+		<li webc:if="$data.site.node">Node <span @text="$data.site.node"></span></li>
+	</ul>
+</header>
+
+<section id="install" aria-labelledby="install-title">
+	<h2 id="install-title">Install</h2>
+	<code-sample
+		language="sh"
+		:@code="$data.project.install || 'npm install ' + $data.site.packageName"
+	></code-sample>
+</section>
+
+<section webc:if="$data.project.usage" id="usage" aria-labelledby="usage-title">
+	<h2 id="usage-title">Usage</h2>
+	<code-sample
+		:@language="$data.project.usage.language"
+		:@code="$data.project.usage.code"
+		:@caption="$data.project.usage.caption"
+	></code-sample>
+</section>
+
+<section webc:if="$data.project.features && $data.project.features.length" id="features" aria-labelledby="features-title">
+	<h2 id="features-title">Features</h2>
+	<feature-grid :@features="$data.project.features"></feature-grid>
+</section>
+
+<section webc:if="$data.project.packages && $data.project.packages.length" id="packages" aria-labelledby="packages-title">
+	<h2 id="packages-title">Packages</h2>
+	<package-index :@packages="$data.project.packages"></package-index>
+</section>

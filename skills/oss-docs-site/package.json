@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "name": "@allons-y/skill-oss-docs-site",
+  "version": "0.0.0",
+  "description": "Scaffold and check single-page landing sites for Allons-y Studio open source projects.",
+  "type": "module",
+  "skill": {
+    "category": "Documentation",
+    "runtime": "node",
+    "settingsKey": "oss-docs",
+    "triggers": [
+      "build a landing site for this open source project",
+      "scaffold a project site with the studio branding",
+      "check this project site against the studio brand",
+      "set up GitHub Pages with PR previews for this project",
+      "which site flavor fits this project",
+      "change the site flavor for this project"
+    ]
+  },
+  "dependencies": {
+    "@npmcli/package-json": "^7.0.5",
+    "ajv": "^8.17.1",
+    "hosted-git-info": "^8.1.0",
+    "semver": "^7.7.0"
+  },
+  "keywords": [
+    "branding",
+    "eleventy",
+    "landing-page",
+    "open-source",
+    "webc"
+  ]
+}

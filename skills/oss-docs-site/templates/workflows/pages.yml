@@ -1,0 +1,20 @@
+name: Pages
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        types: [opened, synchronize, reopened, closed]
+
+permissions:
+    contents: write # push to the gh-pages branch
+    pull-requests: write # comment the preview URL
+
+jobs:
+    pages:
+        name: Pages
+        uses: allonsy-studio/.github/.github/workflows/pages.yml@main
+        with:
+            build-command: yarn docs:build && yarn docs:test
+            output-dir: {{SITE_DIR}}/{{OUTPUT_DIR}}
+            node-version-file: .nvmrc

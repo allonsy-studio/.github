@@ -1,0 +1,5 @@
+<!--- Props: code, language, caption (optional). Highlighted at build time. --->
+<figure>
+	<figcaption webc:if="caption" @text="caption"></figcaption>
+	<pre tabindex="0"><code :data-tokens="tokenRanges(code, language)" @text="code"></code></pre>
+</figure>

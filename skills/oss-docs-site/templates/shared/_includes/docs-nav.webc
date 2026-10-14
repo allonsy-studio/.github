@@ -1,0 +1,8 @@
+<!--- Props: items, an array of { url, title }. Marks the current page. --->
+<nav aria-label="Documentation">
+	<ul>
+		<li webc:for="item of items">
+			<a :href="item.url" :aria-current="item.url === $data.page.url ? 'page' : undefined" @text="item.title"></a>
+		</li>
+	</ul>
+</nav>

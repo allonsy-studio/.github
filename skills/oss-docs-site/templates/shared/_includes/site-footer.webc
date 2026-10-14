@@ -1,0 +1,36 @@
+<!--- Footer block: project links, license, then the studio layer unless the project opts out. --->
+<footer>
+	<div>
+		<div>
+			<p><strong @text="$data.site.name"></strong></p>
+			<p @text="$data.site.tagline + '.'"></p>
+			<p>
+				<small>
+					Licensed under
+					<a :href="$data.site.licenseUrl" data-license @text="$data.site.license"></a>
+				</small>
+			</p>
+		</div>
+		<nav aria-label="Project links">
+			<p><strong>Project</strong></p>
+			<ul>
+				<li><a :href="$data.site.repo">GitHub</a></li>
+				<li webc:if="$data.site.npm"><a :href="$data.site.npm">npm</a></li>
+				<li><a :href="$data.site.changelogUrl">Changelog</a></li>
+			</ul>
+		</nav>
+		<nav aria-label="Help links">
+			<p><strong>Help</strong></p>
+			<ul>
+				<li><a :href="$data.site.issuesUrl">Report an issue</a></li>
+				<li><a :href="$data.site.contributingUrl">Contributing guide</a></li>
+				<li><a :href="$data.studio.conductUrl">Code of conduct</a></li>
+				<li><a :href="$data.studio.securityUrl">Security policy</a></li>
+			</ul>
+		</nav>
+	</div>
+	<div webc:if="$data.site.studio">
+		<studio-cta></studio-cta>
+		<studio-footer></studio-footer>
+	</div>
+</footer>

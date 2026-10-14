@@ -84,6 +84,18 @@ Reach for existing components & styles first; add new ones only when the design
 genuinely needs them. Capitalize visually with `text-transform: uppercase` rather than
 uppercasing the content in source.
 
+Styling defaults (detail in [`skills/oss-docs-site/references/styling.md`](skills/oss-docs-site/references/styling.md)):
+
+- Type: 16px root, `rem` & `em` units, one body sans plus one sparing display face, `text-wrap: balance` on headings & `pretty` on paragraphs.
+- Spacing: a grid with one `gap` per context, not margins on each element.
+- Structure: cascade layers, & tags plus native attributes (`rel`, `role`, `aria-*`) over classes, variants as inherited custom properties read by `@container style()`; `data-*` only when nothing native fits.
+- Tokens named by role (`--accent`), not by hue.
+- Pill-shaped tags; hairline-rule tables, no boxes.
+- Variable fonts with `font-display: swap` & a metric-matched fallback.
+- Screen first, then a tuned `@media print` block.
+
+To build a project site with the studio brand, use [`skills/oss-docs-site/SKILL.md`](skills/oss-docs-site/SKILL.md).
+
 ## Commits and pull requests
 
 Commit and PR bodies are a short note, not a report. Follow the repo's PR template: fill

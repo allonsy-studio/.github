@@ -1,0 +1,227 @@
+/* Shared components. */
+@layer components {
+	/* Intro actions */
+	main > header nav a {
+		display: inline-block;
+		padding: 0.6rem 1.1rem;
+		border: 2px solid var(--accent-text);
+		border-radius: var(--radius);
+		background: var(--accent);
+		color: var(--on-accent);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	main > header nav a:is(:hover, :focus-visible) {
+		text-decoration: underline;
+	}
+
+	/* Emphasis is inherited from the item; the second action is the quiet one. */
+	main > header nav li + li {
+		--emphasis: low;
+	}
+
+	@container style(--emphasis: low) {
+		main > header nav a {
+			background: transparent;
+			color: var(--accent-text);
+		}
+	}
+
+	/* Chips */
+	main > header > ul > li {
+		display: inline-block;
+		padding: 0.15rem 0.75rem;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		background: var(--bg-elev);
+		line-height: 1.5;
+	}
+
+	/* Cards */
+	main > section > ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+		gap: var(--space-m);
+	}
+
+	li > article {
+		block-size: 100%;
+		padding: var(--space-m);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background: var(--bg-elev);
+	}
+
+	li > article > h3 {
+		font-size: 1.2rem;
+	}
+
+	/* Set on the list (`--title-face: mono`), inherited down to each card. */
+	@container style(--title-face: mono) {
+		li > article > h3 {
+			font-family: var(--font-mono);
+			font-size: 1rem;
+			font-weight: 700;
+		}
+	}
+
+	li > article > p {
+		color: var(--fg-muted);
+	}
+
+	/* Prose: the body of a docs page */
+	main > div > article :is(h2, h3) {
+		margin-block-start: var(--space-s);
+	}
+
+	main > div > article h2 {
+		font-size: 1.5rem;
+	}
+
+	main > div > article h3 {
+		font-size: 1.2rem;
+	}
+
+	main > div > article :is(ul, ol) {
+		display: grid;
+		gap: 0.4rem;
+		padding-inline-start: 1.25rem;
+		list-style: revert;
+	}
+
+	main > div > article blockquote {
+		padding-inline-start: var(--space-m);
+		border-inline-start: 3px solid var(--border);
+		color: var(--fg-muted);
+	}
+
+	main > div > article table {
+		border-collapse: collapse;
+		border-block: 1px solid var(--border);
+	}
+
+	main > div > article :is(th, td) {
+		padding: var(--space-xs) var(--space-s);
+		border-block-end: 1px solid var(--border);
+		text-align: start;
+	}
+
+	main > div > article hr {
+		border: 0;
+		border-block-start: 1px solid var(--border);
+	}
+
+	/* Code */
+	code,
+	pre {
+		font-family: var(--font-mono);
+	}
+
+	code {
+		padding: 0.1em 0.35em;
+		border-radius: 0.25rem;
+		background: var(--code-bg);
+		font-size: 0.9em;
+	}
+
+	pre {
+		overflow-x: auto;
+		padding: var(--space-m);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background: var(--code-bg);
+		font-size: 0.9rem;
+		line-height: 1.5;
+	}
+
+	pre code {
+		padding: 0;
+		background: none;
+		font-size: inherit;
+	}
+
+	figcaption {
+		margin-block-end: var(--space-xs);
+		color: var(--fg-muted);
+		font-family: var(--font-mono);
+		font-size: 0.85rem;
+	}
+
+	figure {
+		display: grid;
+	}
+
+	figure > pre,
+	figure > button {
+		grid-area: 2 / 1;
+	}
+
+	figure pre {
+		padding-inline-end: 5.5rem;
+	}
+
+	figure > button {
+		justify-self: end;
+		align-self: start;
+		margin: var(--space-xs);
+		padding: 0.25rem 0.7rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background: var(--bg);
+		color: var(--fg);
+		font-size: 0.85rem;
+		cursor: pointer;
+	}
+
+	figure > button:is(:hover, :focus-visible) {
+		border-color: var(--accent-text);
+	}
+
+	figure > [role="status"] {
+		position: absolute;
+		inline-size: 1px;
+		block-size: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* Syntax colors: ranges registered by assets/scripts/code-highlight.js */
+	::highlight(tok-comment) {
+		color: var(--tok-comment);
+	}
+
+	::highlight(tok-string) {
+		color: var(--tok-string);
+	}
+
+	::highlight(tok-keyword) {
+		color: var(--tok-keyword);
+	}
+
+	::highlight(tok-function) {
+		color: var(--tok-function);
+	}
+
+	::highlight(tok-number) {
+		color: var(--tok-number);
+	}
+
+	::highlight(tok-punctuation) {
+		color: var(--fg-muted);
+	}
+
+	/* Narrow screens */
+	@media (max-width: 40rem) {
+		figure pre {
+			padding-inline-end: var(--space-m);
+		}
+
+		figure > button {
+			grid-row: 3;
+			justify-self: start;
+			margin: var(--space-xs) 0 0;
+		}
+	}
+}

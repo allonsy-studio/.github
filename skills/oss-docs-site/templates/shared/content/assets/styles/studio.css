@@ -1,0 +1,42 @@
+/* Studio layer: locked. Reads only --studio-* tokens. Do not edit in a project. */
+@layer studio {
+	[data-studio="banner"] {
+		display: block;
+		background: var(--studio-navy);
+	}
+
+	[data-studio="banner"] img {
+		margin-inline: auto;
+		inline-size: 100%;
+		max-inline-size: 1600px;
+		block-size: auto;
+	}
+
+	[data-studio="cta"] {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		max-inline-size: 36rem;
+		padding: var(--space-m);
+		border-radius: var(--radius);
+		background: var(--studio-navy);
+		color: var(--studio-ink);
+	}
+
+	[data-studio="cta"] > p:first-child {
+		font-weight: 700;
+	}
+
+	[data-studio="cta"] a {
+		color: var(--studio-link);
+		font-weight: 700;
+	}
+
+	[data-studio="cta"] :focus-visible {
+		outline-color: var(--studio-link);
+	}
+
+	[data-studio="footer"] {
+		display: block;
+	}
+}

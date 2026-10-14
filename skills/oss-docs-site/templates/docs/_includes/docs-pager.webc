@@ -1,0 +1,18 @@
+<!--- Links to the pages before & after this one. --->
+<nav
+	aria-label="Pager"
+	webc:if="adjacent($data.collections.docs, $data.page).prev || adjacent($data.collections.docs, $data.page).next"
+>
+	<a
+		webc:if="adjacent($data.collections.docs, $data.page).prev"
+		rel="prev"
+		:href="adjacent($data.collections.docs, $data.page).prev.url"
+		@text="adjacent($data.collections.docs, $data.page).prev.data.title"
+	></a>
+	<a
+		webc:if="adjacent($data.collections.docs, $data.page).next"
+		rel="next"
+		:href="adjacent($data.collections.docs, $data.page).next.url"
+		@text="adjacent($data.collections.docs, $data.page).next.data.title"
+	></a>
+</nav>

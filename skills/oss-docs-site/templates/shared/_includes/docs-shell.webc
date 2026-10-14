@@ -1,0 +1,8 @@
+<!--- Props: items (see docs-nav), heading. The slot is the page body. --->
+<div>
+	<docs-nav :@items="items"></docs-nav>
+	<article>
+		<h1 @text="heading"></h1>
+		<slot></slot>
+	</article>
+</div>

@@ -49,3 +49,10 @@ types
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# opx
+.opx/*
+!.opx/config.json
+
+# Claude
+.claude/worktrees/*

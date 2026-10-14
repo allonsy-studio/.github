@@ -1,0 +1,8 @@
+<!--- Card. Props: title, body, href (optional). --->
+<article>
+	<h3>
+		<a webc:if="href" :href="href" @text="title"></a>
+		<span webc:else @text="title"></span>
+	</h3>
+	<p @text="body"></p>
+</article>

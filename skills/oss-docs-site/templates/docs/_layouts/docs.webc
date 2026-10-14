@@ -1,0 +1,10 @@
+---
+layout: base.webc
+---
+<docs-shell
+	:@items="$data.collections.docs.map((page) => ({ url: page.url, title: page.data.title }))"
+	:@heading="$data.title"
+>
+	<template webc:nokeep @html="content"></template>
+	<docs-pager></docs-pager>
+</docs-shell>

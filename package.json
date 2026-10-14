@@ -1,0 +1,49 @@
+{
+  "private": true,
+  "name": "@allons-y/core",
+  "version": "0.0.0",
+  "description": "Allons-y Studio organization defaults, shared workflows, & agent skills.",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allonsy-studio/.github.git"
+  },
+  "type": "module",
+  "scripts": {
+    "format": "opx lint --fix",
+    "lint": "opx lint",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@allons-y/envoy": "^1.1.0",
+    "@allons-y/opx-cli": "^0.1.0-beta.0",
+    "@allons-y/opx-lint-js": "^0.1.0-beta.0",
+    "@allons-y/opx-lint-json": "^0.1.0-beta.0",
+    "@allons-y/opx-lint-md": "^0.1.0-beta.0",
+    "@eslint/css": "^1.4.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.0.1",
+    "@eslint/markdown": "^8.0.3",
+    "eslint": "^10.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "browserslist": [
+    "defaults and fully supports es6-module",
+    "maintained node versions",
+    "not dead"
+  ],
+  "lint-staged": {
+    "*": [
+      "yarn g:lint --fix"
+    ],
+    "*.css": [
+      "yarn g:lint:styles --fix"
+    ],
+    ".github/renovate.json": "npx --yes --package renovate -- renovate-config-validator --strict"
+  },
+  "packageManager": "yarn@4.18.1"
+}
