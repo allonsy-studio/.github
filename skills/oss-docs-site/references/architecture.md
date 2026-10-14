@@ -20,7 +20,7 @@ See `REPO_DEV_DEPENDENCIES` in `scripts/lib/layers.js` for what default dependen
 | CSS | Reset, tokens (`--accent`, text-safe shades, `--font-*`), layout, base components, & a print block, each in a cascade layer (`references/styling.md`). Light & dark via `light-dark()`. A project overrides tokens only, in `project.css` |
 | JS | Small dependency-free modules (the code copy button, syntax highlight ranges). Progressive enhancement: every page works without them |
 | WebC components | In `templates/shared/_includes/`. The `studio-*` components are locked (`Studio layer`); the rest are customizable. Comments use WebC's server-only `<!--- --->` so they stay out of the page |
-| Eleventy | Base & flavor layouts, head partial (meta, Open Graph, favicon link), site facts resolved from `package.json` into `_data/site.js`, plugins (HtmlBasePlugin, WebC), Prism tokenizing, Pages workflow |
+| Eleventy | Base & flavor layouts, head partial (meta, Open Graph, favicon link, Font Awesome Free brand icons from cdnjs, pinned with SRI), site facts resolved from `package.json` into `_data/site.js`, plugins (HtmlBasePlugin, WebC), Prism tokenizing, Pages workflow |
 
 ## Studio layer
 

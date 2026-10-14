@@ -53,6 +53,7 @@ Name tokens by role (`--accent`, `--fg`, `--fg-muted`, `--bg`), never by hue, so
 - Chips & tags are pill-shaped (`border-radius: 999px`), quiet, & small.
 - Tables use hairline rules only: `border-block` on the table, a bottom border per row, a tinted header, no vertical lines or box. Split a dense table into focused ones; put chips in cells for tags.
 - Contact details: an icon-led grid beats an inline string, when icons are available.
+- Icons: [Font Awesome Free](https://fontawesome.com) 7 brands, loaded in the head. Use `<i class="fa-brands fa-github" aria-hidden="true"></i>` before link text, so the text names the link. The GitHub & npm links in the header & footer carry them.
 
 ## Font loading
 

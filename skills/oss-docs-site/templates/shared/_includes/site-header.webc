@@ -14,7 +14,7 @@
 		<a webc:if="$data.anchors && $data.project.usage" href="#usage">Usage</a>
 		<a webc:if="$data.anchors && $data.project.features && $data.project.features.length" href="#features">Features</a>
 		<a webc:if="$data.collections.docs && $data.collections.docs.length" :href="$data.collections.docs[0].url">Docs</a>
-		<a :href="$data.site.repo">GitHub</a>
-		<a webc:if="$data.site.npm" :href="$data.site.npm">npm</a>
+		<a :href="$data.site.repo"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
+		<a webc:if="$data.site.npm" :href="$data.site.npm"><i class="fa-brands fa-npm" aria-hidden="true"></i> npm</a>
 	</nav>
 </div>

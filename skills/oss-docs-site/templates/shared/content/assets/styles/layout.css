@@ -107,6 +107,13 @@
 		font-size: 0.95rem;
 	}
 
+	/* Icon-led links */
+	:is(body > header, body > footer) nav a:has(> i) {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+	}
+
 	/* Intro & sections */
 	:is(main > header, main > section) {
 		inline-size: min(100% - 2 * var(--space-m), 64rem);

@@ -1,4 +1,4 @@
-<!--- Head partial: document metadata, Open Graph, favicon, fonts, & styles. --->
+<!--- Head partial: document metadata, Open Graph, favicon, fonts, icons, & styles. --->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title @text="$data.title ? $data.title + ': ' + $data.site.name : $data.site.name + ': ' + $data.site.tagline"></title>
@@ -16,6 +16,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link webc:keep rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" />
+
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+<link
+	webc:keep
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/fontawesome.min.css"
+	integrity="sha512-SMQ1DwSGiIDyNoXdQae7kUBADdtQa8Xsb3LxBxzAXExZNCCH/36yQSpZSYo1c6ckFshd1iMp9eD9+s9+tdhmyg=="
+	crossorigin="anonymous"
+	referrerpolicy="no-referrer"
+/>
+<link
+	webc:keep
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/brands.min.css"
+	integrity="sha512-m0oLz1v7KqlXtoyxY2LmR11D1iUnjOykxdeLg2FjtwKwPW78NYG5/XETzS+KDekWZqZIRsQNhPwpQuxtOQ4+nw=="
+	crossorigin="anonymous"
+	referrerpolicy="no-referrer"
+/>
 
 <link webc:keep rel="stylesheet" href="/assets/styles/tokens.css" />
 <link webc:keep rel="stylesheet" href="/assets/styles/reset.css" />
