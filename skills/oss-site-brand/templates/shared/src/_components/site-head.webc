@@ -1,0 +1,28 @@
+<!-- Head partial: document metadata, Open Graph, favicon, fonts, & styles. -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title @text="$data.title ? $data.title + ': ' + $data.site.name : $data.site.name + ': ' + $data.site.tagline"></title>
+<meta name="description" :content="$data.site.description" />
+<link rel="canonical" :href="$data.site.url" />
+<meta name="theme-color" :content="$data.theme.accent" />
+<meta name="color-scheme" content="light dark" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" :content="$data.site.name + ': ' + $data.site.tagline" />
+<meta property="og:description" :content="$data.site.description" />
+<meta property="og:url" :content="$data.site.url" />
+
+<link webc:if="$data.project.favicon" rel="icon" :href="'/assets/img/' + $data.project.favicon" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link webc:keep rel="stylesheet" :href="$data.theme.fontsUrl" />
+
+<link webc:keep rel="stylesheet" href="/assets/css/tokens.css" />
+<style webc:keep @raw="$data.theme.css"></style>
+<link webc:keep rel="stylesheet" href="/assets/css/reset.css" />
+<link webc:keep rel="stylesheet" href="/assets/css/layout.css" />
+<link webc:keep rel="stylesheet" href="/assets/css/components.css" />
+<link webc:keep rel="stylesheet" href="/assets/css/studio.css" />
+<script webc:keep type="module" src="/assets/js/copy-code.js"></script>
+<script webc:keep type="module" src="/assets/js/code-highlight.js"></script>

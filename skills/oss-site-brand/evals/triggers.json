@@ -1,0 +1,62 @@
+[
+  {
+    "query": "Set up a project site for allonsy-studio/example-cli. It's one CLI command with a short README, and it should have the studio branding.",
+    "should_trigger": true
+  },
+  {
+    "query": "Which site flavor fits our toolkit repo? It's TypeScript, has a packages/ folder with one package per plugin, and each plugin only has a README.",
+    "should_trigger": true
+  },
+  {
+    "query": "example-cli already has a Docusaurus site in docs/. Rework it to match the studio standards.",
+    "should_trigger": true
+  },
+  {
+    "query": "Our site was built with this skill as a landing page, but the project has grown. Move it to the docs flavor without losing our edits.",
+    "should_trigger": true
+  },
+  {
+    "query": "Check the docs site in this repo against the studio brand: contrast, accessibility, and the studio banner.",
+    "should_trigger": true
+  },
+  {
+    "query": "can you add a github pages site w/ PR previews to allonsy-studio/example-cli? its basically one command, short readme",
+    "should_trigger": true
+  },
+  {
+    "query": "somebody edited the studio banner in docs/src/_components on our project site. put it back to the locked version and rerun the accessibility check",
+    "should_trigger": true
+  },
+  {
+    "query": "Design a landing page for my bakery with a warm color palette and a menu section.",
+    "should_trigger": false
+  },
+  {
+    "query": "Set up a Docusaurus docs site with a sidebar and Algolia search for our company's internal API.",
+    "should_trigger": false
+  },
+  {
+    "query": "Review the ARIA pattern of our tabs component and check its color contrast against WCAG.",
+    "should_trigger": false
+  },
+  {
+    "query": "Change the contact email in the README of my personal blog to my new address.",
+    "should_trigger": false
+  },
+  {
+    "query": "Build a project site with the studio branding for github.com/someone-else/their-library.",
+    "should_trigger": false
+  },
+  {
+    "query": "Our library has no logo or favicon. Can you make one for its site?",
+    "should_trigger": false
+  },
+  {
+    "query": "Add Eleventy to my personal portfolio repo and deploy it to Netlify.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write release notes for allonsy-studio/example-cli 2.0 from the merged pull requests.",
+    "should_trigger": false
+  }
+]

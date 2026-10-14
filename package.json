@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "name": "@allonsy-studio/.github",
+  "version": "0.0.0",
+  "description": "Allons-y Studio organization defaults, shared workflows, & agent skills.",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allonsy-studio/.github.git"
+  },
+  "type": "module",
+  "scripts": {
+    "format": "opx lint --fix",
+    "lint": "opx lint",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@allons-y/opx-cli": "^0.1.0-beta.0",
+    "@allons-y/opx-lint-js": "^0.1.0-beta.0",
+    "@allons-y/opx-lint-json": "^0.1.0-beta.0",
+    "@allons-y/opx-lint-md": "^0.1.0-beta.0",
+    "husky": "^9"
+  }
+}

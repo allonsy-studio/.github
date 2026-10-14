@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/allonsy-studio/.github/main/skills/oss-site-brand/project.schema.json",
+  "title": "oss-docs project layer",
+  "description": "A project's content & brand: src/_data/project.json in its site directory. Settings (flavor, site, studio) live in package.json under `oss-docs`; name, license, repository, & links are derived from package.json.",
+  "type": "object",
+  "required": ["accent"],
+  "properties": {
+    "accent": {
+      "description": "A hex color such as #2346d4. The text-safe shade & on-accent color derive from it in CSS.",
+      "type": "string",
+      "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+    },
+    "tagline": {
+      "description": "Defaults to the first sentence of the package.json description.",
+      "type": "string"
+    },
+    "lede": {
+      "description": "Hero paragraph; defaults to the package.json description.",
+      "type": "string"
+    },
+    "install": {
+      "description": "Install command; defaults to `npm install <package name>`.",
+      "type": "string"
+    },
+    "usage": {
+      "description": "One copy-pasteable code sample under Usage.",
+      "type": "object",
+      "required": ["language", "code"],
+      "properties": {
+        "language": { "type": "string" },
+        "code": { "type": "string" },
+        "caption": { "type": "string" }
+      }
+    },
+    "features": {
+      "description": "Feature cards: three to six, each leading with what the project does for the reader.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "body"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "body": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "packages": {
+      "description": "Optional package index.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "href": { "type": "string" }
+        }
+      }
+    },
+    "logo": {
+      "description": "The project's wordmark: a file in src/assets/img/. Without it the header shows the name.",
+      "type": "string"
+    },
+    "favicon": {
+      "description": "A file in src/assets/img/. Without it the page has no icon link.",
+      "type": "string"
+    },
+    "url": {
+      "description": "Overrides the default https://projects.allons-y.studio/<repo>/.",
+      "type": "string"
+    },
+    "fonts": {
+      "description": "Font overrides for sans & display. Mono is locked to PT Mono.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sans": { "$ref": "#/$defs/font" },
+        "display": { "$ref": "#/$defs/font" }
+      }
+    },
+    "flavor": { "not": {}, "description": "A site setting: set it in package.json under `oss-docs`." },
+    "site": { "not": {}, "description": "A site setting: set it in package.json under `oss-docs`." },
+    "studio": { "not": {}, "description": "A site setting: set it in package.json under `oss-docs`." }
+  },
+  "$defs": {
+    "font": {
+      "type": "object",
+      "required": ["family"],
+      "properties": {
+        "family": { "type": "string", "minLength": 1 },
+        "weights": {
+          "description": "Integers from 100 to 900.",
+          "type": "array",
+          "items": { "type": "integer", "minimum": 100, "maximum": 900 }
+        }
+      }
+    }
+  }
+}

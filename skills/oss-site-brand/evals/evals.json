@@ -1,0 +1,87 @@
+{
+  "skill_name": "oss-site-brand",
+  "evals": [
+    {
+      "id": 1,
+      "name": "new-site-for-single-command-tool",
+      "prompt": "Set up a project site for allonsy-studio/example-cli. It's one CLI command with a short README, and it should have the studio branding.",
+      "expected_output": "Runs scripts/suggest.js, suggests the landing flavor & asks the maintainer to confirm it, asks whether a website already exists that isn't built with 11ty, then scaffolds the landing flavor into docs/, fills project.json, notes that the project needs its own wordmark & favicon, builds, runs yarn docs:test, & reports the flavor decision.",
+      "files": [
+        "evals/files/example-cli/README.md",
+        "evals/files/example-cli/cli.js",
+        "evals/files/example-cli/package.json"
+      ],
+      "expectations": [
+        "Ran scripts/suggest.js before scaffolding",
+        "Did not apply the flavor until the maintainer confirmed it, or listed it as applied unattended",
+        "Asked whether a website already exists that isn't built with 11ty",
+        "docs/ holds the landing flavor & package.json records oss-docs with site & flavor",
+        "contact@allons-y.studio appears only in the footer call to action",
+        "No license identifier or personal email address was written into docs/",
+        "Told the maintainer the project needs its own wordmark & favicon",
+        "Ran yarn docs:build & yarn docs:test & reported the result"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "which-flavor-fits",
+      "prompt": "Which site flavor fits our toolkit repo? It's TypeScript, has a packages/ folder with one package per plugin, and each plugin only has a README.",
+      "expected_output": "Suggests the docs flavor, not workspaces: the plugin pages are a table of contents for functions, not distinct products. Also suggests typedoc because the source is TypeScript. Applies nothing until the maintainer confirms.",
+      "files": [
+        "evals/files/example-toolkit/README.md",
+        "evals/files/example-toolkit/package.json",
+        "evals/files/example-toolkit/packages/plugin-a/README.md",
+        "evals/files/example-toolkit/packages/plugin-a/package.json",
+        "evals/files/example-toolkit/packages/plugin-b/README.md",
+        "evals/files/example-toolkit/packages/plugin-b/package.json",
+        "evals/files/example-toolkit/tsconfig.json"
+      ],
+      "expectations": [
+        "Suggested the docs flavor, not workspaces",
+        "Suggested typedoc",
+        "Wrote no files",
+        "Asked the maintainer to confirm before applying"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "rework-existing-docusaurus-site",
+      "prompt": "example-cli already has a Docusaurus site in docs/. Rework it to match the studio standards.",
+      "expected_output": "Runs scripts/suggest.js (scenario new), treats the Docusaurus site the user described as the answer to existingSiteQuestion (a rework), & does not scaffold into docs/. Scaffolds beside it with --target (for example website), moves the install, usage, lede, & features into project.json, keeps the existing logo, keeps the URLs working, replaces the old Pages workflow by hand, & leaves the old site until the new one is live.",
+      "files": [
+        "evals/files/example-cli-docusaurus/README.md",
+        "evals/files/example-cli-docusaurus/cli.js",
+        "evals/files/example-cli-docusaurus/docs/docusaurus.config.js",
+        "evals/files/example-cli-docusaurus/docs/intro.md",
+        "evals/files/example-cli-docusaurus/package.json"
+      ],
+      "expectations": [
+        "Treated the user's statement as the answer to existingSiteQuestion: a rework",
+        "docs/docusaurus.config.js & docs/intro.md are unchanged",
+        "Scaffolded into a new directory with --target",
+        "Moved the install, usage, lede, & features into the new project.json",
+        "Told the maintainer to keep the old URLs working",
+        "Left the old site in place until the new one is live"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "migrate-site-to-another-flavor",
+      "prompt": "Our site was built with this skill as a landing page, but the project has grown. Move it to the docs flavor without losing our edits.",
+      "expected_output": "Reads the recorded flavor from package.json, runs the scaffold with --flavor docs --dry-run, & reports what would be replaced, kept as drift, & left as orphans, offers --prune, & never overwrites edited files.",
+      "files": [
+        "evals/files/example-cli-landing/README.md",
+        "evals/files/example-cli-landing/cli.js",
+        "evals/files/example-cli-landing/docs/src/_data/project.json",
+        "evals/files/example-cli-landing/package.json"
+      ],
+      "expectations": [
+        "Read the recorded flavor from package.json",
+        "Previewed the switch with --dry-run",
+        "Reported what would be replaced, kept, & orphaned",
+        "Offered --prune for the orphans",
+        "Changed no files before the maintainer confirmed"
+      ]
+    }
+  ]
+}

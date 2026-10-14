@@ -49,3 +49,7 @@ types
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# opx
+.opx/*
+!.opx/config.json

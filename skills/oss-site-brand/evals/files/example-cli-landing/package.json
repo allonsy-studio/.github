@@ -1,0 +1,17 @@
+{
+  "name": "@allons-y/example-cli",
+  "version": "1.0.0",
+  "description": "A command-line tool that does one job.",
+  "license": "MPL-2.0",
+  "repository": "allonsy-studio/example-cli",
+  "bin": {
+    "example": "cli.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "oss-docs": {
+    "site": "docs",
+    "flavor": "landing"
+  }
+}

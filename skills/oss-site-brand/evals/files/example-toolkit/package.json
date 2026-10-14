@@ -1,0 +1,10 @@
+{
+  "name": "example-toolkit",
+  "version": "1.0.0",
+  "description": "A toolkit made of independent plugins.",
+  "license": "Apache-2.0",
+  "repository": "allonsy-studio/example-toolkit",
+  "workspaces": [
+    "packages/*"
+  ]
+}

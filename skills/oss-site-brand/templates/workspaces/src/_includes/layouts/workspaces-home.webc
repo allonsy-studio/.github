@@ -1,0 +1,31 @@
+---
+layout: layouts/base.webc
+---
+<header>
+	<h1>
+		<span @text="$data.site.name"></span>
+		<span @text="$data.site.tagline"></span>
+	</h1>
+	<p @text="$data.project.lede || $data.site.description"></p>
+	<nav aria-label="Get started">
+		<ul>
+			<li><a href="#packages">Browse packages</a></li>
+			<li><a :href="$data.site.repo">View on GitHub</a></li>
+		</ul>
+	</nav>
+</header>
+
+<section id="install" aria-labelledby="install-title">
+	<h2 id="install-title">Install</h2>
+	<code-sample
+		language="sh"
+		:@code="$data.project.install || 'npm install ' + $data.site.packageName"
+	></code-sample>
+</section>
+
+<section id="packages" aria-labelledby="packages-title">
+	<h2 id="packages-title">Packages</h2>
+	<package-index
+		:@packages="$data.workspaces.map((workspace) => ({ name: workspace.name, description: workspace.description, href: workspace.url }))"
+	></package-index>
+</section>
