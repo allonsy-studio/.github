@@ -93,7 +93,7 @@
 		inset: -1px;
 		inline-size: calc(100% + 2px);
 		block-size: 1em;
-		border-radius: 3px;
+		border-radius: var(--radius) var(--radius) 0 0;
 		background: var(--feature);
 	}
 
