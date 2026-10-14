@@ -36,7 +36,7 @@ Needs Node 24+ & `yarn install` in this directory. Run the scripts from the proj
 2. **Scaffold.** `node scripts/scaffold.js --target docs --flavor landing`. It records the site & flavor in `package.json`, reports drift, never overwrites the project layer, & flags edits to studio files: fix those with `--update`, never keep them. Changing flavors, previews (`--dry-run`), & cleanup (`--prune`): `references/site-config.md`. Layer rules: `references/architecture.md`.
 3. **Project layer.** Edit `docs/_data/project.json`; ask for the accent if the project has none. Fields: `references/project-layer.md`; rerunning the scaffold checks the file once. Color & fonts: `references/typography-and-color.md`.
 4. **Wordmark.** The skill does not make marks: tell the maintainer the project needs its own wordmark (logo) & favicon in `docs/content/assets/img/`, set as `logo` & `favicon` in `project.json`. Never block on this.
-5. **Wire package.json.** Add the devDependencies & scripts the scaffold prints. Never write a license, license URL, or contact address into a template: the license is read from `package.json`.
+5. **Wire package.json.** Add the devDependencies & scripts the scaffold prints. Never write a license, license URL, or contact address into a template by hand: the scaffold resolves the license from `package.json` into `_data/site.js`.
 6. **Build & check.** `yarn docs:build`, then `yarn docs:test`: Cypress runs axe (WCAG 2.2 AA) on every built page in light, dark, & forced-colors. Fix every failure; never loosen the config or edit a locked file to pass. Detail: `references/testing.md`.
 7. **Report.** The flavor & whether it was confirmed or applied unattended, the tooling suggestions (typedoc for TypeScript, jsdoc for JavaScript), that the project still needs a wordmark, any drift or locked-file edits, & the Cypress result.
 
@@ -44,7 +44,7 @@ Needs Node 24+ & `yarn install` in this directory. Run the scripts from the proj
 
 - Studio layer: locked. A project may opt out whole with `"studio": false` under `oss-docs` in `package.json`, never edit it.
 - Contacts: the sales address appears only in the footer call to action; conduct & security contacts live in the org's `CODE_OF_CONDUCT.md` & `SECURITY.md`, which the footer links. Never a personal, hey, Gmail, or iCloud address, the `.llc` domain, or a `twitter:card` tag.
-- Licenses are read from `package.json`; which license a project takes is set in `AGENTS.md` (Licensing).
+- Licenses are resolved from `package.json` by the scaffold; which license a project takes is set in `AGENTS.md` (Licensing).
 - Theme follows the system (light & dark). No theme switcher.
 - Monospace is locked (PT Mono). Projects override sans & display only.
 - Accent shades & the on-accent color are CSS derived from the accent. Never assume white text on it: the Cypress audit catches a failing pair.

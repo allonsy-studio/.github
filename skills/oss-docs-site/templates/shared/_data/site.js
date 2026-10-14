@@ -1,15 +1,21 @@
-// Site facts; logic lives in utilities/site.js.
+// Site facts, resolved from package.json when the scaffold ran: edit them here.
 
-import path from "node:path";
+import project from "./project.json" with { type: "json" };
 
-import { buildSite } from "../utilities/site.js";
-
-export default function () {
-	// Two levels up to the project root: <root>/<site>/_data.
-	const root = path.resolve(import.meta.dirname, "..", "..");
-	return buildSite({
-		packagePath:
-			process.env.SITE_PACKAGE_JSON ?? path.join(root, "package.json"),
-		projectPath: path.join(import.meta.dirname, "project.json"),
-	});
-}
+export default {
+	name: "{{NAME}}",
+	packageName: "{{PACKAGE_NAME}}",
+	tagline: project.tagline ?? "{{TAGLINE}}",
+	description: "{{DESCRIPTION}}",
+	studio: "{{STUDIO}}",
+	license: "{{LICENSE}}",
+	licenseUrl: "{{LICENSE_URL}}",
+	repo: "{{REPO}}",
+	repoName: "{{REPO_NAME}}",
+	npm: "{{NPM}}",
+	node: "{{NODE}}",
+	url: (project.url ?? "{{URL}}").replace(/\/?$/, "/"),
+	issuesUrl: "{{ISSUES_URL}}",
+	contributingUrl: "{{CONTRIBUTING_URL}}",
+	changelogUrl: "{{CHANGELOG_URL}}",
+};

@@ -17,7 +17,7 @@
         "Asked whether a website already exists that isn't built with 11ty",
         "docs/ holds the landing flavor & package.json records oss-docs with site & flavor",
         "contact@allons-y.studio appears only in the footer call to action",
-        "No license identifier or personal email address was written into docs/",
+        "No license identifier or personal email address was hand-written into docs/: the license appears only as resolved from package.json in _data/site.js",
         "Told the maintainer the project needs its own wordmark & favicon",
         "Ran yarn docs:build & yarn docs:test & reported the result"
       ]

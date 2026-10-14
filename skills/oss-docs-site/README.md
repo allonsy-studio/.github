@@ -16,7 +16,7 @@ node scripts/scaffold.js --flavor landing         # scaffold the site into docs/
 node scripts/scaffold.js --flavor docs --dry-run  # preview a flavor switch
 ```
 
-The scaffold records the site directory & flavor under `oss-docs` in the project's `package.json`, so later runs need no arguments. Options & behavior: `references/site-config.md`.
+The scaffold records the site directory & flavor under `oss-docs` in the project's `package.json`, so later runs need no arguments. It also resolves the site facts (name, license, links) from `package.json` into the site's `_data/site.js`. Options & behavior: `references/site-config.md`.
 
 ## Flavors
 

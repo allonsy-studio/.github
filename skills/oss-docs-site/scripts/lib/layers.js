@@ -47,10 +47,8 @@ export const SITE_DEV_DEPENDENCIES = Object.freeze({
 	"axe-core": "^4.11.0",
 	cypress: "^15.21.1",
 	"cypress-axe": "^1.7.0",
-	"hosted-git-info": "^8.1.0",
 	"markdown-it": "^14.1.0",
 	prismjs: "^1.30.0",
-	semver: "^7.7.0",
 });
 
 /** Studio tooling every repository carries: opx for linting, dashly for template skills. */

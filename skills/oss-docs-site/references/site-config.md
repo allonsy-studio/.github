@@ -1,6 +1,6 @@
 # Site settings
 
-A project records how its site is built under the `oss-docs` key of its own `package.json`. The scaffold writes the key; the maintainer edits it. The key's name lives in this skill's `package.json` (`skill.settingsKey`), & the scaffold fills it into the project's `utilities/site.js`. Content & brand (accent, copy, fonts) stay in `_data/project.json` (`references/project-layer.md`).
+A project records how its site is built under the `oss-docs` key of its own `package.json`. The scaffold writes the key; the maintainer edits it. The key's name lives in this skill's `package.json` (`skill.settingsKey`). Content & brand (accent, copy, fonts) stay in `_data/project.json`, & the facts resolved from `package.json` are in `_data/site.js` (`references/project-layer.md`).
 
 ```json
 {
@@ -17,7 +17,7 @@ A project records how its site is built under the `oss-docs` key of its own `pac
 | --- | --- | --- | --- |
 | `site` | string | `docs` | Site directory, relative to the repository root & inside it |
 | `flavor` | `landing`, `docs`, `workspaces` | none | The confirmed flavor, used without asking |
-| `studio` | boolean | `true` | `false` opts out of the studio layer. The files stay locked |
+| `studio` | boolean | `true` | `false` opts out of the studio layer. The files stay locked. Resolved into `_data/site.js`: delete it & rerun, or pass `--update`, after changing it |
 | `signals.nestedDocs` | boolean | detected | Answers "does each workspace get its own docs page?" so `suggest.js` stops guessing |
 | `signals.singleAction` | boolean | detected | Answers "does one page cover install & usage?" |
 

@@ -24,6 +24,7 @@ import {
 } from "./lib/layers.js";
 import { writeRecorded } from "./lib/package-config.js";
 import { checkProject } from "./lib/project.js";
+import { siteFacts } from "./lib/site-facts.js";
 import { CONFIG_KEY, DEFAULT_SITE, readSiteConfig } from "./lib/settings.js";
 import { assertInScope } from "./lib/scope.js";
 
@@ -39,14 +40,22 @@ const DEFAULT_FLAVOR = "landing";
 
 const posix = (p) => p.split(path.sep).join("/");
 
-const PLACEHOLDERS = { "{{SETTINGS_KEY}}": CONFIG_KEY, "{{OUTPUT_DIR}}": OUTPUT_DIR };
+/** Site-relative file holding the facts resolved from package.json: created once, then the project's. */
+const RESOLVED_FILE = "_data/site.js";
 
-/** Fill the placeholders a template file names. */
-const render = (content) => {
-	const text = content.toString();
-	return Object.keys(PLACEHOLDERS).some((name) => text.includes(name))
-		? Buffer.from(Object.entries(PLACEHOLDERS).reduce((out, [name, value]) => out.replaceAll(name, value), text))
-		: content;
+/**
+ * Fill a template's placeholders: `{{OUTPUT_DIR}}` as text, & each quoted `"{{FACT}}"` with its value as a JS literal.
+ *
+ * @param {Buffer | string} content
+ * @param {Record<string, string | boolean | null>} [facts]
+ * @returns {Buffer}
+ */
+const render = (content, facts = {}) => {
+	const text = Object.entries(facts).reduce(
+		(out, [name, value]) => out.replaceAll(`"{{${name}}}"`, JSON.stringify(value)),
+		content.toString().replaceAll("{{OUTPUT_DIR}}", OUTPUT_DIR),
+	);
+	return Buffer.from(text);
 };
 
 const hasFiles = (dir) => existsSync(dir) && readdirSync(dir).length > 0;
@@ -95,6 +104,7 @@ export async function scaffold({
 	}
 	const pkg = JSON.parse(readFileSync(packagePath, "utf8"));
 	assertInScope(pkg, packagePath);
+	const facts = siteFacts(pkg, packagePath);
 	const config = readSiteConfig(pkg);
 	const configuredSite = typeof config.site === "string" ? config.site : DEFAULT_SITE;
 	const recorded = pkg[CONFIG_KEY];
@@ -159,7 +169,12 @@ export async function scaffold({
 
 	const incoming = templateFiles(flavor, { coreDir });
 	for (const { rel, source, layer } of incoming) {
-		put(path.join(siteDir, rel === CYPRESS_CONFIG ? cypressConfigName(pkg) : rel), render(readFileSync(source)), {
+		const dest = path.join(siteDir, rel === CYPRESS_CONFIG ? cypressConfigName(pkg) : rel);
+		if (rel === RESOLVED_FILE && existsSync(dest) && !update) {
+			actions.push({ path: posix(path.relative(repoRoot, dest)), status: "kept (resolved site facts)" });
+			continue;
+		}
+		put(dest, render(readFileSync(source), facts), {
 			locked: studio.has(rel),
 			rel,
 			layer,
@@ -252,6 +267,7 @@ function nextSteps({ siteRel, drift, orphans, projectProblems, movedFrom }) {
 		`Add scripts: ${JSON.stringify(scripts)}.`,
 		`Ignore ${siteRel}/${OUTPUT_DIR}, ${siteRel}/_a11y, and ${siteRel}/cypress/screenshots in .gitignore.`,
 		"Commit .nvmrc and yarn.lock: the shared Pages workflow reads the Node version from .nvmrc and installs with --immutable.",
+		`${siteRel}/_data/site.js holds the facts resolved from package.json (name, license, links): edit it there. After package.json changes, delete it & rerun, or pass --update.`,
 		`Fill ${siteRel}/_data/project.json (accent, lede, install, usage, features).`,
 		`Add a wordmark: the project supplies its own logo & favicon in ${siteRel}/content/assets/img/ (set \`logo\` & \`favicon\` in project.json). The skill does not make marks.`,
 		"Check accessibility: yarn docs:test runs Cypress with axe (WCAG 2.2 AA) in light, dark, & forced-colors. Cypress downloads its own browser on install.",

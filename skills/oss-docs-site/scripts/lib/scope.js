@@ -7,7 +7,8 @@ import hostedGitInfo from "hosted-git-info";
 
 import { SKILL_ROOT } from "./layers.js";
 
-const repositoryOf = (pkg) => (typeof pkg.repository === "string" ? pkg.repository : pkg.repository?.url);
+/** @param {Record<string, any>} pkg a parsed package.json */
+export const repositoryOf = (pkg) => (typeof pkg.repository === "string" ? pkg.repository : pkg.repository?.url);
 
 /** The org is the GitHub owner in the root `package.json` of the checkout this skill lives in. */
 function checkoutOrg() {
