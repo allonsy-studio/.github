@@ -15,7 +15,7 @@ const cache = new Map();
  * @param {string} name `solid` icon name, or `brands/name` & `regular/name`
  * @returns {string}
  */
-export function icon(name) {
+export function faIcon(name) {
 	const match = NAME.exec(name);
 	if (!match) throw new Error(`Invalid icon name "${name}": use "name", "brands/name", or "regular/name".`);
 	if (!cache.has(name)) {

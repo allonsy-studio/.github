@@ -11,7 +11,7 @@ import webc from "@11ty/eleventy-plugin-webc";
 
 import { bundleCss } from "./utilities/bundle-css.js";
 import { highlightFences, tokenRanges } from "./utilities/highlight.js";
-import { icon, iconType } from "./utilities/icons.js";
+import { faIcon, iconType } from "./utilities/icons.js";
 
 // Anchored to this file so the build runs from the repository root or docs/.
 const here = path.relative(process.cwd(), import.meta.dirname) || ".";
@@ -34,7 +34,7 @@ export default function (config) {
 	config.addPlugin(HtmlBasePlugin);
 
 	config.addJavaScriptFunction("tokenRanges", tokenRanges);
-	config.addJavaScriptFunction("icon", icon);
+	config.addJavaScriptFunction("faIcon", faIcon);
 	config.addJavaScriptFunction("iconType", iconType);
 	config.amendLibrary("md", highlightFences);
 
