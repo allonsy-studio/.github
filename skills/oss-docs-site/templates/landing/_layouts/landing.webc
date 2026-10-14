@@ -9,31 +9,35 @@ layout: base.webc
 	<p @text="$data.project.lede || $data.site.description"></p>
 	<nav aria-label="Get started">
 		<ul>
-			<li><a href="#install">Get started</a></li>
-			<li><a :href="$data.site.repo">View on GitHub</a></li>
+			<li><a href="#install"><fa-icon @name="rocket"></fa-icon> Get started</a></li>
+			<li><a :href="$data.site.repo"><fa-icon @name="brands/github"></fa-icon> View on GitHub</a></li>
 		</ul>
 	</nav>
 	<ul>
-		<li>Free & open source</li>
-		<li>License: <span data-license @text="$data.site.license"></span></li>
-		<li webc:if="$data.site.node">Node <span @text="$data.site.node"></span></li>
+		<li><fa-icon @name="brands/osi"></fa-icon> Free & open source</li>
+		<li><fa-icon @name="scale-balanced"></fa-icon> License: <span data-license @text="$data.site.license"></span></li>
+		<li webc:if="$data.site.node"><fa-icon @name="brands/node-js"></fa-icon> Node <span @text="$data.site.node"></span></li>
 	</ul>
+	<code-sample
+		webc:if="$data.project.usage"
+		:@language="$data.project.usage.language"
+		:@code="$data.project.usage.code"
+		:@caption="$data.project.usage.caption"
+		@anchor="usage"
+	></code-sample>
+	<code-sample
+		webc:else
+		language="sh"
+		:@code="$data.project.install || 'npm install ' + $data.site.packageName"
+		@anchor="install"
+	></code-sample>
 </header>
 
-<section id="install" aria-labelledby="install-title">
+<section webc:if="$data.project.usage" id="install" aria-labelledby="install-title">
 	<h2 id="install-title">Install</h2>
 	<code-sample
 		language="sh"
 		:@code="$data.project.install || 'npm install ' + $data.site.packageName"
-	></code-sample>
-</section>
-
-<section webc:if="$data.project.usage" id="usage" aria-labelledby="usage-title">
-	<h2 id="usage-title">Usage</h2>
-	<code-sample
-		:@language="$data.project.usage.language"
-		:@code="$data.project.usage.code"
-		:@caption="$data.project.usage.caption"
 	></code-sample>
 </section>
 

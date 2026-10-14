@@ -47,6 +47,12 @@
 		--studio-teal: #1f91ad;
 		--studio-yellow: #ffd36b;
 
+		/* Card accents, in order: the project color, then the studio palette. */
+		--feature-1: var(--accent);
+		--feature-2: var(--studio-orange);
+		--feature-3: var(--studio-teal);
+		--feature-4: var(--studio-yellow);
+
 		/* Shape & rhythm */
 		--radius: 0.5rem;
 		--space-xs: 0.5rem;

@@ -100,7 +100,7 @@
 
 	[data-studio="footer"] {
 		display: block;
-		inline-size: 13.75rem;
 		max-inline-size: 100%;
+		margin-inline-start: auto;
 	}
 }

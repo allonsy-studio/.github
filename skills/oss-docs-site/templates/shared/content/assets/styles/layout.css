@@ -145,13 +145,18 @@
 	}
 
 	main > header h1 > :last-child {
-		color: var(--fg-muted);
+		color: var(--accent-text);
 		font-weight: 400;
 	}
 
 	main > header > p {
 		max-inline-size: var(--measure);
 		font-size: 1.2rem;
+	}
+
+	/* Variant for the code sample: read by @container style() in components.css */
+	main > header {
+		--chrome: terminal;
 	}
 
 	main > header nav ul {
