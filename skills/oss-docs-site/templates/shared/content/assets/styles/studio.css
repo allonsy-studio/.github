@@ -59,11 +59,11 @@
 	}
 
 	[data-studio="cta"] > div > p:has(+ h2) {
-		color: var(--studio-link);
-		font-size: 0.8rem;
-		font-weight: 700;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
+		color: inherit;
+		font-size: inherit;
+		font-weight: 600;
+		letter-spacing: normal;
+		text-transform: none;
 	}
 
 	[data-studio="cta"] h2 {
