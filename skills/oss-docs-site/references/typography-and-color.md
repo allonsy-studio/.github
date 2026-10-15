@@ -7,7 +7,7 @@ A project may bring its own font families, but the monospace is the same everywh
 | Token | Rule |
 | --- | --- |
 | `--font-sans` | Default: `--sans-stack`, the system UI stack from `tokens.css`. A project may put its own family in front of it |
-| `--font-display` | Headings & the brand link; defaults to `--font-sans`. Keep it a legible face, not a script |
+| `--font-display` | Headings & the brand link; defaults to `--font-sans`. |
 | `--font-signature` | Yellowtail. Signing a name only, an ultra-limited use: never headings, tag lines, or running text. Opt in per element |
 | `--font-mono` | Locked: PT Mono, then the platform monospace fonts. Not overridable |
 
