@@ -55,8 +55,9 @@ export default function (config) {
 		{ filter: ["**/*", `!styles/{${CORE_SHEETS.join(",")}}.css`] },
 	);
 	config.addWatchTarget(at("content/assets/styles"));
-	config.on("eleventy.after", ({ dir }) => {
-		const out = path.join(dir.output, "assets/styles");
+	// `directories.output` is where this build writes (the audit overrides it); `dir.output` is only the config's.
+	config.on("eleventy.after", ({ directories }) => {
+		const out = path.join(directories.output, "assets/styles");
 		mkdirSync(out, { recursive: true });
 		writeFileSync(path.join(out, "core.css"), bundleCss(at("content/assets/styles"), CORE_SHEETS));
 	});
