@@ -30,7 +30,7 @@ Locked files: any edit is reported as a locked-file edit on rerun, & `--update` 
 - `_data/studio.js`, `content/assets/styles/studio.css`
 - `content/assets/img/studio/*.svg` (banner, footer credit, & mark), copied from the org's `assets/svg/` (the single source: edit them there & list the change in the pull request)
 
-`_data/studio.js` fetches `https://allons-y.studio/api/meta.json` (cached for a day), so a build needs the network or a cached copy. The endpoint's `name`, `url`, `contact`, `conductUrl`, `securityUrl`, & image sizes are used as returned. Images load from the local copies above, & the call to action copy & links are set in `studio.js`, following the studio blog's post outro.
+`_data/studio.js` fetches `https://allons-y.studio/api/meta.json` (cached for a day), so a build needs the network or a cached copy. The endpoint's `name`, `url`, `contact`, `conductUrl`, `securityUrl`, `cta`, & image sizes are used as returned. Images load from the local copies above. The call to action (`cta`: `eyebrow`, `title`, `body`, & `actions`) is read as returned, so its copy & links change in the studio website's `utilities/api/meta.js`; without `actions` it falls back to an email button.
 
 The banner comes before `main`, with a four-color stripe under the header. The call to action opens the footer, above the project lock-up (name, link columns, & the studio credit). `consulting@allons-y.studio` appears only in the call to action. The studio styles read only `--studio-*` tokens, so a project accent never changes them.
 
