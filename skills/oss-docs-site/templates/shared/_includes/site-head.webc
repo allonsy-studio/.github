@@ -16,7 +16,12 @@
 <meta property="og:title" :content="$data.site.name + ': ' + $data.site.tagline" />
 <meta property="og:description" :content="$data.site.description" />
 <meta property="og:url" :content="$data.site.url" />
+<meta webc:if="$data.project.ogImage" property="og:image" :content="$data.site.url + 'assets/img/' + $data.project.ogImage" />
+<meta webc:if="$data.project.ogImage" property="og:image:width" content="1200" />
+<meta webc:if="$data.project.ogImage" property="og:image:height" content="630" />
+<meta webc:if="$data.project.ogImage" property="og:image:alt" :content="$data.site.name + ': ' + $data.site.tagline" />
 
+<link webc:if="$data.project.faviconIco" rel="icon" :href="'/assets/img/' + $data.project.faviconIco" sizes="32x32" />
 <link
 	webc:if="$data.project.favicon"
 	rel="icon"

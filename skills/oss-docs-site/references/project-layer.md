@@ -8,4 +8,4 @@ Settings (flavor, site directory, studio opt-out) live in `package.json`, not he
 
 Copy: lead with what the project does for the reader, keep `features` to three to six (each may name a Font Awesome Free `icon`, such as `plug` or `brands/github`), & keep `usage` to one copy-pasteable snippet: the landing hero shows it, or the install command when there is none.
 
-Icons: `favicon` takes an svg, png, ico, or webp; `appleTouchIcon` is an optional 180px png. Both live in `content/assets/img/`.
+Icons: `favicon` takes an svg, png, ico, or webp; `appleTouchIcon` is an optional 180px png; `faviconIco` is an optional legacy .ico linked beside the SVG; `ogImage` is an optional 1200×630 png for link previews. All live in `content/assets/img/`. The `brand-assets` skill makes & sets every one of them.

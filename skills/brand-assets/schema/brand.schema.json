@@ -1,0 +1,152 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://github.com/allonsy-studio/.github/blob/main/skills/brand-assets/schema/brand.schema.json",
+	"title": "Brand asset spec",
+	"description": "One design direction for a project's wordmark & icons. scripts/build.js turns it into SVGs. Lengths are in em of `size` unless a field says otherwise.",
+	"type": "object",
+	"required": ["name", "font", "palette"],
+	"additionalProperties": false,
+	"properties": {
+		"$schema": { "type": "string" },
+		"name": { "description": "The project name: the SVG <title> & the alt text.", "type": "string", "minLength": 1 },
+		"text": { "description": "The letters drawn; defaults to `name`.", "type": "string", "minLength": 1 },
+		"concept": { "description": "One line on the metaphor, shown on the contact sheet.", "type": "string" },
+		"font": {
+			"type": "object",
+			"required": ["file"],
+			"additionalProperties": false,
+			"properties": {
+				"file": { "description": "woff2, woff, ttf, or otf; relative to the spec file.", "type": "string" },
+				"axes": {
+					"description": "Variation settings such as { \"wght\": 700 }. Axes the font lacks are ignored & reported.",
+					"type": "object",
+					"additionalProperties": { "type": "number" }
+				}
+			}
+		},
+		"size": { "description": "Font size in pixels of the master drawing.", "type": "number", "exclusiveMinimum": 0, "default": 100 },
+		"tracking": { "description": "Extra space between letters, in em.", "type": "number", "default": 0 },
+		"skew": { "description": "Forward lean in degrees (a fake italic).", "type": "number", "minimum": -30, "maximum": 30, "default": 0 },
+		"padding": { "description": "Space around the drawing, in em.", "type": "number", "minimum": 0, "default": 0.18 },
+		"surfaces": {
+			"description": "Page backgrounds the mark sits on; defaults are the oss-docs-site tokens.",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"light": { "type": "string", "default": "#ffffff" },
+				"dark": { "type": "string", "default": "#101216" }
+			}
+		},
+		"palette": {
+			"description": "Named paints. Each becomes a class in the SVG, so light & dark swap inside one file.",
+			"type": "object",
+			"minProperties": 1,
+			"propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" },
+			"additionalProperties": {
+				"type": "object",
+				"required": ["light"],
+				"additionalProperties": false,
+				"properties": {
+					"light": { "type": "string" },
+					"dark": { "description": "Defaults to `light`.", "type": "string" },
+					"role": {
+						"description": "Sets the contrast target: text 4.5:1, graphic 3:1, decorative reported only.",
+						"enum": ["text", "graphic", "decorative"],
+						"default": "text"
+					}
+				}
+			}
+		},
+		"gradients": {
+			"description": "Gradients across several glyphs, in the drawing's own space so the letters read as one unit.",
+			"type": "object",
+			"propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" },
+			"additionalProperties": {
+				"type": "object",
+				"required": ["stops"],
+				"additionalProperties": false,
+				"properties": {
+					"stops": {
+						"description": "Palette names or literal colours, start to end.",
+						"type": "array",
+						"minItems": 2,
+						"items": { "type": "string" }
+					},
+					"direction": { "enum": ["diagonal", "horizontal", "vertical"], "default": "diagonal" }
+				}
+			}
+		},
+		"paint": {
+			"description": "Which paint each letter takes. Keys: `*`, a 0-based index, or an inclusive range `4-5`. Values: a palette name or `@gradient`.",
+			"type": "object",
+			"propertyNames": { "pattern": "^(\\*|\\d+|\\d+-\\d+)$" },
+			"additionalProperties": { "type": "string" }
+		},
+		"motion": {
+			"description": "Speed lines behind the leading letter, right-aligned, inside the x-height band.",
+			"type": "object",
+			"required": ["lines"],
+			"additionalProperties": false,
+			"properties": {
+				"lines": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["length", "paint"],
+						"additionalProperties": false,
+						"properties": {
+							"length": { "type": "number", "exclusiveMinimum": 0 },
+							"paint": { "type": "string" }
+						}
+					}
+				},
+				"thickness": { "type": "number", "exclusiveMinimum": 0, "default": 0.08 },
+				"gap": { "description": "Space between the lines' right edge & the text.", "type": "number", "default": 0.08 },
+				"inset": { "description": "Space above the baseline below the last line.", "type": "number", "default": 0.05 }
+			}
+		},
+		"decorations": {
+			"description": "Extra rectangles relative to the baseline origin (y up is negative), for concept sketches such as a cursor or stripe.",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": ["x", "y", "width", "height", "paint"],
+				"additionalProperties": false,
+				"properties": {
+					"x": { "type": "number" },
+					"y": { "type": "number" },
+					"width": { "type": "number", "exclusiveMinimum": 0 },
+					"height": { "type": "number", "exclusiveMinimum": 0 },
+					"radius": { "type": "number", "minimum": 0, "default": 0 },
+					"paint": { "type": "string" },
+					"layer": { "enum": ["behind", "front"], "default": "behind" },
+					"skew": { "description": "Lean with the letters.", "type": "boolean", "default": true }
+				}
+			}
+		},
+		"favicon": {
+			"description": "The square icon: one glyph on a tile. Also feeds the touch icon, .ico, & Open Graph image.",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"glyph": { "description": "Defaults to the first letter of `text`.", "type": "string", "minLength": 1 },
+				"tile": { "description": "A palette name, `@gradient`, or literal colour.", "type": "string" },
+				"ink": { "description": "The glyph colour: a palette name or literal colour.", "type": "string", "default": "#ffffff" },
+				"radius": { "description": "Tile corner radius as a fraction of the tile.", "type": "number", "minimum": 0, "maximum": 0.5, "default": 0.22 },
+				"scale": { "description": "Glyph size as a fraction of the tile.", "type": "number", "exclusiveMinimum": 0, "maximum": 1.2, "default": 0.72 },
+				"dashes": { "description": "Speed dashes beside the glyph; two survive at 16px, three do not.", "type": "integer", "minimum": 0, "maximum": 3, "default": 0 }
+			}
+		},
+		"og": {
+			"description": "Open Graph image settings.",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"tagline": { "description": "Defaults to project.json `tagline`.", "type": "string" },
+				"url": { "description": "Small line under the tagline, such as the site address without the scheme.", "type": "string" },
+				"accent": { "description": "Bar along the bottom edge: a palette name, `@gradient`, or literal colour.", "type": "string" }
+			}
+		}
+	}
+}

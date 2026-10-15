@@ -1,0 +1,29 @@
+{
+	"$schema": "../../schema/brand.schema.json",
+	"name": "dashly",
+	"concept": "Speed: dashes trail the leading d; the l & y share one sunrise gradient.",
+	"font": { "file": "../../../../assets/fonts/instrument-sans-var.woff2", "axes": { "wght": 700 } },
+	"size": 100,
+	"skew": 11,
+	"palette": {
+		"ink": { "light": "#16181d", "dark": "#eceef3" },
+		"hot": { "light": "#d22d6f", "dark": "#ff7aa8" },
+		"sunset": { "light": "#e8700f", "dark": "#ff944d", "role": "graphic" },
+		"o": { "light": "#e07a1f", "dark": "#ff944d", "role": "graphic" },
+		"y": { "light": "#e5ac00", "dark": "#ffd36b", "role": "decorative" }
+	},
+	"gradients": {
+		"sunrise": { "stops": ["hot", "sunset"] },
+		"tile": { "stops": ["#d22d6f", "#e8700f"] }
+	},
+	"paint": { "*": "ink", "4-5": "@sunrise" },
+	"motion": {
+		"lines": [
+			{ "length": 0.56, "paint": "hot" },
+			{ "length": 0.92, "paint": "o" },
+			{ "length": 0.4, "paint": "y" }
+		]
+	},
+	"favicon": { "tile": "@tile", "ink": "#ffffff", "dashes": 2 },
+	"og": { "tagline": "A standard library of filters, transforms, & shortcodes for Eleventy", "url": "projects.allons-y.studio/dashly", "accent": "@sunrise" }
+}
