@@ -185,17 +185,21 @@ export function commandsToPath(commands, scale, dx = 0) {
  * @property {number} x Pen position in pixels.
  * @property {number} advance Pixels.
  * @property {{ minX: number, minY: number, maxX: number, maxY: number }} bbox Pixels, y down; empty glyphs are zero size at the pen.
+ * @property {{ minX: number, minY: number, maxX: number, maxY: number }} inkBox Like `bbox`, measured on the slanted outline when `skew` is set, so centring follows the ink, not the slanted corners of the upright box.
  */
 
 /**
  * Lay out & outline text. Kerning & ligatures come from the font's own layout.
  * @param {import("fontkit").Font} font An instanced font.
  * @param {string} text
- * @param {{ size: number, tracking?: number }} options Size in pixels; tracking in em.
+ * @param {{ size: number, tracking?: number, skew?: number }} options Size in pixels; tracking in em; skew in degrees, as the SVG applies it.
  * @returns {{ glyphs: OutlinedGlyph[], advance: number, metrics: { ascent: number, descent: number, capHeight: number, xHeight: number } }}
  */
-export function outline(font, text, { size, tracking = 0 }) {
+export function outline(font, text, { size, tracking = 0, skew = 0 }) {
 	const scale = size / font.unitsPerEm;
+	const tan = Math.tan((skew * Math.PI) / 180);
+	/** @param {{ minX: number, minY: number, maxX: number, maxY: number }} b Font units, y up. */
+	const toPixels = (b, x) => ({ minX: b.minX * scale + x, minY: -b.maxY * scale, maxX: b.maxX * scale + x, maxY: -b.minY * scale });
 	const run = font.layout(text);
 	const chars = [...text];
 	const glyphs = [];
@@ -205,6 +209,8 @@ export function outline(font, text, { size, tracking = 0 }) {
 		const position = run.positions[i];
 		const x = pen + position.xOffset * scale;
 		const pathBox = glyph.path.commands.length ? glyph.path.bbox : null;
+		// skewX(-angle) in SVG space is x' = x + tan·y in font space (y up).
+		const inkBox = pathBox && tan ? glyph.path.transform(1, 0, tan, 1, 0, 0).bbox : pathBox;
 		const char = glyph.codePoints.length ? String.fromCodePoint(...glyph.codePoints) : chars[index] ?? "";
 		if (glyph.id === 0 && char.trim()) {
 			throw new Error(`${familyOf(font)} has no glyph for "${char}".`);
@@ -215,14 +221,8 @@ export function outline(font, text, { size, tracking = 0 }) {
 			d: commandsToPath(glyph.path.commands, scale, x),
 			x,
 			advance: position.xAdvance * scale,
-			bbox: pathBox
-				? {
-					minX: pathBox.minX * scale + x,
-					minY: -pathBox.maxY * scale,
-					maxX: pathBox.maxX * scale + x,
-					maxY: -pathBox.minY * scale,
-				}
-				: { minX: x, minY: 0, maxX: x, maxY: 0 },
+			bbox: pathBox ? toPixels(pathBox, x) : { minX: x, minY: 0, maxX: x, maxY: 0 },
+			inkBox: inkBox ? toPixels(inkBox, x) : { minX: x, minY: 0, maxX: x, maxY: 0 },
 		});
 		pen += position.xAdvance * scale + tracking * size;
 		index += Math.max(1, glyph.codePoints.length);

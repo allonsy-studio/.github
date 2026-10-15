@@ -14,9 +14,10 @@ import {
 	tileCandidates,
 	validateFamily,
 } from "../scripts/family.js";
+import { browserAvailable, rasterize, withBrowser } from "../scripts/lib/browser.js";
 import { instance, loadFont } from "../scripts/lib/font.js";
 import { loadSpec } from "../scripts/lib/spec.js";
-import { TILE, buildFavicon } from "../scripts/lib/svg.js";
+import { buildFavicon } from "../scripts/lib/svg.js";
 import { wirePackages } from "../scripts/wire.js";
 import { DASHLY, tempDir } from "./helpers.js";
 
@@ -84,7 +85,7 @@ describe("family file", () => {
 	});
 
 	it("draws only the glyph unless a wordmark is wanted", () => {
-		assert.deepEqual(packagePatch({ slug: "skill-x", glyph: "x" }), { name: "skill-x", text: "x", favicon: { align: "baseline", glyph: "x" } });
+		assert.deepEqual(packagePatch({ slug: "skill-x", glyph: "x" }), { name: "skill-x", text: "x", favicon: { glyph: "x" } });
 		assert.equal(packagePatch({ slug: "skill-x", wordmark: true, text: "x-ray" }).text, "x-ray");
 	});
 
@@ -139,27 +140,33 @@ describe("buildFamily & wirePackages", () => {
 		assert.ok(!existsSync(path.join(img, "skill-design-system-wordmark.svg")));
 	});
 
-	it("puts every baseline-aligned icon on one size & one baseline", async () => {
+	it("centres each icon's letters in its own tile", async (t) => {
+		if (!(await browserAvailable())) return t.skip("Chromium unavailable");
 		const work = tempDir();
 		const family = path.join(work, "family.json");
-		const glyphs = ["a", "d", "g", "i", "s", "ds", "dv"];
+		const glyphs = ["a", "d", "g", "i", "ds"];
 		writeFileSync(family, JSON.stringify({ base: DASHLY, packages: glyphs.map((glyph, i) => ({ slug: `p${i}`, glyph, patch: { favicon: { dashes: 0 } } })) }));
 		const out = path.join(work, "out");
-		const { layout } = await buildFamily(family, out);
-		const baselines = glyphs.map((_, i) => {
-			const svg = readFileSync(path.join(out, `p${i}`, "favicon.svg"), "utf8");
-			return Number(/<g transform="translate\([\d.-]+ ([\d.-]+)\) skewX/.exec(svg)[1]);
+		await buildFamily(family, out);
+		const size = 256;
+		await withBrowser(async (browser) => {
+			for (const [i, glyph] of glyphs.entries()) {
+				const svg = readFileSync(path.join(out, `p${i}`, "favicon.svg"), "utf8");
+				const { data } = await rasterize(browser, svg, { width: size, height: size });
+				// The letters are the white pixels; their box should sit in the middle of the tile.
+				let [minX, minY, maxX, maxY] = [size, size, 0, 0];
+				for (let p = 0; p < size * size; p++) {
+					if (data[p * 4] > 240 && data[p * 4 + 1] > 240 && data[p * 4 + 2] > 240) {
+						const x = p % size;
+						const y = Math.floor(p / size);
+						[minX, minY, maxX, maxY] = [Math.min(minX, x), Math.min(minY, y), Math.max(maxX, x), Math.max(maxY, y)];
+					}
+				}
+				const dx = (minX + maxX) / 2 - size / 2;
+				const dy = (minY + maxY) / 2 - size / 2;
+				assert.ok(Math.abs(dx) <= 3 && Math.abs(dy) <= 3, `${glyph} is off centre by ${dx}, ${dy} px at ${size} px`);
+			}
 		});
-		assert.deepEqual(new Set(baselines), new Set([Math.round(layout.baselineY * 100) / 100]));
-	});
-
-	it("leaves a package that opts out with align: ink centred on its letter", async () => {
-		const work = tempDir();
-		const family = path.join(work, "family.json");
-		writeFileSync(family, JSON.stringify({ base: DASHLY, packages: [{ slug: "a", glyph: "a" }, { slug: "g", glyph: "g", patch: { favicon: { align: "ink" } } }] }));
-		await buildFamily(family, path.join(work, "out"));
-		const spec = JSON.parse(readFileSync(path.join(work, "out", "g", "spec.json"), "utf8"));
-		assert.equal(spec.favicon.baselineY, undefined);
 	});
 
 	it("rejects duplicate slugs", async () => {
@@ -171,11 +178,20 @@ describe("buildFamily & wirePackages", () => {
 });
 
 describe("favicon fit", () => {
-	it("shrinks a three-letter glyph to keep a margin inside the tile", async () => {
+	it("shrinks a three-letter glyph to keep a margin inside the tile", async (t) => {
+		if (!(await browserAvailable())) return t.skip("Chromium unavailable");
 		const spec = loadSpec(DASHLY, { favicon: { glyph: "dsh", dashes: 0 } });
 		const { font } = instance(await loadFont(spec.font.path), spec.font.axes);
-		const { svg } = buildFavicon(spec, font);
-		const x = Number(/<g transform="translate\(([\d.-]+) /.exec(svg)[1]);
-		assert.ok(x > TILE * 0.08, `left margin ${x}`);
+		const size = 256;
+		const { data } = await withBrowser((browser) => rasterize(browser, buildFavicon(spec, font).svg, { width: size, height: size }));
+		let [minX, maxX] = [size, 0];
+		for (let p = 0; p < size * size; p++) {
+			if (data[p * 4] > 240 && data[p * 4 + 1] > 240 && data[p * 4 + 2] > 240) {
+				minX = Math.min(minX, p % size);
+				maxX = Math.max(maxX, p % size);
+			}
+		}
+		// MAX_FILL keeps 10% of the tile clear on each side; allow 1 px of antialiasing.
+		assert.ok(minX >= size * 0.1 - 1 && maxX <= size * 0.9 + 1, `ink spans ${minX}–${maxX} of ${size}`);
 	});
 });

@@ -83,7 +83,7 @@ export function resolveSpec(raw, baseDir) {
 		checkPaint(spec, item.paint, `decorations.${i}`, { allowLiteral: false });
 		return { radius: 0, layer: "behind", skew: true, ...item };
 	});
-	spec.favicon = { ink: "#ffffff", radius: 0.22, scale: 0.72, dashes: 0, fit: "x-height", align: "ink", lift: 0, ...spec.favicon };
+	spec.favicon = { ink: "#ffffff", radius: 0.22, scale: 0.72, dashes: 0, fit: "x-height", lift: 0, ...spec.favicon };
 	spec.favicon.glyph ??= [...spec.text][0];
 	spec.favicon.tile ??= Object.keys(spec.palette).find((name) => spec.palette[name].role !== "decorative");
 	checkPaint(spec, spec.favicon.tile, "favicon.tile");

@@ -140,13 +140,6 @@
 					"default": "x-height"
 				},
 				"fill": { "description": "Share of the tile for `x-height` (default 0.48) or `ink` (default 0.62).", "type": "number", "exclusiveMinimum": 0, "maximum": 0.8 },
-				"align": {
-					"description": "Vertical placement: `ink` centres the drawn letters (the default for a single favicon); `baseline` centres the x-height band so a family of icons shares one baseline (family.js sets it).",
-					"enum": ["ink", "baseline"],
-					"default": "ink"
-				},
-				"glyphSize": { "description": "Set by family.js: the shared glyph size in pixels of the 64 px tile. Overrides `fit`.", "type": "number", "exclusiveMinimum": 0 },
-				"baselineY": { "description": "Set by family.js: the shared baseline in pixels from the tile's top. Overrides `align` & `lift`.", "type": "number", "minimum": 0, "maximum": 64 },
 				"lift": { "description": "Raise the glyph by this share of the tile; 0.01 to 0.03 reads as optically centred.", "type": "number", "minimum": -0.1, "maximum": 0.1, "default": 0 },
 				"scale": { "description": "Glyph size as a fraction of the tile, for `fit: em`.", "type": "number", "exclusiveMinimum": 0, "maximum": 1.2, "default": 0.72 },
 				"dashes": { "description": "Speed dashes beside the glyph; two survive at 16px, three do not.", "type": "integer", "minimum": 0, "maximum": 3, "default": 0 }

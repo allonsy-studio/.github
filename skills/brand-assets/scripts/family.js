@@ -20,8 +20,6 @@ import Ajv2020 from "ajv/dist/2020.js";
 
 import { TAB_BARS } from "./lib/audit.js";
 import { buildToDir } from "./lib/build.js";
-import { instance, loadFont } from "./lib/font.js";
-import { familyLayout } from "./lib/svg.js";
 import { isMain, printJson, run } from "./lib/cli.js";
 import { TARGETS, contrast } from "./lib/color.js";
 import { loadSpec, mergePatch, paintColors } from "./lib/spec.js";
@@ -156,8 +154,7 @@ export function validateFamily(family) {
  * @returns {object}
  */
 export function packagePatch(pkg) {
-	// A family shares one baseline, so ascenders & descenders read as part of the letter, not a shift.
-	const favicon = { align: "baseline" };
+	const favicon = {};
 	if (pkg.glyph) favicon.glyph = pkg.glyph;
 	if (pkg.tile) favicon.tile = pkg.tile;
 	// Without a wordmark the letters drawn are only the glyph, so a name with characters the font lacks still builds.
@@ -197,25 +194,9 @@ export async function buildFamily(familyFile, outDir) {
 		slugs.add(pkg.slug);
 	}
 
-	// Lay the baseline-aligned members out together, so each shares one size & one baseline.
-	const fonts = new Map();
-	const fontFor = async (spec) => {
-		const key = `${spec.font.path}|${JSON.stringify(spec.font.axes ?? {})}`;
-		if (!fonts.has(key)) fonts.set(key, instance(await loadFont(spec.font.path), spec.font.axes).font);
-		return fonts.get(key);
-	};
-	const patches = family.packages.map(packagePatch);
-	const members = [];
-	for (const patch of patches) {
-		const spec = loadSpec(base, patch);
-		if (spec.favicon.align === "baseline") members.push({ spec, font: await fontFor(spec) });
-	}
-	const layout = members.length ? familyLayout(members) : null;
-
 	const packages = [];
-	for (const [i, pkg] of family.packages.entries()) {
-		const own = patches[i];
-		const patch = layout && loadSpec(base, own).favicon.align === "baseline" ? mergePatch(own, { favicon: layout }) : own;
+	for (const pkg of family.packages) {
+		const patch = packagePatch(pkg);
 		const meta = await buildToDir(base, path.join(outDir, pkg.slug), {
 			patch,
 			skip: pkg.wordmark ? [] : ["wordmark.svg"],
@@ -232,7 +213,7 @@ export async function buildFamily(familyFile, outDir) {
 			contrastFailures: meta.contrast.failures.filter((f) => f.startsWith("favicon") || pkg.wordmark),
 		});
 	}
-	return { packages, clashes: findClashes(packages), layout };
+	return { packages, clashes: findClashes(packages) };
 }
 
 if (isMain(import.meta.url)) {
