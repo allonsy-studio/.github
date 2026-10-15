@@ -27,6 +27,8 @@ Copy speaks to prospective clients & their outcomes: not the studio's own backst
 
 - **Pronoun-free voice**: avoid first-person pronouns ("I", "we", "our"). This is a
   deliberate positioning choice, not an oversight: preserve it in future drafts.
+- **Calls to action are the exception**: "Let's" stays in a call to action (the tagline
+  "Let's build something great together", "Let's talk") so the invitation reads as active.
 - **Preferred constructions**: the studio name, client-as-subject phrasing, & second
   person "you / your" directed at the client.
 - **Client-outcome-oriented**: frame copy around what the client gains, rather than
