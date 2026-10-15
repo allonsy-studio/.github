@@ -42,6 +42,13 @@
 		color: var(--studio-ink);
 	}
 
+	/* The CTA closes main, above the footer. */
+	main > [data-studio="cta"] {
+		max-inline-size: 64rem;
+		margin-block: 4rem 0;
+		margin-inline: auto;
+	}
+
 	[data-studio="cta"] > img {
 		inline-size: 4.5rem;
 	}

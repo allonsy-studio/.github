@@ -1,6 +1,5 @@
-<!--- Footer block: the studio call to action, then the project lock-up: name, links, license, & the studio credit. --->
+<!--- Footer block: the project lock-up: name, links, license, & the studio credit. --->
 <footer>
-	<studio-cta webc:if="$data.site.studio"></studio-cta>
 	<div>
 		<div>
 			<p><strong @text="$data.site.packageName || $data.site.name"></strong></p>
