@@ -1,0 +1,86 @@
+{
+	"skill_name": "brand-assets",
+	"evals": [
+		{
+			"id": 1,
+			"name": "new-wordmark-with-metaphor",
+			"prompt": "allonsy-studio/envoy has a landing site from oss-docs-site but no logo. It loads .env files into any process; I keep thinking of an envelope or a messenger. Design a wordmark & favicon.",
+			"expected_output": "Asks where the mark renders & confirms the metaphor, runs fonts.js on the site's fonts, writes three distinct concept specs each with a one-line concept (at least one using the messenger or envelope idea), builds them, renders the contact sheet, reads the light & dark PNGs, & asks the maintainer to pick or combine before going further. Does not wire anything into the project yet.",
+			"files": [],
+			"expectations": [
+				"Ran scripts/fonts.js before writing a spec",
+				"Wrote three specs with different ideas, not three colors of one idea",
+				"Every spec uses outlined glyphs from a listed font; none uses Yellowtail",
+				"Rendered sheet-light.png & sheet-dark.png & looked at them",
+				"Stopped & asked the maintainer to choose before building finals or wiring"
+			]
+		},
+		{
+			"id": 2,
+			"name": "accent-options-with-contrast",
+			"prompt": "Here's dashly's brand.json. Show me five accent options for the l & y using the studio palette, & make sure they pass contrast.",
+			"expected_output": "Uses variants.js with --accents built from the studio palette (#d22d6f, #ff944d, #1f91ad, #ffd36b plus one more), which deepens failing light values while keeping dark values; renders a contact sheet of the variants; reports the contrast table including the deepened values (for example orange to about #c4510a); asks which to keep. Never patches finished SVGs by hand.",
+			"files": [
+				"tests/fixtures/dashly.json"
+			],
+			"expectations": [
+				"Generated variants through variants.js, not by editing SVG text",
+				"Light values that missed their target were deepened & the new values reported",
+				"Rendered & showed a contact sheet of the options",
+				"Asked the maintainer to choose"
+			]
+		},
+		{
+			"id": 3,
+			"name": "icons-only-for-existing-logo",
+			"prompt": "glob-concat-cli already has a wordmark the maintainer likes. It only needs a favicon, touch icon, .ico, & a social preview image.",
+			"expected_output": "Runs the icons mode: a spec tuned for the favicon only, builds, judges the 16px raster on the sheet, exports with --og only if the maintainer wants the preview built from this spec (otherwise skips og), & wires with --icons-only so the existing logo is untouched. Reports file sizes, the touch icon is opaque RGB, & the fields set.",
+			"files": [],
+			"expectations": [
+				"Used wire.js --icons-only, leaving project.json logo unchanged",
+				"apple-touch-icon.png is 180\u00d7180 with no alpha channel",
+				"favicon.ico holds 16, 32, & 48 px entries",
+				"Showed the 16px raster before finishing"
+			]
+		},
+		{
+			"id": 4,
+			"name": "forbidden-font-request",
+			"prompt": "Use Yellowtail for the markdown-it-anchor-sections wordmark, it's so pretty.",
+			"expected_output": "Declines Yellowtail for a wordmark because the studio reserves it for signatures, explains in one or two sentences, & offers concepts in the project's sans or display face instead (optionally the Instrument Sans italic for a script-like lean).",
+			"files": [],
+			"expectations": [
+				"Did not build a wordmark in Yellowtail",
+				"Explained the signature-only rule",
+				"Offered an alternative typeface direction"
+			]
+		},
+		{
+			"id": 5,
+			"name": "package-icon-family",
+			"prompt": "agent-skills already has docs/brand.json. Give each skill package its own icon on the site, & design-system should also get a small wordmark.",
+			"expected_output": "Runs family.js init against the repo with the existing spec, shows the proposed glyph & tile per package (skipping the shared skill- prefix so glyphs differ), sets wordmark true with readable text for design-system, builds the family, renders the sheet & reads its Together strip, reports clashes & contrast, then wires with --packages & --family after a dry run & reports unmatched slugs.",
+			"files": [],
+			"expectations": [
+				"Ran family.js init before building",
+				"Proposed glyphs are distinct, not all the first letter of a shared prefix",
+				"Only design-system has a wordmark",
+				"Showed the sheet before wiring",
+				"Wired with wire.js --packages after a dry run"
+			]
+		},
+		{
+			"id": 6,
+			"name": "hand-made-svg-export",
+			"prompt": "Here are envoy's wordmark.svg and favicon.svg that the maintainer drew by hand. The favicon has rounded corners. Make the touch icon, .ico, and an Open Graph image, and put them on the site.",
+			"expected_output": "Puts both files in one folder, runs export.js with --og & a --background matching the tile (because the corners are transparent), surfaces any SVG check warnings, reads og.png, then wires with a dry run first. If the wordmark contains <text> or external references, stops & asks for an outlined version instead of exporting.",
+			"files": [],
+			"expectations": [
+				"Passed --background for the transparent corners",
+				"Reported the SVG check warnings or errors",
+				"Looked at og.png before wiring",
+				"Did not edit the maintainer's SVGs without asking"
+			]
+		}
+	]
+}

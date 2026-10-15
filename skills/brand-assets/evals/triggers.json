@@ -1,0 +1,54 @@
+[
+	{
+		"query": "envoy needs a logo for its docs site. Can you design a wordmark?",
+		"should_trigger": true
+	},
+	{
+		"query": "Make a favicon and apple touch icon for allonsy-studio/glob-concat-cli; we already like the header text as is.",
+		"should_trigger": true
+	},
+	{
+		"query": "The dashly logo's orange looks washed out on white. Give me a few accent options for the l and y.",
+		"should_trigger": true
+	},
+	{
+		"query": "opx shares look bare on Slack. Make an Open Graph image for the project site.",
+		"should_trigger": true
+	},
+	{
+		"query": "oss-docs-site said markdown-it-anchor-sections has no wordmark. Let's make one.",
+		"should_trigger": true
+	},
+	{
+		"query": "agent-skills needs an icon for each skill package on its docs site.",
+		"should_trigger": true
+	},
+	{
+		"query": "I drew envoy's logo in Figma and exported wordmark.svg and favicon.svg. Can you make the touch icon, .ico, and social preview from them?",
+		"should_trigger": true
+	},
+	{
+		"query": "Draw a cute fox mascot for envoy's README.",
+		"should_trigger": false
+	},
+	{
+		"query": "Is the name 'dashly' trademarked? Can we use it?",
+		"should_trigger": false
+	},
+	{
+		"query": "Update the Allons-y Studio banner and footer credit on all the project sites.",
+		"should_trigger": false
+	},
+	{
+		"query": "Design a logo for my sister's bakery.",
+		"should_trigger": false
+	},
+	{
+		"query": "Change the accent color on the dashly site's buttons to teal.",
+		"should_trigger": false
+	},
+	{
+		"query": "Scaffold a landing site for envoy with the studio branding.",
+		"should_trigger": false
+	}
+]

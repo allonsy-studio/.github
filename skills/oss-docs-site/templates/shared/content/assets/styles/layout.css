@@ -211,6 +211,23 @@
 		font-size: clamp(1.9rem, 4vw, 2.5rem);
 	}
 
+	/* A package icon sits beside the heading; a package wordmark replaces its text. */
+	main > div > article h1:has(> img) {
+		display: flex;
+		align-items: center;
+		gap: var(--space-s);
+	}
+
+	main > div > article h1 > img {
+		flex: none;
+		block-size: 1.4em;
+		inline-size: auto;
+	}
+
+	main > div > article h1 > img:only-child {
+		block-size: clamp(2.5rem, 6vw, 3.5rem);
+	}
+
 	nav[aria-label="Pager"] {
 		display: flex;
 		justify-content: space-between;

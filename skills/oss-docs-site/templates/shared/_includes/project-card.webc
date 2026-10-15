@@ -1,6 +1,7 @@
-<!--- Card. Props: title, body, href (optional), icon (optional: "rocket", "brands/github"). --->
+<!--- Card. Props: title, body, href (optional), icon (optional: "rocket", "brands/github"), image (optional: a path; wins over icon). --->
 <article>
-	<span webc:if="icon" aria-hidden="true"><fa-icon :@name="icon"></fa-icon></span>
+	<img webc:if="image" :src="image" alt="" width="48" height="48" />
+	<span webc:elseif="icon" aria-hidden="true"><fa-icon :@name="icon"></fa-icon></span>
 	<h3>
 		<a webc:if="href" :href="href" @text="title"></a>
 		<span webc:else @text="title"></span>

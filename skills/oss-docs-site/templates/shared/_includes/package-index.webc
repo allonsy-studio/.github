@@ -1,10 +1,11 @@
-<!--- Prop: packages, an array of { name, description, href }. --->
+<!--- Prop: packages, an array of { name, description, href, icon? }; icon is an image path. --->
 <ul style="--title-face: mono">
 	<li webc:for="pkg of packages">
 		<project-card
 			:@title="pkg.name"
 			:@body="pkg.description"
 			:@href="pkg.href"
+			:@image="pkg.icon"
 		></project-card>
 	</li>
 </ul>

@@ -1,8 +1,10 @@
-<!--- Props: items (see docs-nav), heading. The slot is the page body. --->
+<!--- Props: items (see docs-nav), heading, icon & wordmark (optional image paths; a wordmark replaces the heading text). The slot is the page body. --->
 <div>
 	<docs-nav :@items="items"></docs-nav>
 	<article>
-		<h1 @text="heading"></h1>
+		<h1 webc:if="wordmark"><img :src="wordmark" :alt="heading" height="56" /></h1>
+		<h1 webc:elseif="icon"><img :src="icon" alt="" width="40" height="40" /><span @text="heading"></span></h1>
+		<h1 webc:else @text="heading"></h1>
 		<slot></slot>
 	</article>
 </div>

@@ -273,7 +273,7 @@ function nextSteps({ siteRel, drift, orphans, projectProblems, movedFrom }) {
 		"Commit .nvmrc and yarn.lock: the shared Pages workflow reads the Node version from .nvmrc and installs with --immutable.",
 		`${siteRel}/_data/site.js holds the facts resolved from package.json (name, license, links): edit it there. After package.json changes, delete it & rerun, or pass --update.`,
 		`Fill ${siteRel}/_data/project.json (lede, install, usage, features) & set the accent & fonts in ${siteRel}/content/assets/styles/project.css.`,
-		`Add a wordmark: the project supplies its own logo & favicon in ${siteRel}/content/assets/img/ (set \`logo\` & \`favicon\` in project.json). The skill does not make marks.`,
+		`Add a wordmark: the project needs its own logo & favicon in ${siteRel}/content/assets/img/ (set \`logo\` & \`favicon\` in project.json). The brand-assets skill makes them, & for Workspaces sites one icon per package.`,
 		"Check accessibility: yarn docs:test runs Cypress with axe (WCAG 2.2 AA) in light, dark, & forced-colors. Cypress downloads its own browser on install.",
 	].filter(Boolean);
 }

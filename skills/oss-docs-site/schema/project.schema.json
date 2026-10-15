@@ -69,6 +69,14 @@
       "description": "A 180px png in content/assets/img/ for home screens. Optional.",
       "type": "string"
     },
+    "faviconIco": {
+      "description": "A legacy .ico in content/assets/img/, linked with sizes=\"32x32\" so browsers that read SVG icons still prefer `favicon`. Optional.",
+      "type": "string"
+    },
+    "ogImage": {
+      "description": "A 1200×630 png in content/assets/img/ for og:image link previews. Optional.",
+      "type": "string"
+    },
     "url": {
       "description": "Overrides the default https://projects.allons-y.studio/<repo>/.",
       "type": "string"
