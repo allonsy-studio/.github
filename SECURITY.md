@@ -1,7 +1,7 @@
 # Security Policy
 
 We take the security of Allons-y Studio projects seriously. Thank you for
-helping keep our software and our users safe.
+helping keep our software & our users safe.
 
 ## Supported versions
 
@@ -23,7 +23,7 @@ Instead, report them privately using one of the following:
 
 Please include as much of the following as you can:
 
-- The type of issue and the affected project/version.
+- The type of issue & the affected project/version.
 - Steps to reproduce or a proof of concept.
 - The potential impact, including how an attacker might exploit it.
 - Any suggested mitigations, if you have them.
@@ -31,7 +31,7 @@ Please include as much of the following as you can:
 ## What to expect
 
 - **Acknowledgement** within **3 business days**.
-- An assessment and, where confirmed, a plan and timeline for a fix.
+- An assessment &, where confirmed, a plan & timeline for a fix.
 - Regular updates as we work toward a resolution.
 - Credit for your responsible disclosure, if you'd like it.
 
