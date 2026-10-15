@@ -4,7 +4,7 @@ Learned building the dashly mark. Each rule says what to do & why.
 
 ## Contents
 
-- [Finding a metaphor](#finding-a-metaphor)
+- [Finding a metaphor](#finding-a-metaphor): the project description, the maintainer, then Font Awesome
 - [Running the loop](#running-the-loop)
 - [Letters](#letters)
 - [Motion & decoration](#motion--decoration)
@@ -14,7 +14,11 @@ Learned building the dashly mark. Each rule says what to do & why.
 
 ## Finding a metaphor
 
-Font Awesome Free is a quick source of metaphors: its ~2,000 icons each carry search terms, so "send", "speed", or "filter" turns up the visual shorthand people already read (paper plane, gauge, funnel). Studio sites already install it (`@fortawesome/fontawesome-free`, used by `<fa-icon>`), so search the copy in the project's `node_modules`:
+Start with what the project says about itself. Read the `description` & `keywords` in `package.json`, the README's opening paragraph, & `tagline` & `lede` in `<site>/_data/project.json`, then pull out the verbs & images: dashly's "filters, transforms, & shortcodes" gave the pipe in `{{ x | filter }}`, & its name gave "dash" as speed. Offer two or three candidates drawn from those words, each with the phrase it came from.
+
+When the description is thin or nothing in it suggests an image, ask the maintainer instead of guessing: what the project does for someone in one sentence, a word they would use for how it feels to use (fast, quiet, sturdy), & any image they already picture. Their answer outranks anything inferred from the text.
+
+Font Awesome Free is a quick source of visual metaphors once there are words to search: its ~2,000 icons each carry search terms, so "send", "speed", or "filter" turns up the visual shorthand people already read (paper plane, gauge, funnel). Studio sites already install it (`@fortawesome/fontawesome-free`, used by `<fa-icon>`), so search the copy in the project's `node_modules`:
 
 ```sh
 node -e 'const m = require("@fortawesome/fontawesome-free/metadata/icon-families.json");
