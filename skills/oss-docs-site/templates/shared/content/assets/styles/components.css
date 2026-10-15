@@ -145,6 +145,18 @@
 		font-size: 1.2rem;
 	}
 
+	/* Heading links: a "#" in front, in the text color */
+	:is(main > div > article, [data-pagefind-body]) :is(h1, h2, h3, h4, h5, h6) a {
+		color: inherit;
+		text-underline-offset: 0.1em;
+	}
+
+	:is(main > div > article, [data-pagefind-body]) :is(h1, h2, h3, h4, h5, h6) a::before {
+		content: "#";
+		content: "#" / "";
+		margin-inline-end: 0.25em;
+	}
+
 	main > div > article :is(ul, ol) {
 		display: grid;
 		gap: 0.4rem;
