@@ -51,7 +51,7 @@
 		gap: 0.4rem;
 	}
 
-	[data-studio="cta"] > div > p:first-child {
+	[data-studio="cta"] > div > p:has(+ h2) {
 		color: var(--studio-link);
 		font-size: 0.8rem;
 		font-weight: 700;
