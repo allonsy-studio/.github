@@ -25,6 +25,10 @@
 		text-wrap: pretty;
 	}
 
+	p {
+		line-height: 1.4;
+	}
+
 	a {
 		color: var(--accent-text);
 		text-decoration: underline dotted;
@@ -39,8 +43,19 @@
 	}
 
 	:focus-visible {
-		outline: 3px solid var(--accent-text);
+		outline: 2px solid var(--accent-text);
 		outline-offset: 2px;
+	}
+
+	/* Links in running text take a hairline ring; bold or large text, & controls, keep 2px. */
+	:is(p, li, dd, td, th, small, figcaption, nav) a:focus-visible {
+		outline-width: 1px;
+	}
+
+	:is(h1, h2, h3, strong) a:focus-visible,
+	main > header nav a:focus-visible,
+	[data-studio="cta"] a:focus-visible {
+		outline-width: 2px;
 	}
 
 	main:focus {
@@ -74,7 +89,7 @@
 	}
 
 	:is(body > footer > div > *, li > article) {
-		gap: var(--space-xs);
+		gap: var(--space-s);
 	}
 
 	/* Header */
@@ -98,6 +113,12 @@
 		font-size: 1.2rem;
 		font-weight: 700;
 		text-decoration: none;
+	}
+
+	/* The reset's block-size: auto would drop the height attribute, so an SVG logo renders at full size. */
+	body > header a[rel="home"] img {
+		block-size: 2rem;
+		inline-size: auto;
 	}
 
 	body > header nav {
@@ -137,7 +158,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-xs);
-		font-size: clamp(1.9rem, 5vw, 3.1rem);
+		font-size: clamp(2rem, 5vw, 3.25rem);
 	}
 
 	main > header h1 > :first-child {
@@ -151,6 +172,7 @@
 
 	main > header > p {
 		max-inline-size: var(--measure);
+		color: var(--fg-muted);
 		font-size: 1.2rem;
 	}
 
@@ -168,7 +190,7 @@
 	main > header > ul {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-xs);
+		gap: var(--space-l) var(--space-m);
 		color: var(--fg-muted);
 		font-size: 0.95rem;
 	}
@@ -183,28 +205,69 @@
 		padding-block: var(--space-l);
 	}
 
+	/* The sidebar stays in view beside the page; a long list scrolls inside it, below the search. */
 	nav[aria-label="Documentation"] {
+		position: sticky;
+		inset-block-start: var(--space-m);
+		display: flex;
+		flex-direction: column;
 		align-self: start;
-		font-size: 0.95rem;
+		max-block-size: calc(100dvh - 2 * var(--space-m));
+		font-size: 0.92rem;
+	}
+
+	/* Padding with an equal negative margin gives focus rings room: overflow clips them at the box edge. */
+	nav[aria-label="Documentation"] > ul {
+		min-block-size: 0;
+		margin: -6px;
+		padding: 6px;
+		overflow-y: auto;
+		overscroll-behavior: contain;
 	}
 
 	nav[aria-label="Documentation"] ul {
 		display: flex;
 		flex-direction: column;
-		gap: 0.4rem;
+		gap: 0.15rem;
+	}
+
+	/* Pages nested under a page: a rule down the left. */
+	nav[aria-label="Documentation"] ul ul {
+		margin: 0.15rem 0 0.5rem 0.5rem;
+		padding-inline-start: 0.75rem;
+		border-inline-start: 1px solid var(--border);
+	}
+
+	nav[aria-label="Documentation"] a {
+		display: flex;
+		align-items: baseline;
+		gap: 0.55rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0 4px 4px 0;
+		color: var(--fg-muted);
+		text-decoration: none;
+	}
+
+	nav[aria-label="Documentation"] a > svg {
+		color: var(--accent-text);
+	}
+
+	nav[aria-label="Documentation"] a:hover {
+		background: var(--bg-elev);
+		color: var(--fg);
 	}
 
 	nav[aria-label="Documentation"] a[aria-current="page"] {
-		color: var(--fg);
-		font-weight: 700;
-		text-decoration: none;
+		background: var(--bg-elev);
+		box-shadow: inset 3px 0 0 var(--accent);
+		color: var(--accent-text);
+		font-weight: 600;
 	}
 
 	main > div > article {
 		display: grid;
 		align-content: start;
 		gap: var(--space-m);
-		max-inline-size: var(--measure);
 	}
 
 	main > div > article h1 {
@@ -226,6 +289,15 @@
 
 	main > div > article h1 > img:only-child {
 		block-size: clamp(2.5rem, 6vw, 3.5rem);
+	}
+
+	/* Sections inside a page stack with a small row gap. */
+	main > div > article :is(article, section) {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		min-inline-size: 0;
+		align-content: start;
+		gap: var(--space-s);
 	}
 
 	nav[aria-label="Pager"] {
@@ -272,18 +344,25 @@
 		margin-inline: auto;
 	}
 
-	/* Lock-up: name, link columns, & the studio credit */
+	/* Lock-up: name, link columns, & the studio credit, which takes a fourth column when wide */
 	body > footer > div {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
 		align-items: start;
-		justify-content: space-between;
 		gap: var(--space-l);
 	}
 
-	body > footer > div > :first-child {
-		flex: 1 1 18rem;
-		max-inline-size: 28rem;
+	@media (min-width: 60rem) {
+		body > footer > div {
+			grid-template-columns: minmax(0, 25rem) repeat(2, minmax(min-content, max-content));
+			justify-content: space-between;
+		}
+
+		body > footer > div:has(> [data-studio="footer"]) {
+			grid-template-columns:
+				minmax(0, 25rem) repeat(2, minmax(min-content, max-content))
+				minmax(0, 13.75rem);
+		}
 	}
 
 	body > footer > div > :first-child strong {
@@ -306,9 +385,30 @@
 		font-size: 0.9rem;
 	}
 
+	/* npm badges: shown only once the package has a release */
+	body > footer [data-badges] {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-xs);
+	}
+
+	body > footer [data-badges] img {
+		inline-size: auto;
+		block-size: 20px;
+	}
+
 	@media (max-width: 40rem) {
 		main > div:has(> nav[aria-label="Documentation"]) {
 			grid-template-columns: minmax(0, 1fr);
+		}
+
+		nav[aria-label="Documentation"] {
+			position: static;
+			max-block-size: none;
+		}
+
+		nav[aria-label="Documentation"] > ul {
+			overflow-y: visible;
 		}
 	}
 }

@@ -14,7 +14,7 @@
 		align-items: center;
 		gap: 0.5em;
 		padding: 0.6rem 1.1rem;
-		border: 2px solid var(--accent-text);
+		border: 1px solid var(--accent);
 		border-radius: var(--radius);
 		background: var(--accent);
 		color: var(--on-accent);
@@ -38,15 +38,11 @@
 		}
 	}
 
-	/* Chips */
+	/* Tags: an icon & a few words, no box */
 	main > header > ul > li {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4em;
-		padding: 0.15rem 0.75rem;
-		border: 1px solid var(--border);
-		border-radius: 999px;
-		background: var(--bg-elev);
 		line-height: 1.5;
 	}
 
@@ -92,7 +88,7 @@
 		position: absolute;
 		inset: -1px;
 		inline-size: calc(100% + 2px);
-		block-size: 1em;
+		block-size: 0.6em;
 		border-radius: var(--radius) var(--radius) 0 0;
 		background: var(--feature);
 	}
@@ -132,9 +128,47 @@
 		color: var(--fg-muted);
 	}
 
+	/* Contents: a term & its description, in two columns when wide */
+	main > section > dl {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+		gap: var(--space-m) var(--space-l);
+	}
+
+	main > section > dl > div {
+		display: grid;
+		align-content: start;
+		gap: 0.25rem;
+		padding-block-end: var(--space-s);
+		border-block-end: 1px solid var(--border);
+	}
+
+	main > section > dl dt {
+		font-family: var(--font-display);
+		font-size: 1.1rem;
+		font-weight: 700;
+	}
+
+	main > section > dl dd {
+		margin: 0;
+		color: var(--fg-muted);
+	}
+
 	/* Prose: the body of a docs page */
 	main > div > article :is(h2, h3) {
 		margin-block-start: var(--space-s);
+	}
+
+	/* A heading that links is marked with a #, & its link takes the text color. */
+	:is(main > div > article, [data-pagefind-body]) :is(h1, h2, h3, h4, h5, h6):has(> a)::before {
+		content: "#";
+		content: "#" / "";
+		margin-inline-end: 0.25em;
+	}
+
+	:is(main > div > article, [data-pagefind-body]) :is(h1, h2, h3, h4, h5, h6) > a {
+		color: inherit;
+		text-underline-offset: 0.1em;
 	}
 
 	main > div > article h2 {
@@ -143,18 +177,6 @@
 
 	main > div > article h3 {
 		font-size: 1.2rem;
-	}
-
-	/* Heading links: a "#" in front, in the text color */
-	:is(main > div > article, [data-pagefind-body]) :is(h1, h2, h3, h4, h5, h6) a {
-		color: inherit;
-		text-underline-offset: 0.1em;
-	}
-
-	:is(main > div > article, [data-pagefind-body]) :is(h1, h2, h3, h4, h5, h6) a::before {
-		content: "#";
-		content: "#" / "";
-		margin-inline-end: 0.25em;
 	}
 
 	main > div > article :is(ul, ol) {
@@ -172,13 +194,18 @@
 
 	main > div > article table {
 		border-collapse: collapse;
-		border-block: 1px solid var(--border);
+		border-block-end: 1px solid var(--border);
 	}
 
 	main > div > article :is(th, td) {
 		padding: var(--space-xs) var(--space-s);
 		border-block-end: 1px solid var(--border);
 		text-align: start;
+	}
+
+	/* A wide table scrolls sideways inside its own focusable region. */
+	[data-scroll] {
+		overflow-x: auto;
 	}
 
 	main > div > article hr {

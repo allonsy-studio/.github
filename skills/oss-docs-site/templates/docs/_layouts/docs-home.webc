@@ -22,9 +22,10 @@ layout: base.webc
 
 <section aria-labelledby="docs-title">
 	<h2 id="docs-title">Documentation</h2>
-	<ul>
-		<li webc:for="page of $data.collections.docs">
-			<project-card :@title="page.data.title" :@body="page.data.description" :@href="page.url"></project-card>
-		</li>
-	</ul>
+	<dl>
+		<div webc:for="page of $data.collections.docs">
+			<dt><a :href="page.url" @text="page.data.title"></a></dt>
+			<dd @text="page.data.description"></dd>
+		</div>
+	</dl>
 </section>

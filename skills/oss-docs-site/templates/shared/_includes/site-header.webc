@@ -13,7 +13,7 @@
 		<a webc:if="$data.anchors" href="#install">Install</a>
 		<a webc:if="$data.anchors && $data.project.usage" href="#usage">Usage</a>
 		<a webc:if="$data.anchors && $data.project.features && $data.project.features.length" href="#features">Features</a>
-		<a webc:if="$data.collections.docs && $data.collections.docs.length" :href="$data.collections.docs[0].url">Docs</a>
+		<a webc:if="$data.collections.docs && $data.collections.docs.length" :href="$data.collections.docs[0].url"><fa-icon @name="book"></fa-icon> Docs</a>
 		<a :href="$data.site.repo"><fa-icon @name="brands/github"></fa-icon> GitHub</a>
 		<a webc:if="$data.site.npm" :href="$data.site.npm"><fa-icon @name="brands/npm"></fa-icon> npm</a>
 	</nav>

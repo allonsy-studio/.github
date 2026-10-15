@@ -77,8 +77,8 @@
 
 		/* Surfaces */
 		--bg: light-dark(#ffffff, #101216);
-		--bg-elev: light-dark(#f4f5f8, #181b21);
-		--code-bg: light-dark(#eceef3, #1d212a);
+		--bg-elev: light-dark(hsl(40, 14%, 96%), hsl(0, 0%, 11%));
+		--code-bg: light-dark(hsl(40, 14%, 94%), hsl(0, 0%, 14%));
 		--border: light-dark(#d3d8e2, #2d323e);
 
 		/* Text */
@@ -87,8 +87,11 @@
 
 		/* Placeholder, replaced by the project block. */
 		--accent: #2346d4;
-		/* Accent pulled toward the text color. */
-		--accent-text: color-mix(in oklab, var(--accent) 45%, var(--fg));
+		/* Accent for text & links: darkened on light surfaces (never lighter than L 0.52, so bright accents hold 4.5:1), lightened on dark ones. */
+		--accent-text: light-dark(
+			oklch(from color-mix(in oklch, var(--accent) 82%, black) min(l, 0.52) c h),
+			color-mix(in oklch, var(--accent) 55%, white)
+		);
 		/* Ink or white by accent lightness. */
 		--on-accent: oklab(from var(--accent) clamp(0, calc((0.58 - l) * 1000), 1) 0 0);
 
@@ -125,7 +128,7 @@
 		--feature-4: var(--studio-yellow);
 
 		/* Shape & rhythm */
-		--radius: 0.5rem;
+		--radius: 6px;
 		--space-xs: 0.5rem;
 		--space-s: 0.75rem;
 		--space-m: 1.25rem;
