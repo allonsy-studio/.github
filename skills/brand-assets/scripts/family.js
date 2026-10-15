@@ -35,7 +35,7 @@ const validator = new Ajv2020({ allErrors: true, strict: false }).compile(JSON.p
  */
 
 /**
- * Workspaces from the root package.json globs, honouring `!` exclusions, sorted like the site lists them.
+ * Workspaces from the root package.json globs, honoring `!` exclusions, sorted like the site lists them.
  * @param {string} repo
  * @returns {Workspace[]}
  */
@@ -110,8 +110,8 @@ export function glyphCandidates(words) {
 }
 
 /**
- * Propose a glyph & tile per workspace. Distinct glyphs come first, because a tile colour alone is a weak
- * signal (& none for some colour vision); tiles cycle, & a repeated glyph moves to an unused tile.
+ * Propose a glyph & tile per workspace. Distinct glyphs come first, because a tile color alone is a weak
+ * signal (& none for some color vision); tiles cycle, & a repeated glyph moves to an unused tile.
  * @param {Workspace[]} workspaces
  * @param {object} spec A resolved spec.
  * @returns {{ packages: { slug: string, name: string, glyph: string, tile: string }[], warnings: string[] }}
@@ -121,7 +121,7 @@ export function proposeFamily(workspaces, spec) {
 	let tiles = tileCandidates(spec);
 	if (!tiles.length) {
 		tiles = [spec.favicon.tile];
-		warnings.push(`No palette entry or gradient reads in both tab strips with a ${spec.favicon.ink} glyph: every package uses ${spec.favicon.tile}. Add a mid-tone palette colour for variety.`);
+		warnings.push(`No palette entry or gradient reads in both tab strips with a ${spec.favicon.ink} glyph: every package uses ${spec.favicon.tile}. Add a mid-tone palette color for variety.`);
 	}
 	const wordsOf = distinctWords(workspaces.map((w) => w.slug));
 	const glyphs = new Set();

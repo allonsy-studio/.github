@@ -9,7 +9,7 @@
 			"files": [],
 			"expectations": [
 				"Ran scripts/fonts.js before writing a spec",
-				"Wrote three specs with different ideas, not three colours of one idea",
+				"Wrote three specs with different ideas, not three colors of one idea",
 				"Every spec uses outlined glyphs from a listed font; none uses Yellowtail",
 				"Rendered sheet-light.png & sheet-dark.png & looked at them",
 				"Stopped & asked the maintainer to choose before building finals or wiring"

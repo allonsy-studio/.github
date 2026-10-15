@@ -9,7 +9,7 @@
  * hand-made: its SVGs are checked first, & --font, --accent, --background, --name, & --url fill the gaps.
  *
  * Usage: node scripts/export.js <dir> [--og] [--tagline "..."] [--project <repo-root>]
- *          [--name <name>] [--font <file>] [--accent <colour>] [--background <colour>] [--url <text>]
+ *          [--name <name>] [--font <file>] [--accent <color>] [--background <color>] [--url <text>]
  * The tagline falls back to the spec's og.tagline, then <project>/<site>/_data/project.json.
  */
 
@@ -156,7 +156,7 @@ function packageName(project) {
  * @property {string} [project]
  * @property {string} [name] Hand-made only: alt text for the Open Graph wordmark.
  * @property {string} [font] Hand-made only: font file for the tagline; system UI otherwise.
- * @property {string} [accent] Hand-made only: colour for the Open Graph bar; none otherwise.
+ * @property {string} [accent] Hand-made only: color for the Open Graph bar; none otherwise.
  * @property {string} [background] Touch icon fill behind transparent pixels.
  * @property {string} [url] Hand-made only: small line under the tagline.
  */
@@ -197,7 +197,7 @@ export async function exportBuild(dir, options = {}) {
 		const transparent = touchPixels.data.some((v, i) => i % 4 === 3 && v < 255);
 		if (transparent && !background) {
 			throw new Error(
-				`${existsSync(squareFile) ? "icon-square.svg" : "favicon.svg"} has transparent pixels (often rounded corners). Pass --background <colour>, usually the tile colour, to fill them for the touch icon.`,
+				`${existsSync(squareFile) ? "icon-square.svg" : "favicon.svg"} has transparent pixels (often rounded corners). Pass --background <color>, usually the tile color, to fill them for the touch icon.`,
 			);
 		}
 		const touch = encodePng(touchPixels, { alpha: false, background: background ?? undefined });
@@ -254,7 +254,7 @@ if (isMain(import.meta.url)) {
 			},
 		});
 		if (positionals.length !== 1) {
-			throw new Error("Usage: node scripts/export.js <dir> [--og] [--tagline ...] [--project <repo-root>] [--name ...] [--font <file>] [--accent <colour>] [--background <colour>] [--url ...]");
+			throw new Error("Usage: node scripts/export.js <dir> [--og] [--tagline ...] [--project <repo-root>] [--name ...] [--font <file>] [--accent <color>] [--background <color>] [--url ...]");
 		}
 		printJson(await exportBuild(positionals[0], values));
 	});

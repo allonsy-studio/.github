@@ -1,6 +1,6 @@
 # Icons & Open Graph
 
-All icons come from the spec's `favicon` block; `build.js` writes `favicon.svg` (rounded tile) & `icon-square.svg` (square corners), & `export.js` rasterises them.
+All icons come from the spec's `favicon` block; `build.js` writes `favicon.svg` (rounded tile) & `icon-square.svg` (square corners), & `export.js` rasterizes them.
 
 | File | Size | Rules | project.json |
 | --- | --- | --- | --- |
@@ -25,11 +25,11 @@ Missing `<title>`, missing dark-mode rules, & embedded raster images are warning
 ## Favicon
 
 - Sizing (`favicon.fit`): `x-height` by default, with lowercase at 48% of the tile (`fill`), so `a` & `s` fill about half the tile & ascenders reach past it. `ink` makes every letter equally full but makes a family uneven; `em` is the old em-box sizing that left short letters small. Any fit shrinks to keep 10% of the tile clear on every side.
-- Placement: every icon centres its own letters in its own tile, measured on the outline as drawn (slant included), never on a line shared with other icons.
-- Descenders: when some letters descend & others do not (`ag`, `ay`), only half of the descender counts when centring (`descender: 0.5`), so the letters sit lower & read as centred instead of riding high. When every letter descends (`py`, `g`) or none does (`ad`), the icon uses standard centring. `1` turns the adjustment off; `0` centres the body alone, but long descenders then shrink to stay inside the margin.
+- Placement: every icon centers its own letters in its own tile, measured on the outline as drawn (slant included), never on a line shared with other icons.
+- Descenders: when some letters descend & others do not (`ag`, `ay`), only half of the descender counts when centering (`descender: 0.5`), so the letters sit lower & read as centered instead of riding high. When every letter descends (`py`, `g`) or none does (`ad`), the icon uses standard centering. `1` turns the adjustment off; `0` centers the body alone, but long descenders then shrink to stay inside the margin.
 - `lift` raises the letters by a share of the tile; it is off by default because 2% barely shows at 64 px.
 - Judge at 16 px first. The contact sheet shows a magnified 16 px raster: that is what a tab shows, not the scaled SVG.
-- Prefer a coloured or gradient tile with a white glyph. Coloured marks on a coloured tile lose contrast (yellow on orange fails).
+- Prefer a colored or gradient tile with a white glyph. Colored marks on a colored tile lose contrast (yellow on orange fails).
 - An ink or near-black tile disappears in dark tab bars; the sheet shows both tab bars.
 - The glyph is usually the first letter; pick another only if it carries the metaphor.
 - Two dashes survive at 16 px; three merge.

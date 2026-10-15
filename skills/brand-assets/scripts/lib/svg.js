@@ -14,7 +14,7 @@ const PREFIX = "b-";
 export const TILE = 64;
 /** Widest share of the tile the glyph & dashes may cover, so iOS masks & rounded corners never clip them. */
 const MAX_FILL = 0.8;
-/** Share of a descender counted when centring a mix such as `ag`: half lowers the letters' body so it reads as centred. */
+/** Share of a descender counted when centering a mix such as `ag`: half lowers the letters' body so it reads as centered. */
 export const DESCENDER_WEIGHT = 0.5;
 /** Depth below the baseline, as a share of the em, treated as round-letter overshoot rather than a descender (fonts use about 1–1.5%). */
 const OVERSHOOT = 0.03;
@@ -23,7 +23,7 @@ export const FILL_DEFAULTS = { "x-height": 0.48, ink: 0.62 };
 
 /**
  * Glyph size in pixels for the favicon's `fit` mode.
- * `em` scales the font's em box (the original behaviour); `x-height` scales lowercase height, so a family of
+ * `em` scales the font's em box (the original behavior); `x-height` scales lowercase height, so a family of
  * icons shares one letter size; `ink` scales the drawn letters' own box, so every icon looks equally full.
  * @param {object} spec A resolved spec.
  * @param {import("fontkit").Font} font
@@ -322,19 +322,19 @@ export function buildFavicon(spec, font, { square = false, size } = {}) {
 	}
 
 	const box = union(boxes);
-	// Each icon centres its own letters in its own tile; wide or tall glyphs shrink to keep the margin.
+	// Each icon centers its own letters in its own tile; wide or tall glyphs shrink to keep the margin.
 	const fit = (MAX_FILL * TILE) / Math.max(box.maxX - box.minX, box.maxY - box.minY);
 	if (fit < 1) return buildFavicon(spec, font, { square, size: glyphSize * fit * 0.999 });
 	const ox = TILE / 2 - (box.minX + box.maxX) / 2;
-	// A descender (g, y, p) counts only partly when centring, so the letters' body sits lower & reads as centred.
+	// A descender (g, y, p) counts only partly when centering, so the letters' body sits lower & reads as centered.
 	// The baseline is y = 0. Round letters dip just below it (overshoot), which is not a descender.
-	// Only a mix needs it: when every letter descends (py, g) the letters share their depth, so standard centring holds.
+	// Only a mix needs it: when every letter descends (py, g) the letters share their depth, so standard centering holds.
 	const overshoot = OVERSHOOT * glyphSize;
 	const descends = visible.map((glyph) => glyph.inkBox.maxY > overshoot);
 	const mixed = descends.some(Boolean) && !descends.every(Boolean);
 	const weight = mixed ? (favicon.descender ?? DESCENDER_WEIGHT) : 1;
 	const bottom = box.maxY > overshoot ? overshoot + (box.maxY - overshoot) * weight : box.maxY;
-	// A positive lift raises the letters above that centre.
+	// A positive lift raises the letters above that center.
 	const oy = TILE / 2 - (box.minY + bottom) / 2 - (favicon.lift ?? 0) * TILE;
 	// Sitting lower can push a descender past the margin: shrink until it clears.
 	const margin = (TILE * (1 - MAX_FILL)) / 2;

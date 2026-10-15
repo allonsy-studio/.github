@@ -54,7 +54,7 @@ export function mergePatch(base, patch) {
  * Fill defaults & check every paint reference.
  * @param {object} raw A valid spec.
  * @param {string} baseDir Directory font paths resolve against.
- * @returns {object} A resolved spec: `font.path` is absolute, palettes are normalised.
+ * @returns {object} A resolved spec: `font.path` is absolute, palettes are normalized.
  */
 export function resolveSpec(raw, baseDir) {
 	validateSpec(raw);
@@ -114,7 +114,7 @@ function checkPaint(spec, value, where, { allowGradient = true, allowLiteral = t
 			// Falls through to the error below.
 		}
 	}
-	throw new Error(`${where}: "${value}" is not a palette name${allowGradient ? " or @gradient" : ""}${allowLiteral ? " or colour" : ""}.`);
+	throw new Error(`${where}: "${value}" is not a palette name${allowGradient ? " or @gradient" : ""}${allowLiteral ? " or color" : ""}.`);
 }
 
 /**
@@ -152,7 +152,7 @@ export function paintsFor(paint, count) {
 }
 
 /**
- * The light-mode colour of a paint: palette name, literal, or a gradient's stops.
+ * The light-mode color of a paint: palette name, literal, or a gradient's stops.
  * @param {object} spec
  * @param {string} value
  * @param {"light" | "dark"} [scheme]

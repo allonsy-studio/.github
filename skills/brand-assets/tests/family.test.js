@@ -35,7 +35,7 @@ function workspacesRepo() {
 }
 
 describe("discoverWorkspaces", () => {
-	it("reads the globs, honours exclusions, & slugs like the site", () => {
+	it("reads the globs, honors exclusions, & slugs like the site", () => {
 		assert.deepEqual(
 			discoverWorkspaces(workspacesRepo()).map((w) => w.slug),
 			["skill-design-system", "skill-dreamlight-valley", "skill-structured-data"],
@@ -140,7 +140,7 @@ describe("buildFamily & wirePackages", () => {
 		assert.ok(!existsSync(path.join(img, "skill-design-system-wordmark.svg")));
 	});
 
-	it("centres each icon's letters in its own tile", async (t) => {
+	it("centers each icon's letters in its own tile", async (t) => {
 		if (!(await browserAvailable())) return t.skip("Chromium unavailable");
 		const work = tempDir();
 		const family = path.join(work, "family.json");
@@ -165,7 +165,7 @@ describe("buildFamily & wirePackages", () => {
 				}
 				const dx = (minX + maxX) / 2 - size / 2;
 				const dy = (minY + maxY) / 2 - size / 2;
-				assert.ok(Math.abs(dx) <= 3 && Math.abs(dy) <= 3, `${glyph} is off centre by ${dx}, ${dy} px at ${size} px`);
+				assert.ok(Math.abs(dx) <= 3 && Math.abs(dy) <= 3, `${glyph} is off center by ${dx}, ${dy} px at ${size} px`);
 			}
 		});
 	});

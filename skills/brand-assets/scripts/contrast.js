@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * WCAG contrast for every palette colour on the light & dark surfaces, plus the favicon glyph on its tile.
+ * WCAG contrast for every palette color on the light & dark surfaces, plus the favicon glyph on its tile.
  * Exits 1 when a text or graphic paint misses its target; decorative paints are reported, never failed.
  *
  * Usage: node scripts/contrast.js <spec.json> [--json] [--report-only]

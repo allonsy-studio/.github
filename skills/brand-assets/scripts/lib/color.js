@@ -1,12 +1,12 @@
 /**
- * Colour parsing, WCAG contrast, & OKLCH deepening.
+ * Color parsing, WCAG contrast, & OKLCH deepening.
  * @module color
  */
 
 /** WCAG 2 targets by palette role. Logotypes are exempt from 1.4.3; the studio holds glyphs to text contrast anyway. */
 export const TARGETS = { text: 4.5, graphic: 3, decorative: 0 };
 
-/** Named colours the specs may use. */
+/** Named colors the specs may use. */
 const NAMED = { white: "#ffffff", black: "#000000" };
 
 /**
@@ -29,7 +29,7 @@ export function parseColor(input) {
 	}
 	match = /^rgb\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)\s*\)$/.exec(value);
 	if (match) return { r: +match[1], g: +match[2], b: +match[3] };
-	throw new Error(`Unsupported colour "${input}": use #rrggbb, #rgb, rgb(), white, or black.`);
+	throw new Error(`Unsupported color "${input}": use #rrggbb, #rgb, rgb(), white, or black.`);
 }
 
 /**
@@ -41,7 +41,7 @@ export function toHex({ r, g, b }) {
 }
 
 /**
- * Normalise any accepted colour to lowercase #rrggbb.
+ * Normalize any accepted color to lowercase #rrggbb.
  * @param {string} input
  * @returns {string}
  */
@@ -110,7 +110,7 @@ function oklchToLinear({ l: L, c, h }) {
 }
 
 /**
- * OKLCH to hex, reducing chroma until the colour is inside sRGB.
+ * OKLCH to hex, reducing chroma until the color is inside sRGB.
  * @param {{ l: number, c: number, h: number }} lch
  * @returns {string}
  */
@@ -127,8 +127,8 @@ export function fromOklch(lch) {
 }
 
 /**
- * Move a colour's OKLCH lightness away from the surface, keeping hue, until it meets the target.
- * Light surfaces darken the colour; dark surfaces lighten it.
+ * Move a color's OKLCH lightness away from the surface, keeping hue, until it meets the target.
+ * Light surfaces darken the color; dark surfaces lighten it.
  * @param {string} color
  * @param {string} surface
  * @param {number} target Contrast ratio.

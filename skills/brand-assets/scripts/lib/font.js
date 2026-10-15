@@ -185,7 +185,7 @@ export function commandsToPath(commands, scale, dx = 0) {
  * @property {number} x Pen position in pixels.
  * @property {number} advance Pixels.
  * @property {{ minX: number, minY: number, maxX: number, maxY: number }} bbox Pixels, y down; empty glyphs are zero size at the pen.
- * @property {{ minX: number, minY: number, maxX: number, maxY: number }} inkBox Like `bbox`, measured on the slanted outline when `skew` is set, so centring follows the ink, not the slanted corners of the upright box.
+ * @property {{ minX: number, minY: number, maxX: number, maxY: number }} inkBox Like `bbox`, measured on the slanted outline when `skew` is set, so centering follows the ink, not the slanted corners of the upright box.
  */
 
 /**

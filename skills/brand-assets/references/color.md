@@ -1,6 +1,6 @@
-# Colour & contrast
+# Color & contrast
 
-`scripts/contrast.js` measures every palette colour on the light (`#ffffff`) & dark (`#101216`) surfaces, the favicon glyph on each tile stop, & the tile's strongest stop on Chrome's light (`#dee1e6`) & dark (`#202124`) tab strips, which catches a near-black tile that vanishes in dark mode. It exits 1 when a text or graphic paint misses its target.
+`scripts/contrast.js` measures every palette color on the light (`#ffffff`) & dark (`#101216`) surfaces, the favicon glyph on each tile stop, & the tile's strongest stop on Chrome's light (`#dee1e6`) & dark (`#202124`) tab strips, which catches a near-black tile that vanishes in dark mode. It exits 1 when a text or graphic paint misses its target.
 
 ## Roles
 
@@ -14,9 +14,9 @@ WCAG 2.2 exempts logotypes from text contrast ([1.4.3](https://www.w3.org/TR/WCA
 
 ## Tint, don't reuse
 
-Brand colours tuned for dark surfaces fail on white. Measured on `#ffffff`:
+Brand colors tuned for dark surfaces fail on white. Measured on `#ffffff`:
 
-| Brand colour | Ratio | Passing light value |
+| Brand color | Ratio | Passing light value |
 | --- | --- | --- |
 | `#d22d6f` magenta | 4.83:1 | as is; dark counterpart `#ff7aa8` |
 | `#ff944d` orange | 2.19:1 | `#c4510a` |
@@ -27,7 +27,7 @@ Keep the brand value for dark mode & deepen only the light value.
 
 ## Deepening
 
-`variants.js --deepen` (implied by `--accents`) & `contrast.js` both use the same rule: hold the OKLCH hue, move lightness away from the surface until the colour meets its target, & reduce chroma only when the colour leaves sRGB. The result is the lightest passing shade, so the accent stays as close to the brand as contrast allows. `contrast.js` prints the suggested values; it never edits the spec.
+`variants.js --deepen` (implied by `--accents`) & `contrast.js` both use the same rule: hold the OKLCH hue, move lightness away from the surface until the color meets its target, & reduce chroma only when the color leaves sRGB. The result is the lightest passing shade, so the accent stays as close to the brand as contrast allows. `contrast.js` prints the suggested values; it never edits the spec.
 
 ## Reporting
 

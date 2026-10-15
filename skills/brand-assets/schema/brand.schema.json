@@ -67,7 +67,7 @@
 				"additionalProperties": false,
 				"properties": {
 					"stops": {
-						"description": "Palette names or literal colours, start to end.",
+						"description": "Palette names or literal colors, start to end.",
 						"type": "array",
 						"minItems": 2,
 						"items": { "type": "string" }
@@ -131,8 +131,8 @@
 			"additionalProperties": false,
 			"properties": {
 				"glyph": { "description": "Defaults to the first letter of `text`.", "type": "string", "minLength": 1 },
-				"tile": { "description": "A palette name, `@gradient`, or literal colour.", "type": "string" },
-				"ink": { "description": "The glyph colour: a palette name or literal colour.", "type": "string", "default": "#ffffff" },
+				"tile": { "description": "A palette name, `@gradient`, or literal color.", "type": "string" },
+				"ink": { "description": "The glyph color: a palette name or literal color.", "type": "string", "default": "#ffffff" },
 				"radius": { "description": "Tile corner radius as a fraction of the tile.", "type": "number", "minimum": 0, "maximum": 0.5, "default": 0.22 },
 				"fit": {
 					"description": "How the glyph is sized: `em` scales the font's em box by `scale`; `x-height` sets lowercase height to `fill` of the tile, so a family shares one letter size; `ink` sets the drawn letters' larger side to `fill`.",
@@ -141,13 +141,13 @@
 				},
 				"fill": { "description": "Share of the tile for `x-height` (default 0.48) or `ink` (default 0.62).", "type": "number", "exclusiveMinimum": 0, "maximum": 0.8 },
 				"descender": {
-					"description": "For a mix of letters with & without descenders (ag): the share of the descender counted when centring. 1 centres the full letters; lower values sit the letters lower. Letters that all descend (py, g) or none (ad) always use standard centring.",
+					"description": "For a mix of letters with & without descenders (ag): the share of the descender counted when centering. 1 centers the full letters; lower values sit the letters lower. Letters that all descend (py, g) or none (ad) always use standard centering.",
 					"type": "number",
 					"minimum": 0,
 					"maximum": 1,
 					"default": 0.5
 				},
-				"lift": { "description": "Raise the glyph by this share of the tile; 0.01 to 0.03 reads as optically centred.", "type": "number", "minimum": -0.1, "maximum": 0.1, "default": 0 },
+				"lift": { "description": "Raise the glyph by this share of the tile; 0.01 to 0.03 reads as optically centered.", "type": "number", "minimum": -0.1, "maximum": 0.1, "default": 0 },
 				"scale": { "description": "Glyph size as a fraction of the tile, for `fit: em`.", "type": "number", "exclusiveMinimum": 0, "maximum": 1.2, "default": 0.72 },
 				"dashes": { "description": "Speed dashes beside the glyph; two survive at 16px, three do not.", "type": "integer", "minimum": 0, "maximum": 3, "default": 0 }
 			}
@@ -159,7 +159,7 @@
 			"properties": {
 				"tagline": { "description": "Defaults to project.json `tagline`.", "type": "string" },
 				"url": { "description": "Small line under the tagline, such as the site address without the scheme.", "type": "string" },
-				"accent": { "description": "Bar along the bottom edge: a palette name, `@gradient`, or literal colour.", "type": "string" }
+				"accent": { "description": "Bar along the bottom edge: a palette name, `@gradient`, or literal color.", "type": "string" }
 			}
 		}
 	}

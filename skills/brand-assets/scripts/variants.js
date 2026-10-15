@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * Build colour (or any other) variants of one spec without editing finished SVGs.
+ * Build color (or any other) variants of one spec without editing finished SVGs.
  *
  * Usage:
  *   node scripts/variants.js --spec <spec.json> --variants <variants.json> --out <dir> [--deepen]
  *   node scripts/variants.js --spec <spec.json> --token <palette name> --accents "#d22d6f,#1f91ad" --out <dir>
  *
  * variants.json is an array of { "id", "label"?, "patch" }: each patch deep-merges into the spec (null deletes a key).
- * --accents makes one variant per colour for that palette entry & always deepens.
- * --deepen moves failing text & graphic colours to the nearest passing lightness, keeping hue.
+ * --accents makes one variant per color for that palette entry & always deepens.
+ * --deepen moves failing text & graphic colors to the nearest passing lightness, keeping hue.
  */
 
 import { readFileSync } from "node:fs";
@@ -35,7 +35,7 @@ export function accentVariants(token, accents) {
 }
 
 /**
- * Build every variant, optionally deepening failing colours first.
+ * Build every variant, optionally deepening failing colors first.
  * @param {string} specFile
  * @param {{ id: string, label?: string, patch: object }[]} variants
  * @param {string} outDir

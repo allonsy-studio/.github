@@ -94,7 +94,7 @@ export function wire(buildDir, repo, { dryRun = false, iconsOnly = false } = {})
 		fields[FIELDS[name]] = name;
 		project[FIELDS[name]] = name;
 	}
-	// Keep the spec beside the site so later colour or icon changes rebuild from it.
+	// Keep the spec beside the site so later color or icon changes rebuild from it.
 	const specFile = path.join(buildDir, "spec.json");
 	const brandJson = path.join(repo, site, BRAND_FILE);
 	let spec = null;

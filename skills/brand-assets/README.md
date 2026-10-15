@@ -1,6 +1,6 @@
 # brand-assets
 
-A skill that designs a wordmark & icon set for an Allons-y Studio open source project & installs them into its oss-docs-site. Letters are outlined from the project's font, so the SVGs need no font at render time; light & dark colours swap inside one file.
+A skill that designs a wordmark & icon set for an Allons-y Studio open source project & installs them into its oss-docs-site. Letters are outlined from the project's font, so the SVGs need no font at render time; light & dark colors swap inside one file.
 
 `SKILL.md` is written for agents. This file is for people: what the skill makes, how to run it, & how it is laid out.
 
@@ -27,7 +27,7 @@ node scripts/fonts.js docs/content/assets/fonts                 # families, axes
 node scripts/build.js concepts/*.json --out out/concepts         # one folder of SVGs per spec
 node scripts/sheet.js out/concepts                               # light & dark contact sheets
 node scripts/variants.js --spec final.json --token hot \
-  --accents "#d22d6f,#1f91ad" --out out/colour                   # accent options, deepened to pass
+  --accents "#d22d6f,#1f91ad" --out out/color                   # accent options, deepened to pass
 node scripts/contrast.js final.json                              # WCAG table; exits 1 on a miss
 node scripts/build.js final.json --out out/final --flat
 node scripts/export.js out/final --og --project .                # touch icon, .ico, Open Graph

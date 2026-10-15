@@ -124,7 +124,7 @@ describe("browser steps", () => {
 		available = await browserAvailable();
 	});
 
-	it("rasterises the wordmark with the scheme's colours", async (t) => {
+	it("rasterizes the wordmark with the scheme's colors", async (t) => {
 		if (!available) return t.skip("Chromium unavailable");
 		const build = path.join(tempDir(), "b");
 		await buildToDir(DASHLY, build);
@@ -186,7 +186,7 @@ describe("browser steps", () => {
 		assert.equal(leftInk(pixels), 30);
 	});
 
-	it("renders light, dark, & forced-colours sheets", async (t) => {
+	it("renders light, dark, & forced-colors sheets", async (t) => {
 		if (!available) return t.skip("Chromium unavailable");
 		const out = tempDir();
 		await buildToDir(DASHLY, path.join(out, "a"));

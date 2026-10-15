@@ -1,5 +1,5 @@
 /**
- * Headless Chromium helpers: rasterise SVG through a canvas & screenshot HTML.
+ * Headless Chromium helpers: rasterize SVG through a canvas & screenshot HTML.
  * @module browser
  */
 
@@ -42,7 +42,7 @@ export async function browserAvailable() {
 }
 
 /**
- * Set an SVG's width & height attributes so the browser rasterises at the target size.
+ * Set an SVG's width & height attributes so the browser rasterizes at the target size.
  * @param {string} svg
  * @param {number} width
  * @param {number} height
@@ -56,7 +56,7 @@ export function sizeSvg(svg, width, height) {
 }
 
 /**
- * Rasterise SVG markup to straight RGBA pixels at one size.
+ * Rasterize SVG markup to straight RGBA pixels at one size.
  * @param {import("playwright").Browser} browser
  * @param {string} svg
  * @param {{ width: number, height: number, scheme?: "light" | "dark" }} options

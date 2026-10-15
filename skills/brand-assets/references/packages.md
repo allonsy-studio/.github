@@ -44,10 +44,10 @@ For Workspaces projects (`agent-skills` is the model): one icon per workspace pa
 ## Choosing glyphs & tiles
 
 - `init` drops a leading word most packages share (`skill-` in agent-skills), then tries the first letter, the initials of two words, & the first two letters, keeping glyphs distinct across the family.
-- Distinct glyphs first: a tile colour alone is a weak signal, & none at all for some colour vision.
-- Tiles cycle through palette colours & gradients that read in both tab strips with the favicon ink; ink-dark tiles are left out.
+- Distinct glyphs first: a tile color alone is a weak signal, & none at all for some color vision.
+- Tiles cycle through palette colors & gradients that read in both tab strips with the favicon ink; ink-dark tiles are left out.
 - One to three letters fit; wider glyphs shrink to keep a margin inside the tile.
-- Each icon is centred within its own tile; icons never share a baseline with each other. Letter size comes from the font's x-height, so single letters match across the family without being tied together.
+- Each icon is centered within its own tile; icons never share a baseline with each other. Letter size comes from the font's x-height, so single letters match across the family without being tied together.
 - The slug is the last segment of the package name: the site's URL & the icon's file name.
 
 ## On the site

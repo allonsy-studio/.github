@@ -1,5 +1,5 @@
 /**
- * Contrast checks for a resolved spec, & a palette patch that deepens failing colours.
+ * Contrast checks for a resolved spec, & a palette patch that deepens failing colors.
  * @module audit
  */
 
@@ -29,7 +29,7 @@ function measure(row) {
 }
 
 /**
- * Every palette colour against its surface in both schemes, plus the favicon glyph on its tile.
+ * Every palette color against its surface in both schemes, plus the favicon glyph on its tile.
  * @param {object} spec A resolved spec.
  * @returns {ContrastRow[]}
  */
@@ -62,11 +62,11 @@ export function contrastRows(spec) {
 	return rows;
 }
 
-/** Chrome's light & dark tab-strip colours, where favicons sit. */
+/** Chrome's light & dark tab-strip colors, where favicons sit. */
 export const TAB_BARS = { light: "#dee1e6", dark: "#202124" };
 
 /**
- * Lightest change that brings every failing palette colour up to its target.
+ * Lightest change that brings every failing palette color up to its target.
  * @param {object} spec A resolved spec.
  * @returns {{ patch: { palette: Record<string, { light?: string, dark?: string }> }, changes: { name: string, scheme: string, from: string, to: string, ratio: number, reached: boolean }[] }}
  */
@@ -94,7 +94,7 @@ export function deepenPatch(spec) {
  * @returns {string}
  */
 export function contrastTable(rows) {
-	const lines = ["| Subject | Scheme | Colour | Against | Ratio | Target | Result |", "| --- | --- | --- | --- | --- | --- | --- |"];
+	const lines = ["| Subject | Scheme | Color | Against | Ratio | Target | Result |", "| --- | --- | --- | --- | --- | --- | --- |"];
 	for (const row of rows) {
 		const result = { pass: "pass", fail: "**fail**", note: "decorative" }[row.status];
 		const target = row.target ? `${row.target}:1` : "none";

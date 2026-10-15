@@ -41,7 +41,7 @@ describe("parseColor", () => {
 });
 
 describe("deepen", () => {
-	it("darkens a failing colour on white until it passes, keeping its hue", () => {
+	it("darkens a failing color on white until it passes, keeping its hue", () => {
 		const result = deepen("#ff944d", "#ffffff", 4.5);
 		assert.ok(result.changed && result.reached);
 		assert.ok(result.ratio >= 4.5);
@@ -49,13 +49,13 @@ describe("deepen", () => {
 		assert.ok(Math.abs(toOklch(result.hex).h - toOklch("#ff944d").h) < 4);
 	});
 
-	it("lightens a failing colour on a dark surface", () => {
+	it("lightens a failing color on a dark surface", () => {
 		const result = deepen("#5a1030", "#101216", 4.5);
 		assert.ok(result.reached);
 		assert.ok(toOklch(result.hex).l > toOklch("#5a1030").l);
 	});
 
-	it("leaves passing colours alone", () => {
+	it("leaves passing colors alone", () => {
 		assert.deepEqual(deepen("#d22d6f", "#ffffff", 4.5), { hex: "#d22d6f", ratio: contrast("#d22d6f", "#ffffff"), changed: false, reached: true });
 	});
 });

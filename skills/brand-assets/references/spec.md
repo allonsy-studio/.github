@@ -36,7 +36,7 @@ One JSON file per design direction. `scripts/build.js` reads it; `schema/brand.s
 | `padding` | Space around the drawing in em |
 | `surfaces` | Light & dark page backgrounds; defaults match oss-docs-site |
 | `palette.<name>` | `light`, `dark`, `role` (`text`, `graphic`, `decorative`); each becomes a class |
-| `gradients.<name>` | `stops` (palette names or colours) & `direction` |
+| `gradients.<name>` | `stops` (palette names or colors) & `direction` |
 | `paint` | Which paint each letter takes |
 | `motion` | Speed lines behind the leading letter: `lines`, `thickness`, `gap`, `inset` |
 | `decorations` | Rectangles relative to the baseline origin for stripes, cursors, or bars; `skew` makes them lean with the letters |
@@ -49,7 +49,7 @@ The origin for `decorations` is the pen position at the baseline: `y` is negativ
 
 - A palette name: `"hot"`. Swaps in dark mode.
 - A gradient: `"@sunrise"`. Its stops swap in dark mode when they are palette names.
-- A literal colour (`favicon`, gradient stops, `og.accent` only): `"#ffffff"`, `"white"`.
+- A literal color (`favicon`, gradient stops, `og.accent` only): `"#ffffff"`, `"white"`.
 
 `paint` keys: `"*"` for every letter, `"3"` for one letter (0-based), `"4-5"` for an inclusive range. Single letters override ranges, ranges override `*`.
 

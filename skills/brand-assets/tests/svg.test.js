@@ -28,7 +28,7 @@ describe("buildWordmark", () => {
 		assert.match(svg, /role="img"/);
 	});
 
-	it("swaps colours inside one file", async () => {
+	it("swaps colors inside one file", async () => {
 		const { spec, font } = await setup();
 		const { svg } = buildWordmark(spec, font);
 		assert.match(svg, /\.b-ink\{fill:#16181d\}/);
@@ -101,7 +101,7 @@ describe("descender weighting", () => {
 		assert.ok(half > full + 1, `ag moved from ${full} to ${half}`);
 	});
 
-	it("uses standard centring when every letter descends", async () => {
+	it("uses standard centering when every letter descends", async () => {
 		assert.equal(await groupY({ glyph: "py", descender: 1 }), await groupY({ glyph: "py" }));
 		assert.equal(await groupY({ glyph: "g", descender: 1 }), await groupY({ glyph: "g", descender: 0 }));
 	});

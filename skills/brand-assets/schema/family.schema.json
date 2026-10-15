@@ -24,7 +24,7 @@
 					},
 					"name": { "description": "Full package name: the SVG title. Defaults to `slug`.", "type": "string" },
 					"glyph": { "description": "One to three letters on the tile. Defaults to the slug's first letter.", "type": "string", "minLength": 1, "maxLength": 3 },
-					"tile": { "description": "A palette name, `@gradient`, or literal colour from the base spec. Defaults to the base favicon tile.", "type": "string" },
+					"tile": { "description": "A palette name, `@gradient`, or literal color from the base spec. Defaults to the base favicon tile.", "type": "string" },
 					"wordmark": { "description": "Also build a wordmark of `text` for this package.", "type": "boolean", "default": false },
 					"text": { "description": "Wordmark letters; defaults to `slug`.", "type": "string", "minLength": 1 },
 					"patch": { "description": "Any other spec changes for this package, deep-merged last.", "type": "object" }

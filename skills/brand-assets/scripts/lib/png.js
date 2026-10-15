@@ -25,7 +25,7 @@ function chunk(type, data) {
  * Encode RGBA pixels as a PNG.
  * @param {{ width: number, height: number, data: Uint8Array | number[] }} image Straight (unpremultiplied) RGBA, row-major.
  * @param {{ alpha?: boolean, background?: { r: number, g: number, b: number } }} [options]
- *   `alpha: false` writes RGB (colour type 2), compositing any transparency over `background` (white by default).
+ *   `alpha: false` writes RGB (color type 2), compositing any transparency over `background` (white by default).
  * @returns {Buffer}
  */
 export function encodePng({ width, height, data }, { alpha = true, background = { r: 255, g: 255, b: 255 } } = {}) {
@@ -60,7 +60,7 @@ export function encodePng({ width, height, data }, { alpha = true, background = 
 }
 
 /**
- * Read width, height, & colour type from a PNG header.
+ * Read width, height, & color type from a PNG header.
  * @param {Buffer} png
  * @returns {{ width: number, height: number, colorType: number, alpha: boolean }}
  */
