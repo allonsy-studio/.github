@@ -1,7 +1,7 @@
 # Allons-y Studio: shared conventions
 
-The studio-wide reference: voice, style, licensing, and brand. Individual repos carry
-their own `AGENTS.md` for their stack, commands, and testing: this file covers only
+The studio-wide reference: voice, style, licensing, & brand. Individual repos carry
+their own `AGENTS.md` for their stack, commands, & testing: this file covers only
 what holds across all of them.
 
 ## About the studio
@@ -96,9 +96,9 @@ Styling defaults (detail in [`skills/oss-docs-site/references/styling.md`](skill
 
 To build a project site with the studio brand, use [`skills/oss-docs-site/SKILL.md`](skills/oss-docs-site/SKILL.md).
 
-## Commits and pull requests
+## Commits & pull requests
 
-Commit and PR bodies are a short note, not a report. Follow the repo's PR template: fill
+Commit & PR bodies are a short note, not a report. Follow the repo's PR template: fill
 each section in a line, or remove it when it's optional and empty.
 
 - Pronoun-free, as in all studio copy: no "I", "we", or "our" in PR titles, descriptions,
@@ -106,11 +106,11 @@ each section in a line, or remove it when it's optional and empty.
 - PR descriptions: 1 to 3 sentences of prose by default, ~100 words at most. Lead with a
   verb; never open with "This PR".
 - Commit bodies: 1 to 2 sentences, or none for a small change.
-- Cover what changed, the why when the title doesn't already say it, and anything someone
+- Cover what changed, the why when the title doesn't already say it, & anything someone
   must act on (a breaking change, a manual step).
 - Leave out environment or sandbox notes, after-merge process, file lists the diff already
   shows, speculation about causes, side findings (open an issue instead), unfilled
-  template comments, and an empty `Closes #`.
+  template comments, & an empty `Closes #`.
 - Test plan: one line on what was actually checked.
 - Review replies: one sentence plus the commit SHA.
 - No headers beyond the template's, no bold-label bullets, no em dashes.

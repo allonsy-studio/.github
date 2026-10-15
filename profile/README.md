@@ -5,7 +5,7 @@
     <img id="logo" src="https://raw.githubusercontent.com/allonsy-studio/.github/main/assets/png/banner_header_1500x500.png" alt="Allons-y Studio" width="1500"/>
   </picture>
 
-  **Open-source design systems & front-end tooling.** _Allons-y_ — let's go.
+  **Open-source design systems & front-end tooling.** _Allons-y_: let's go.
 
   <img src="https://github.com/allonsy-studio/.github/blob/main/assets/tag-rule.gif" alt="" height="10" />
 </div>
@@ -16,17 +16,17 @@ reused, remixed, & improved together.
 
 ### Focus areas
 
-- 🎨 **Design systems** — composable components & tokens that scale across products.
-- ♿ **Accessibility first** — WCAG-conformant by default, not as an afterthought.
-- 🌐 **Web standards** — built on the platform, with contributions upstream.
-- 🧰 **Developer experience** — tooling that makes the right thing the easy thing.
+- 🎨 **Design systems**: composable components & tokens that scale across products.
+- ♿ **Accessibility first**: WCAG-conformant by default, not as an afterthought.
+- 🌐 **Web standards**: built on the platform, with contributions upstream.
+- 🧰 **Developer experience**: tooling that makes the right thing the easy thing.
 
 ### Get involved
 
 - Browse the [repositories](https://github.com/orgs/allonsy-studio/repositories) to see what's in progress.
 - Read the [contributing guide](https://github.com/allonsy-studio/.github/blob/main/CONTRIBUTING.md) before opening a pull request.
 - Found a bug or have an idea? [Open an issue](https://github.com/allonsy-studio/.github/issues/new/choose).
-- Be excellent to each other — see the [Code of Conduct](https://github.com/allonsy-studio/.github/blob/main/CODE_OF_CONDUCT.md).
+- Be excellent to each other; see the [Code of Conduct](https://github.com/allonsy-studio/.github/blob/main/CODE_OF_CONDUCT.md).
 
 ### 🚀 Hire Allons-y Studio for your next project
 
@@ -39,8 +39,8 @@ The same care behind this open-source work goes into every client project. From 
 - ✅ **Front-end architecture & tooling** that makes your team faster.
 - ✅ **Standards-first engineering** you won't have to rewrite next year.
 
-👉 **[Start a project](mailto:contact@allons-y.studio?subject=New%20project%20inquiry)** — or [open a conversation](https://github.com/orgs/allonsy-studio/discussions) & share what you're building. _Allons-y!_
+👉 **[Start a project](mailto:contact@allons-y.studio?subject=New%20project%20inquiry)** or [open a conversation](https://github.com/orgs/allonsy-studio/discussions) & share what you're building. _Allons-y!_
 
 ### Support the work
 
-If these projects help you, consider [buying a coffee](https://www.buymeacoffee.com/castastrophe) ☕ — it keeps the work going.
+If these projects help you, consider [buying a coffee](https://www.buymeacoffee.com/castastrophe) ☕. It keeps the work going.

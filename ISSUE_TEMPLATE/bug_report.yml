@@ -59,6 +59,6 @@ body:
     id: context
     attributes:
       label: Additional context
-      description: Anything else that might help — screenshots, related issues, workarounds you've tried.
+      description: Anything else that might help: screenshots, related issues, & workarounds you've tried.
     validations:
       required: false
