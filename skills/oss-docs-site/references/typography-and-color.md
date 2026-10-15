@@ -8,7 +8,7 @@ A project may bring its own font families, but the monospace is the same everywh
 | --- | --- |
 | `--font-sans` | Default: `--sans-stack`, the system UI stack from `tokens.css`. A project may put its own family in front of it |
 | `--font-display` | Headings & the brand link; defaults to `--font-sans`. |
-| `--font-signature` | Yellowtail. Flourish only, a limited use; never headings, tag lines, or running text. |
+| `--font-signature` | Yellowtail. Flourish only, a limited use; never headings, tag lines, or running text. The one exception is the studio layer, which signs the studio name in the call to action title. |
 | `--font-mono` | Locked: PT Mono, then the platform monospace fonts. Not overridable |
 
 Every site self-hosts its fonts from `content/assets/fonts/`, copied from the org's `assets/fonts/`, & `tokens.css` declares them, each with a metric-matched fallback face: PT Mono (preloaded in the head), Instrument Sans (regular & italic, 400 to 700), & Yellowtail. A face downloads only when text uses it, so unused ones cost nothing. A project sets its fonts in `content/assets/styles/project.css`: put the bundled family first, as `--font-sans: "Instrument Sans", "Instrument Sans Fallback", var(--sans-stack);`, or load another family there (`@font-face` or `@import`, with `font-display: swap`). No font request goes to another host; nothing redeclares `--font-mono`.
@@ -17,10 +17,10 @@ Every site self-hosts its fonts from `content/assets/fonts/`, copied from the or
 
 Set one `--accent` in `content/assets/styles/project.css` (any CSS color; the scaffold's `--accent` option seeds it). `tokens.css` derives the rest in CSS, so there is no per-project color math:
 
-- `--accent-text`: `color-mix(in oklab, var(--accent) 45%, var(--fg))`. `--fg` is dark in light mode & light in dark mode, so one expression pulls the accent toward readable text on either surface.
+- `--accent-text`: `light-dark(oklch(from color-mix(in oklch, var(--accent) 82%, black) min(l, 0.52) c h), color-mix(in oklch, var(--accent) 55%, white))`. The accent is darkened on light surfaces (with its lightness capped at 0.52, so a bright accent such as yellow or orange still holds 4.5:1 on white) & lightened on dark ones, so one expression gives readable text & links on either.
 - `--on-accent`: `oklab(from var(--accent) clamp(0, calc((0.58 - l) * 1000), 1) 0 0)`. Relative color syntax turns the accent's lightness into black or white; `color-mix()` alone cannot choose between two colors.
 
-The 45% mix & the 0.58 threshold are the two knobs. A bright yellow gets dark button text & a darker text shade in light mode, as intended. A mid-tone accent near the threshold can still leave button text under 4.5:1: the Cypress audit reports it, & the fix is a slightly different accent.
+The 82% & 55% mixes, the 0.52 lightness cap, & the 0.58 threshold are the knobs. A bright yellow gets dark button text & a darker text shade in light mode, as intended. A mid-tone accent near the threshold can still leave button text under 4.5:1: the Cypress audit reports it, & the fix is a slightly different accent.
 
 ## Contrast
 

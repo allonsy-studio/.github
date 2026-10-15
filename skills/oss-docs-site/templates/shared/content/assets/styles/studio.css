@@ -70,6 +70,18 @@
 		font-size: clamp(1.35rem, 3vw, 1.75rem);
 	}
 
+	/* The studio name is signed, wherever it appears in the call to action. */
+	[data-studio="cta"] [data-signature] {
+		font-family: var(--font-signature);
+		font-size: 1.3em;
+		font-weight: 400;
+		line-height: 1;
+	}
+
+	[data-studio="cta"] > div > p [data-signature] {
+		font-size: 1.5em;
+	}
+
 	[data-studio="cta"] ul {
 		flex-direction: row;
 		flex-wrap: wrap;
@@ -105,9 +117,15 @@
 		}
 	}
 
+	/* The footer art is 880 x 150 with about 270 of blank canvas on each side: crop to a 300 x 135 box. */
 	[data-studio="footer"] {
 		display: block;
-		max-inline-size: 100%;
-		margin-inline-start: auto;
+		max-inline-size: min(100%, 20rem);
+	}
+
+	[data-studio="footer"] img {
+		inline-size: 100%;
+		aspect-ratio: 300 / 135;
+		object-fit: cover;
 	}
 }

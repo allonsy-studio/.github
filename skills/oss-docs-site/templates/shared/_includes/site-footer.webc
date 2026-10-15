@@ -4,6 +4,10 @@
 		<div>
 			<p><strong @text="$data.site.packageName || $data.site.name"></strong></p>
 			<p @text="$data.site.tagline + '.'"></p>
+			<p webc:if="$data.site.npmRelease" data-badges>
+				<a :href="$data.site.npm"><img alt="npm version" :src="'https://img.shields.io/npm/v/' + $data.site.packageName + '?logo=npm&labelColor=black&color=%23' + $data.site.badgeColor" height="20" loading="lazy" /></a>
+				<a :href="$data.site.npm"><img alt="npm weekly downloads" :src="'https://img.shields.io/npm/dw/' + $data.site.packageName + '?logo=npm&labelColor=black&color=%23' + $data.site.badgeColor" height="20" loading="lazy" /></a>
+			</p>
 			<p>
 				<small>
 					Licensed under

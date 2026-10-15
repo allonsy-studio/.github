@@ -35,6 +35,16 @@ export function highlightFences(md) {
 }
 
 /**
+ * Wrap Markdown tables in a focusable region, so a wide one scrolls sideways.
+ *
+ * @param {import("markdown-it")} md
+ */
+export function scrollTables(md) {
+	md.renderer.rules.table_open = () => '<div data-scroll tabindex="0">\n<table>\n';
+	md.renderer.rules.table_close = () => "</table>\n</div>\n";
+}
+
+/**
  * @param {string} code
  * @param {string} [language]
  * @returns {string | undefined} JSON `[group, start, end][]` of character offsets; undefined when there are none

@@ -50,8 +50,11 @@ Name tokens by role (`--accent`, `--fg`, `--fg-muted`, `--bg`), never by hue, so
 
 ## Components
 
-- Chips & tags are pill-shaped (`border-radius: 999px`), quiet, & small.
-- Tables use hairline rules only: `border-block` on the table, a bottom border per row, a tinted header, no vertical lines or box. Split a dense table into focused ones; put chips in cells for tags.
+- Tags (the facts row under the hero actions) are an icon & a few words: no border, no fill.
+- Tables use hairline rules only: a bottom border on the table & on each row, no top border, no vertical lines or box. A wide table scrolls sideways inside `<div data-scroll tabindex="0">`; Markdown tables are wrapped for you, so wrap a hand-written one yourself. Split a dense table into focused ones; put tags in cells.
+- Contents lists (the home page's Documentation section) are a `<dl>`: the page title as `dt`, its description as `dd`, two columns when wide.
+- Footer: the name & tagline, npm version & weekly-download badges (shields.io, in the project accent), link columns, & the studio credit. The badges render only when the registry has a release (`site.npmRelease`, checked at build & cached an hour); with no release, or no network, they are left out. A site scaffolded earlier keeps its old `_data/site.js`: delete it & rerun the scaffold to get the check. The credit's SVG has blank canvas on each side, so CSS crops it to the middle 380 of 880 units.
+- Focus rings: 2px, & 1px on links in running text. Bold or large text & controls keep 2px.
 - Contact details: an icon-led grid beats an inline string, when icons are available.
 - Icons: [Font Awesome Free](https://fontawesome.com) 7, inlined as SVG at build time (`<fa-icon @name="brands/github">`, solid by default, or `regular/name`), so they paint with the first frame & nothing blocks render. They are decorative (`aria-hidden`), sized & colored by the text around them: put one before link text, never in place of it. Cards take an optional `icon` in `project.json`.
 - Terminal chrome: a container sets `--chrome: terminal`; code samples inside it get the title bar. The home hero sets it.

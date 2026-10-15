@@ -8,8 +8,8 @@
 		loading="lazy"
 	/>
 	<div>
-		<p webc:if="$data.studio.cta.eyebrow" @text="$data.studio.cta.eyebrow"></p>
-		<h2 @text="$data.studio.cta.title"></h2>
+		<p webc:if="$data.studio.cta.eyebrow"><template webc:nokeep @html="$data.studio.cta.eyebrowHtml"></template></p>
+		<h2><template webc:nokeep @html="$data.studio.cta.titleHtml"></template></h2>
 		<p @text="$data.studio.cta.body"></p>
 	</div>
 	<ul>

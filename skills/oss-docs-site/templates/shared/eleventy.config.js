@@ -10,7 +10,7 @@ import { HtmlBasePlugin } from "@11ty/eleventy";
 import webc from "@11ty/eleventy-plugin-webc";
 
 import { bundleCss } from "./utilities/bundle-css.js";
-import { highlightFences, tokenRanges } from "./utilities/highlight.js";
+import { highlightFences, scrollTables, tokenRanges } from "./utilities/highlight.js";
 import { faIcon, iconType } from "./utilities/icons.js";
 
 // Anchored to this file so the build runs from the repository root or docs/.
@@ -36,7 +36,7 @@ export default function (config) {
 	config.addJavaScriptFunction("tokenRanges", tokenRanges);
 	config.addJavaScriptFunction("faIcon", faIcon);
 	config.addJavaScriptFunction("iconType", iconType);
-	config.amendLibrary("md", highlightFences);
+	config.amendLibrary("md", (md) => md.use(highlightFences).use(scrollTables));
 
 	// Pages on the docs layout, in order, & the pages around one.
 	config.addCollection("docs", (api) =>
