@@ -1,6 +1,6 @@
 // Named .js in "type": "module" projects; .mjs loads as ESM elsewhere.
 
-import { readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 import Eleventy from "@11ty/eleventy";
@@ -33,6 +33,10 @@ export default defineConfig({
 			});
 			await eleventy.init();
 			await eleventy.write();
+			// Without core.css every page is unstyled & axe fails opaquely.
+			if (!existsSync(join(BUILD_DIR, "assets/styles/core.css"))) {
+				throw new Error("core.css was not written to the audit build; check the eleventy.after hook.");
+			}
 			await eleventy.serve(PORT);
 			on("after:run", () => eleventy.stopWatch());
 
