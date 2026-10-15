@@ -15,11 +15,11 @@ uphold it. Please report unacceptable behavior to **report@allons-y.studio**.
 
 You don't have to write code to make a difference:
 
-- 🐛 **Report bugs**: open an issue with clear reproduction steps.
-- ✨ **Suggest features**: tell us about the problem you're trying to solve.
-- 📚 **Improve docs**: typos, clarifications, & examples are always welcome.
-- 🧪 **Triage issues**: reproduce reports, confirm bugs, suggest labels.
-- 💬 **Help others**: answer questions in Discussions.
+- 🐛 **Report bugs.** Open an issue with clear reproduction steps.
+- ✨ **Suggest features.** Tell us about the problem you're trying to solve.
+- 📚 **Improve docs.** Typos, clarifications, & examples are always welcome.
+- 🧪 **Triage issues.** Reproduce reports, confirm bugs, suggest labels.
+- 💬 **Help others.** Answer questions in Discussions.
 
 ## Reporting bugs & requesting features
 

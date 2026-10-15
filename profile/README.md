@@ -5,7 +5,7 @@
     <img id="logo" src="https://raw.githubusercontent.com/allonsy-studio/.github/main/assets/png/banner_header_1500x500.png" alt="Allons-y Studio" width="1500"/>
   </picture>
 
-  **Open-source design systems & front-end tooling.** _Allons-y_: let's go.
+  **Open-source design systems & front-end tooling.** _Allons-y_, let's go.
 
   <img src="https://github.com/allonsy-studio/.github/blob/main/assets/tag-rule.gif" alt="" height="10" />
 </div>
@@ -16,10 +16,10 @@ reused, remixed, & improved together.
 
 ### Focus areas
 
-- 🎨 **Design systems**: composable components & tokens that scale across products.
-- ♿ **Accessibility first**: WCAG-conformant by default, not as an afterthought.
-- 🌐 **Web standards**: built on the platform, with contributions upstream.
-- 🧰 **Developer experience**: tooling that makes the right thing the easy thing.
+- 🎨 **Design systems.** Composable components & tokens that scale across products.
+- ♿ **Accessibility first.** WCAG-conformant by default, not as an afterthought.
+- 🌐 **Web standards.** Built on the platform, with contributions upstream.
+- 🧰 **Developer experience.** Tooling that makes the right thing the easy thing.
 
 ### Get involved
 

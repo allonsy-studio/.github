@@ -8,8 +8,8 @@ yarn changeset
 
 Pick the bump type when prompted, write a short but descriptive summary, & commit the generated file in `.changeset/` alongside your code:
 
-- **patch**: bug fixes
-- **minor**: new, backwards-compatible features
-- **major**: breaking changes
+- **patch** for bug fixes
+- **minor** for new, backwards-compatible features
+- **major** for breaking changes
 
 Please be sure that changes are written for a human reader rather than a short commit message. Changes that don't affect consumers (docs, tests, CI, internal refactors) don't need a changeset.

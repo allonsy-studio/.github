@@ -24,4 +24,4 @@ body:
     id: suggestion
     attributes:
       label: Suggested improvement
-      description: Optional: propose specific wording or structure changes.
+      description: Optional. Propose specific wording or structure changes.
