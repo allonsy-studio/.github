@@ -11,6 +11,7 @@
 		</header>
 		<main id="main" tabindex="-1">
 			<template webc:nokeep @html="content"></template>
+			<studio-cta webc:if="$data.site.studio"></studio-cta>
 		</main>
 		<site-footer></site-footer>
 	</body>

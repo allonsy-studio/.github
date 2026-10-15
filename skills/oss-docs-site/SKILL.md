@@ -43,7 +43,7 @@ Needs Node 24+ & `yarn install` in this directory. Run the scripts from the proj
 ## Hard rules
 
 - Studio layer: locked. A project may opt out whole with `"studio": false` under `oss-docs` in `package.json`, never edit it.
-- Contacts: the sales address appears only in the footer call to action; conduct & security contacts live in the org's `CODE_OF_CONDUCT.md` & `SECURITY.md`, which the footer links. Never a personal, hey, Gmail, or iCloud address, the `.llc` domain, or a `twitter:card` tag.
+- Contacts: the sales address appears only in the call to action above the footer; conduct & security contacts live in the org's `CODE_OF_CONDUCT.md` & `SECURITY.md`, which the footer links. Never a personal, hey, Gmail, or iCloud address, the `.llc` domain, or a `twitter:card` tag.
 - Licenses are resolved from `package.json` by the scaffold; which license a project takes is set in `AGENTS.md` (Licensing).
 - Theme follows the system (light & dark). No theme switcher.
 - Monospace is locked (PT Mono). Projects override sans & display only.

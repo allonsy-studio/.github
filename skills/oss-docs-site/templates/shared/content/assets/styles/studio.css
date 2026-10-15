@@ -42,6 +42,13 @@
 		color: var(--studio-ink);
 	}
 
+	/* The CTA closes main, above the footer. */
+	main > [data-studio="cta"] {
+		max-inline-size: 64rem;
+		margin-block: 4rem 0;
+		margin-inline: auto;
+	}
+
 	[data-studio="cta"] > img {
 		inline-size: 4.5rem;
 	}
@@ -52,11 +59,11 @@
 	}
 
 	[data-studio="cta"] > div > p:has(+ h2) {
-		color: var(--studio-link);
-		font-size: 0.8rem;
-		font-weight: 700;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
+		color: inherit;
+		font-size: inherit;
+		font-weight: 600;
+		letter-spacing: normal;
+		text-transform: none;
 	}
 
 	[data-studio="cta"] h2 {
