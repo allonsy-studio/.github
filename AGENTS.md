@@ -114,6 +114,9 @@ each section in a line, or remove it when it's optional and empty.
 - Test plan: one line on what was actually checked.
 - Review replies: one sentence plus the commit SHA.
 - No headers beyond the template's, no bold-label bullets, no em dashes.
+- After drafting, run the [humanizer](https://github.com/blader/humanizer) skill on the
+  prose. Where it conflicts with these rules, these rules win: no dashes even if a sample
+  uses them, & short replies & verb-first sentences stay as they are.
 
 ## Attribution
 
