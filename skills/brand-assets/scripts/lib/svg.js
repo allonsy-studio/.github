@@ -273,6 +273,31 @@ export function buildWordmark(spec, font) {
 }
 
 /**
+ * One size & one baseline for a family of icons: the largest size at which every member's letters fit
+ * the tile vertically with the x-height band centred, so ascenders, descenders, & dots never force one
+ * icon smaller than the rest. Widths are left to each icon, which narrows on the shared baseline.
+ * @param {{ spec: object, font: import("fontkit").Font }[]} members Resolved specs with their instanced fonts.
+ * @returns {{ glyphSize: number, baselineY: number }}
+ */
+export function familyLayout(members) {
+	if (!members.length) throw new Error("A family needs at least one icon.");
+	const half = (TILE * MAX_FILL) / 2;
+	let glyphSize = Infinity;
+	for (const { spec, font } of members) {
+		const size = faviconGlyphSize(spec, font);
+		const tan = Math.tan((spec.skew * Math.PI) / 180);
+		const { glyphs, metrics } = outline(font, spec.favicon.glyph, { size });
+		const box = union(glyphs.filter((g) => g.d).map((g) => skewBox(g.bbox, tan)));
+		const middle = -metrics.xHeight / 2;
+		const reach = half / Math.max(middle - box.minY, box.maxY - middle);
+		glyphSize = Math.min(glyphSize, size * Math.min(1, reach));
+	}
+	const [{ spec, font }] = members;
+	const xHeight = ((font.xHeight || font.unitsPerEm * 0.5) / font.unitsPerEm) * glyphSize;
+	return { glyphSize, baselineY: TILE / 2 + xHeight / 2 - (spec.favicon.lift ?? 0) * TILE };
+}
+
+/**
  * Build the favicon SVG: one glyph, optional dashes, on a tile.
  * @param {object} spec A resolved spec.
  * @param {import("fontkit").Font} font An instanced font.
@@ -281,7 +306,7 @@ export function buildWordmark(spec, font) {
  */
 export function buildFavicon(spec, font, { square = false, size } = {}) {
 	const { favicon } = spec;
-	const glyphSize = size ?? faviconGlyphSize(spec, font);
+	const glyphSize = size ?? favicon.glyphSize ?? faviconGlyphSize(spec, font);
 	const tan = Math.tan((spec.skew * Math.PI) / 180);
 	const { glyphs, metrics } = outline(font, favicon.glyph, { size: glyphSize });
 	const visible = glyphs.filter((glyph) => glyph.d);
@@ -319,17 +344,30 @@ export function buildFavicon(spec, font, { square = false, size } = {}) {
 	}
 
 	const box = union(boxes);
-	// Monograms & wide glyphs shrink until they keep a margin inside the tile.
-	const fit = (MAX_FILL * TILE) / Math.max(box.maxX - box.minX, box.maxY - box.minY);
-	if (fit < 1) return buildFavicon(spec, font, { square, size: glyphSize * fit * 0.999 });
+	const margin = (TILE * (1 - MAX_FILL)) / 2;
 	const ox = TILE / 2 - (box.minX + box.maxX) / 2;
-	// `ink` centres the drawn letters; `baseline` centres the x-height band, so every icon in a family
-	// shares one baseline & ascenders or descenders extend from it. A positive lift raises either.
-	const middle = favicon.align === "baseline" ? -metrics.xHeight / 2 : (box.minY + box.maxY) / 2;
-	// Baseline placement can push an ascender or descender into the corners: shrink until both clear the margin.
-	const reach = (TILE * MAX_FILL) / 2 / Math.max(middle - box.minY, box.maxY - middle);
-	if (reach < 1) return buildFavicon(spec, font, { square, size: glyphSize * reach * 0.999 });
-	const oy = TILE / 2 - middle - (favicon.lift ?? 0) * TILE;
+	let oy;
+	if (favicon.baselineY !== undefined) {
+		// Family layout: every icon shares one size & one baseline. A glyph that would cross the margin
+		// (a wide monogram, a tall ascender) shrinks but stays on the shared line.
+		const y = favicon.baselineY;
+		const fit = Math.min(
+			(MAX_FILL * TILE) / (box.maxX - box.minX),
+			box.minY < 0 ? (y - margin) / -box.minY : Infinity,
+			box.maxY > 0 ? (TILE - margin - y) / box.maxY : Infinity,
+		);
+		if (fit < 1) return buildFavicon(spec, font, { square, size: glyphSize * fit * 0.999 });
+		oy = y;
+	} else {
+		// Monograms & wide glyphs shrink until they keep a margin inside the tile.
+		const fit = (MAX_FILL * TILE) / Math.max(box.maxX - box.minX, box.maxY - box.minY);
+		if (fit < 1) return buildFavicon(spec, font, { square, size: glyphSize * fit * 0.999 });
+		// `ink` centres the drawn letters; `baseline` centres the x-height band. A positive lift raises either.
+		const middle = favicon.align === "baseline" ? -metrics.xHeight / 2 : (box.minY + box.maxY) / 2;
+		const reach = (TILE * MAX_FILL) / 2 / Math.max(middle - box.minY, box.maxY - middle);
+		if (reach < 1) return buildFavicon(spec, font, { square, size: glyphSize * reach * 0.999 });
+		oy = TILE / 2 - middle - (favicon.lift ?? 0) * TILE;
+	}
 	const radius = square ? 0 : favicon.radius * TILE;
 
 	let tileFill;

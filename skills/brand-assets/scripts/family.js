@@ -20,6 +20,8 @@ import Ajv2020 from "ajv/dist/2020.js";
 
 import { TAB_BARS } from "./lib/audit.js";
 import { buildToDir } from "./lib/build.js";
+import { instance, loadFont } from "./lib/font.js";
+import { familyLayout } from "./lib/svg.js";
 import { isMain, printJson, run } from "./lib/cli.js";
 import { TARGETS, contrast } from "./lib/color.js";
 import { loadSpec, mergePatch, paintColors } from "./lib/spec.js";
@@ -190,11 +192,30 @@ export async function buildFamily(familyFile, outDir) {
 	validateFamily(family);
 	const base = path.resolve(path.dirname(familyFile), family.base);
 	const slugs = new Set();
-	const packages = [];
 	for (const pkg of family.packages) {
 		if (slugs.has(pkg.slug)) throw new Error(`Duplicate package slug "${pkg.slug}".`);
 		slugs.add(pkg.slug);
-		const patch = packagePatch(pkg);
+	}
+
+	// Lay the baseline-aligned members out together, so each shares one size & one baseline.
+	const fonts = new Map();
+	const fontFor = async (spec) => {
+		const key = `${spec.font.path}|${JSON.stringify(spec.font.axes ?? {})}`;
+		if (!fonts.has(key)) fonts.set(key, instance(await loadFont(spec.font.path), spec.font.axes).font);
+		return fonts.get(key);
+	};
+	const patches = family.packages.map(packagePatch);
+	const members = [];
+	for (const patch of patches) {
+		const spec = loadSpec(base, patch);
+		if (spec.favicon.align === "baseline") members.push({ spec, font: await fontFor(spec) });
+	}
+	const layout = members.length ? familyLayout(members) : null;
+
+	const packages = [];
+	for (const [i, pkg] of family.packages.entries()) {
+		const own = patches[i];
+		const patch = layout && loadSpec(base, own).favicon.align === "baseline" ? mergePatch(own, { favicon: layout }) : own;
 		const meta = await buildToDir(base, path.join(outDir, pkg.slug), {
 			patch,
 			skip: pkg.wordmark ? [] : ["wordmark.svg"],
@@ -211,7 +232,7 @@ export async function buildFamily(familyFile, outDir) {
 			contrastFailures: meta.contrast.failures.filter((f) => f.startsWith("favicon") || pkg.wordmark),
 		});
 	}
-	return { packages, clashes: findClashes(packages) };
+	return { packages, clashes: findClashes(packages), layout };
 }
 
 if (isMain(import.meta.url)) {

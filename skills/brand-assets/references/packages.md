@@ -47,7 +47,7 @@ For Workspaces projects (`agent-skills` is the model): one icon per workspace pa
 - Distinct glyphs first: a tile colour alone is a weak signal, & none at all for some colour vision.
 - Tiles cycle through palette colours & gradients that read in both tab strips with the favicon ink; ink-dark tiles are left out.
 - One to three letters fit; wider glyphs shrink to keep a margin inside the tile.
-- Every package icon sits on one shared baseline (`favicon.align: "baseline"`), so `a`, `d`, & `g` line up across the strip; a package `patch` can set `align: "ink"` to centre one on its letter instead.
+- Every package icon sits on one shared baseline at one shared size (`favicon.align: "baseline"`), so `a`, `d`, & `g` line up across the strip. `family.js build` lays the family out together: the size is the largest at which every member's ascenders, descenders, & dots clear the tile's margin, so no letter shrinks on its own & drifts off the line. A wide monogram (`ds`) narrows but stays on the baseline. A package `patch` can set `align: "ink"` to centre one on its letter instead.
 - The slug is the last segment of the package name: the site's URL & the icon's file name.
 
 ## On the site

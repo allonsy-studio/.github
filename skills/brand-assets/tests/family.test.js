@@ -139,6 +139,29 @@ describe("buildFamily & wirePackages", () => {
 		assert.ok(!existsSync(path.join(img, "skill-design-system-wordmark.svg")));
 	});
 
+	it("puts every baseline-aligned icon on one size & one baseline", async () => {
+		const work = tempDir();
+		const family = path.join(work, "family.json");
+		const glyphs = ["a", "d", "g", "i", "s", "ds", "dv"];
+		writeFileSync(family, JSON.stringify({ base: DASHLY, packages: glyphs.map((glyph, i) => ({ slug: `p${i}`, glyph, patch: { favicon: { dashes: 0 } } })) }));
+		const out = path.join(work, "out");
+		const { layout } = await buildFamily(family, out);
+		const baselines = glyphs.map((_, i) => {
+			const svg = readFileSync(path.join(out, `p${i}`, "favicon.svg"), "utf8");
+			return Number(/<g transform="translate\([\d.-]+ ([\d.-]+)\) skewX/.exec(svg)[1]);
+		});
+		assert.deepEqual(new Set(baselines), new Set([Math.round(layout.baselineY * 100) / 100]));
+	});
+
+	it("leaves a package that opts out with align: ink centred on its letter", async () => {
+		const work = tempDir();
+		const family = path.join(work, "family.json");
+		writeFileSync(family, JSON.stringify({ base: DASHLY, packages: [{ slug: "a", glyph: "a" }, { slug: "g", glyph: "g", patch: { favicon: { align: "ink" } } }] }));
+		await buildFamily(family, path.join(work, "out"));
+		const spec = JSON.parse(readFileSync(path.join(work, "out", "g", "spec.json"), "utf8"));
+		assert.equal(spec.favicon.baselineY, undefined);
+	});
+
 	it("rejects duplicate slugs", async () => {
 		const work = tempDir();
 		const family = path.join(work, "family.json");
