@@ -43,6 +43,8 @@ Open a hit at `@fortawesome/fontawesome-free/svgs/solid/<name>.svg` to see the s
 - Outline the real glyph every time. A hand-drawn bar standing in for an `l` differs from the font's `l`, & the maintainer will see it.
 - Skew is a fake italic. Up close it looks slightly mechanical; at header size it reads as motion. The studio ships Instrument Sans Italic too: offer it as a concept when the lean matters more than the exact angle.
 - Check weight at 32 px on the sheet: thin strokes fade at header size.
+- In an icon that mixes letters with & without descenders, centring the whole glyph pulls the letters up: `ag` reads top-heavy. The favicon counts half the descender for a mix so the letters sit lower; `py` or `g` alone, where every letter descends, stays on standard centring (`references/icons.md`).
+- Two-letter monograms blur at 16 px. When a monogram suits the larger sizes, check the 16 px raster on the sheet & consider a single letter for the favicon.
 - Tracking: leave it at 0 for most faces. Tighten only for display weights where the default spacing looks loose at master size.
 
 ## Motion & decoration

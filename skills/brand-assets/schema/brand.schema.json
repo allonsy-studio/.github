@@ -140,6 +140,13 @@
 					"default": "x-height"
 				},
 				"fill": { "description": "Share of the tile for `x-height` (default 0.48) or `ink` (default 0.62).", "type": "number", "exclusiveMinimum": 0, "maximum": 0.8 },
+				"descender": {
+					"description": "For a mix of letters with & without descenders (ag): the share of the descender counted when centring. 1 centres the full letters; lower values sit the letters lower. Letters that all descend (py, g) or none (ad) always use standard centring.",
+					"type": "number",
+					"minimum": 0,
+					"maximum": 1,
+					"default": 0.5
+				},
 				"lift": { "description": "Raise the glyph by this share of the tile; 0.01 to 0.03 reads as optically centred.", "type": "number", "minimum": -0.1, "maximum": 0.1, "default": 0 },
 				"scale": { "description": "Glyph size as a fraction of the tile, for `fit: em`.", "type": "number", "exclusiveMinimum": 0, "maximum": 1.2, "default": 0.72 },
 				"dashes": { "description": "Speed dashes beside the glyph; two survive at 16px, three do not.", "type": "integer", "minimum": 0, "maximum": 3, "default": 0 }

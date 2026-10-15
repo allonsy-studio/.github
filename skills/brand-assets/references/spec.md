@@ -40,7 +40,7 @@ One JSON file per design direction. `scripts/build.js` reads it; `schema/brand.s
 | `paint` | Which paint each letter takes |
 | `motion` | Speed lines behind the leading letter: `lines`, `thickness`, `gap`, `inset` |
 | `decorations` | Rectangles relative to the baseline origin for stripes, cursors, or bars; `skew` makes them lean with the letters |
-| `favicon` | `glyph`, `tile`, `ink`, `radius`, `fit` & `fill` (sizing), `lift` (placement), `scale` (for `fit: em`), `dashes` |
+| `favicon` | `glyph`, `tile`, `ink`, `radius`, `fit` & `fill` (sizing), `descender` & `lift` (placement), `scale` (for `fit: em`), `dashes` |
 | `og` | `tagline`, `url`, `accent` for the Open Graph image |
 
 The origin for `decorations` is the pen position at the baseline: `y` is negative above it. The x-height band runs from `-xHeight` to `0`; `fonts.js` prints the x-height per 1000 units (Instrument Sans: 510, so `-0.51`).

@@ -144,7 +144,8 @@ describe("buildFamily & wirePackages", () => {
 		if (!(await browserAvailable())) return t.skip("Chromium unavailable");
 		const work = tempDir();
 		const family = path.join(work, "family.json");
-		const glyphs = ["a", "d", "g", "i", "ds"];
+		// Letters without a descender; those with one sit lower on purpose (see "descender weighting").
+		const glyphs = ["a", "d", "i", "ds"];
 		writeFileSync(family, JSON.stringify({ base: DASHLY, packages: glyphs.map((glyph, i) => ({ slug: `p${i}`, glyph, patch: { favicon: { dashes: 0 } } })) }));
 		const out = path.join(work, "out");
 		await buildFamily(family, out);

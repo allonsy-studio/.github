@@ -87,6 +87,31 @@ describe("buildFavicon", () => {
 	});
 });
 
+describe("descender weighting", () => {
+	/** @returns {Promise<number>} The y of the letters' group in a favicon built with these favicon settings. */
+	async function groupY(favicon) {
+		const spec = loadSpec(DASHLY, { skew: 0, favicon: { dashes: 0, ...favicon } });
+		const { font } = instance(await loadFont(spec.font.path), spec.font.axes);
+		return Number(/<g transform="translate\([\d.-]+ ([\d.-]+)\)"><path/.exec(buildFavicon(spec, font).svg)?.[1] ?? /<g transform="translate\([\d.-]+ ([\d.-]+)\)">/.exec(buildFavicon(spec, font).svg)[1]);
+	}
+
+	it("sits a mix of letters with & without descenders lower by default", async () => {
+		const full = await groupY({ glyph: "ag", descender: 1 });
+		const half = await groupY({ glyph: "ag" });
+		assert.ok(half > full + 1, `ag moved from ${full} to ${half}`);
+	});
+
+	it("uses standard centring when every letter descends", async () => {
+		assert.equal(await groupY({ glyph: "py", descender: 1 }), await groupY({ glyph: "py" }));
+		assert.equal(await groupY({ glyph: "g", descender: 1 }), await groupY({ glyph: "g", descender: 0 }));
+	});
+
+	it("leaves letters without a descender where they were", async () => {
+		assert.equal(await groupY({ glyph: "a", descender: 1 }), await groupY({ glyph: "a" }));
+		assert.equal(await groupY({ glyph: "d", descender: 1 }), await groupY({ glyph: "d", descender: 0 }));
+	});
+});
+
 describe("escapeXml", () => {
 	it("escapes names", () => {
 		assert.equal(escapeXml('a & <b> "c"'), "a &amp; &lt;b&gt; &quot;c&quot;");
