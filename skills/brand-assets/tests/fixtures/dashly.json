@@ -24,6 +24,6 @@
 			{ "length": 0.4, "paint": "y" }
 		]
 	},
-	"favicon": { "tile": "@tile", "ink": "#ffffff", "dashes": 2 },
+	"favicon": { "tile": "@tile", "ink": "#ffffff", "dashes": 2, "fit": "em" },
 	"og": { "tagline": "A standard library of filters, transforms, & shortcodes for Eleventy", "url": "projects.allons-y.studio/dashly", "accent": "@sunrise" }
 }

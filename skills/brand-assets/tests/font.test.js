@@ -28,7 +28,11 @@ describe("loadFont & describeFont", () => {
 
 	it("lists every font in a folder", async () => {
 		const infos = await inspectFonts([FONTS]);
-		assert.deepEqual(new Set(infos.map((i) => i.family)), new Set(["Instrument Sans", "PT Mono", "Yellowtail"]));
+		assert.deepEqual(new Set(infos.map((i) => i.family)), new Set(["Instrument Sans", "PT Mono", "Space Grotesk", "Yellowtail"]));
+	});
+
+	it("names the family without the default instance's style words", async () => {
+		assert.equal(describeFont(await loadFont(path.join(FONTS, "space-grotesk-var.woff2"))).family, "Space Grotesk");
 	});
 });
 

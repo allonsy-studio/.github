@@ -24,6 +24,8 @@ Missing `<title>`, missing dark-mode rules, & embedded raster images are warning
 
 ## Favicon
 
+- Sizing (`favicon.fit`): `x-height` by default, with lowercase at 48% of the tile (`fill`), so `a` & `s` fill about half the tile & ascenders reach past it. `ink` makes every letter equally full but makes a family uneven; `em` is the old em-box sizing that left short letters small. Any fit shrinks to keep 10% of the tile clear on every side.
+- Alignment (`favicon.align`): a single favicon is centred on its letter (`ink`); package families share one baseline (`baseline`, which `family.js` sets) so `d`, `g`, & `a` line up across the set. `lift` raises either by a share of the tile; it is off by default because 2% barely shows at 64 px.
 - Judge at 16 px first. The contact sheet shows a magnified 16 px raster: that is what a tab shows, not the scaled SVG.
 - Prefer a coloured or gradient tile with a white glyph. Coloured marks on a coloured tile lose contrast (yellow on orange fails).
 - An ink or near-black tile disappears in dark tab bars; the sheet shows both tab bars.

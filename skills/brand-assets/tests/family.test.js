@@ -84,7 +84,7 @@ describe("family file", () => {
 	});
 
 	it("draws only the glyph unless a wordmark is wanted", () => {
-		assert.deepEqual(packagePatch({ slug: "skill-x", glyph: "x" }), { name: "skill-x", text: "x", favicon: { glyph: "x" } });
+		assert.deepEqual(packagePatch({ slug: "skill-x", glyph: "x" }), { name: "skill-x", text: "x", favicon: { align: "baseline", glyph: "x" } });
 		assert.equal(packagePatch({ slug: "skill-x", wordmark: true, text: "x-ray" }).text, "x-ray");
 	});
 

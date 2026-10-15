@@ -33,9 +33,9 @@ Needs Node 24+ & `touch yarn.lock && yarn install` in this directory (the empty,
 - [ ] 9. Check & report
 ```
 
-1. **Constraints.** Ask, don't assume: what the project does in one line; any metaphor the maintainer already has (dashly: the pipe in `{{ x | filter }}`, "dash" as speed); where the mark renders (header at 32 px, README, social previews). Read the accent from `<site>/content/assets/styles/project.css` & the studio palette in the org `AGENTS.md` (Brand & design). With no metaphor, offer two or three; with none accepted, fall back to a clean, strong type-only wordmark.
-2. **Fonts.** `node scripts/fonts.js <site>/content/assets/fonts` lists each family, its axes, & flags forbidden ones. The studio sans (Instrument Sans) is the default. Put only listed axes in `font.axes`; the build ignores & reports others. Never a forbidden family: Yellowtail is for signatures only.
-3. **Concepts.** Write three specs (`concepts/a.json`, `b.json`, `c.json`), each a different idea with a one-line `concept`. Spec fields: `references/spec.md`; start from `tests/fixtures/dashly.json`. Then `node scripts/build.js concepts/*.json --out out/concepts` & `node scripts/sheet.js out/concepts`. Show `sheet-light.png` & `sheet-dark.png` (Read them first) & ask which to keep, combine, or drop.
+1. **Constraints.** Ask, don't assume: what the project does in one line; any metaphor the maintainer already has (dashly: the pipe in `{{ x | filter }}`, "dash" as speed); where the mark renders (header at 32 px, README, social previews). Read the accent from `<site>/content/assets/styles/project.css` & the studio palette in the org `AGENTS.md` (Brand & design). With no metaphor, offer two or three, using Font Awesome Free's search terms for inspiration (`references/design-rules.md`, Finding a metaphor); with none accepted, fall back to a clean, strong type-only wordmark.
+2. **Fonts.** `node scripts/fonts.js <site>/content/assets/fonts` lists each family, its axes, & flags forbidden ones. Space Grotesk (`assets/fonts/space-grotesk-var.woff2` in the org repo, weight 700) is the first choice for wordmarks; start from `templates/starter.json`. Instrument Sans, the site's own sans, is the second. Put only listed axes in `font.axes`; the build ignores & reports others. Never a forbidden family: Yellowtail is for signatures only.
+3. **Concepts.** Write three specs (`concepts/a.json`, `b.json`, `c.json`), each a different idea with a one-line `concept`. Spec fields: `references/spec.md`; start from `templates/starter.json`, or `tests/fixtures/dashly.json` for a fuller example. Then `node scripts/build.js concepts/*.json --out out/concepts` & `node scripts/sheet.js out/concepts`. Show `sheet-light.png` & `sheet-dark.png` (Read them first) & ask which to keep, combine, or drop.
 4. **Steer.** Each round edits one idea (motion, weight, skew, which letters carry the accent), rebuilds, & re-renders the sheet. Keep earlier rounds in their own folders so the maintainer can go back. Design rules & ideas that failed before: `references/design-rules.md`.
 5. **Colour.** For accent options: `node scripts/variants.js --spec final.json --token <name> --accents "#d22d6f,#1f91ad,…" --out out/colour`; it deepens any colour that misses its target in light mode. For other changes, a `variants.json` of patches. `node scripts/contrast.js final.json` prints the table. Roles & targets: `references/colour.md`.
 6. **Final build.** `node scripts/build.js final.json --out out/final --flat`. Re-render the sheet with `--forced-colors` & judge the favicon at 16 px first: the magnified raster on the sheet is what a tab shows.
@@ -57,7 +57,7 @@ Needs Node 24+ & `touch yarn.lock && yarn install` in this directory (the empty,
 | Need | Read |
 | --- | --- |
 | Every spec field, with the dashly spec annotated | `references/spec.md` |
-| Concept ideas, motion, skew, gradients, what failed before | `references/design-rules.md` |
+| Metaphors from Font Awesome, concept ideas, motion, skew, gradients, what failed before | `references/design-rules.md` |
 | Contrast roles, deepening, the logotype exemption | `references/colour.md` |
 | Favicon, touch icon, .ico, & Open Graph rules; hand-made SVGs | `references/icons.md` |
 | One icon per Workspaces package, optional package wordmarks | `references/packages.md` |

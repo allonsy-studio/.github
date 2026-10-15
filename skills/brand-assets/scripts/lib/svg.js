@@ -14,6 +14,31 @@ const PREFIX = "b-";
 export const TILE = 64;
 /** Widest share of the tile the glyph & dashes may cover, so iOS masks & rounded corners never clip them. */
 const MAX_FILL = 0.8;
+/** Default `favicon.fill` per fit: x-height 48% of the tile puts a lowercase `a` near half the tile; the ink box 62% leaves room for the mask. */
+export const FILL_DEFAULTS = { "x-height": 0.48, ink: 0.62 };
+
+/**
+ * Glyph size in pixels for the favicon's `fit` mode.
+ * `em` scales the font's em box (the original behaviour); `x-height` scales lowercase height, so a family of
+ * icons shares one letter size; `ink` scales the drawn letters' own box, so every icon looks equally full.
+ * @param {object} spec A resolved spec.
+ * @param {import("fontkit").Font} font
+ * @returns {number}
+ */
+export function faviconGlyphSize(spec, font) {
+	const { favicon } = spec;
+	const fit = favicon.fit ?? "x-height";
+	if (fit === "em") return favicon.scale * TILE;
+	const fill = (favicon.fill ?? FILL_DEFAULTS[fit]) * TILE;
+	if (fit === "x-height") {
+		const xHeight = (font.xHeight || font.unitsPerEm * 0.5) / font.unitsPerEm;
+		return fill / xHeight;
+	}
+	const probe = 100;
+	const tan = Math.tan((spec.skew * Math.PI) / 180);
+	const box = union(outline(font, favicon.glyph, { size: probe }).glyphs.filter((g) => g.d).map((g) => skewBox(g.bbox, tan)));
+	return (fill / Math.max(box.maxX - box.minX, box.maxY - box.minY)) * probe;
+}
 
 /**
  * Escape text for XML.
@@ -254,9 +279,9 @@ export function buildWordmark(spec, font) {
  * @param {{ square?: boolean }} [options] `square` drops the corner radius, for the touch icon & Open Graph tile.
  * @returns {{ svg: string, width: number, height: number }}
  */
-export function buildFavicon(spec, font, { square = false } = {}) {
+export function buildFavicon(spec, font, { square = false, size } = {}) {
 	const { favicon } = spec;
-	const glyphSize = favicon.scale * TILE;
+	const glyphSize = size ?? faviconGlyphSize(spec, font);
 	const tan = Math.tan((spec.skew * Math.PI) / 180);
 	const { glyphs, metrics } = outline(font, favicon.glyph, { size: glyphSize });
 	const visible = glyphs.filter((glyph) => glyph.d);
@@ -296,9 +321,15 @@ export function buildFavicon(spec, font, { square = false } = {}) {
 	const box = union(boxes);
 	// Monograms & wide glyphs shrink until they keep a margin inside the tile.
 	const fit = (MAX_FILL * TILE) / Math.max(box.maxX - box.minX, box.maxY - box.minY);
-	if (fit < 1) return buildFavicon({ ...spec, favicon: { ...favicon, scale: favicon.scale * fit * 0.999 } }, font, { square });
+	if (fit < 1) return buildFavicon(spec, font, { square, size: glyphSize * fit * 0.999 });
 	const ox = TILE / 2 - (box.minX + box.maxX) / 2;
-	const oy = TILE / 2 - (box.minY + box.maxY) / 2;
+	// `ink` centres the drawn letters; `baseline` centres the x-height band, so every icon in a family
+	// shares one baseline & ascenders or descenders extend from it. A positive lift raises either.
+	const middle = favicon.align === "baseline" ? -metrics.xHeight / 2 : (box.minY + box.maxY) / 2;
+	// Baseline placement can push an ascender or descender into the corners: shrink until both clear the margin.
+	const reach = (TILE * MAX_FILL) / 2 / Math.max(middle - box.minY, box.maxY - middle);
+	if (reach < 1) return buildFavicon(spec, font, { square, size: glyphSize * reach * 0.999 });
+	const oy = TILE / 2 - middle - (favicon.lift ?? 0) * TILE;
 	const radius = square ? 0 : favicon.radius * TILE;
 
 	let tileFill;

@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { describe, it } from "node:test";
 
 import { contrastRows, deepenPatch } from "../scripts/lib/audit.js";
 import { loadSpec, mergePatch, paintColors, paintsFor, resolveSpec } from "../scripts/lib/spec.js";
-import { DASHLY, HERE } from "./helpers.js";
+import { DASHLY, HERE, SKILL } from "./helpers.js";
 
 const minimal = () => ({ name: "demo", font: { file: "x.woff2" }, palette: { ink: { light: "#111111" } } });
 
@@ -33,6 +35,12 @@ describe("resolveSpec", () => {
 			() => resolveSpec({ ...minimal(), gradients: { g: { stops: ["ink", "@g"] } } }, HERE),
 			/gradients are not allowed here/,
 		);
+	});
+
+	it("loads the starter template with Space Grotesk", () => {
+		const spec = loadSpec(path.join(SKILL, "templates", "starter.json"));
+		assert.ok(existsSync(spec.font.path), spec.font.path);
+		assert.equal(spec.favicon.fit, "x-height");
 	});
 
 	it("loads the dashly fixture", () => {

@@ -134,7 +134,19 @@
 				"tile": { "description": "A palette name, `@gradient`, or literal colour.", "type": "string" },
 				"ink": { "description": "The glyph colour: a palette name or literal colour.", "type": "string", "default": "#ffffff" },
 				"radius": { "description": "Tile corner radius as a fraction of the tile.", "type": "number", "minimum": 0, "maximum": 0.5, "default": 0.22 },
-				"scale": { "description": "Glyph size as a fraction of the tile.", "type": "number", "exclusiveMinimum": 0, "maximum": 1.2, "default": 0.72 },
+				"fit": {
+					"description": "How the glyph is sized: `em` scales the font's em box by `scale`; `x-height` sets lowercase height to `fill` of the tile, so a family shares one letter size; `ink` sets the drawn letters' larger side to `fill`.",
+					"enum": ["em", "x-height", "ink"],
+					"default": "x-height"
+				},
+				"fill": { "description": "Share of the tile for `x-height` (default 0.48) or `ink` (default 0.62).", "type": "number", "exclusiveMinimum": 0, "maximum": 0.8 },
+				"align": {
+					"description": "Vertical placement: `ink` centres the drawn letters (the default for a single favicon); `baseline` centres the x-height band so a family of icons shares one baseline (family.js sets it).",
+					"enum": ["ink", "baseline"],
+					"default": "ink"
+				},
+				"lift": { "description": "Raise the glyph by this share of the tile; 0.01 to 0.03 reads as optically centred.", "type": "number", "minimum": -0.1, "maximum": 0.1, "default": 0 },
+				"scale": { "description": "Glyph size as a fraction of the tile, for `fit: em`.", "type": "number", "exclusiveMinimum": 0, "maximum": 1.2, "default": 0.72 },
 				"dashes": { "description": "Speed dashes beside the glyph; two survive at 16px, three do not.", "type": "integer", "minimum": 0, "maximum": 3, "default": 0 }
 			}
 		},

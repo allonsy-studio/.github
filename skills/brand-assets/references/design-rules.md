@@ -4,12 +4,29 @@ Learned building the dashly mark. Each rule says what to do & why.
 
 ## Contents
 
+- [Finding a metaphor](#finding-a-metaphor)
 - [Running the loop](#running-the-loop)
 - [Letters](#letters)
 - [Motion & decoration](#motion--decoration)
 - [Gradients](#gradients)
 - [Dark mode](#dark-mode)
 - [Ideas that failed](#ideas-that-failed)
+
+## Finding a metaphor
+
+Font Awesome Free is a quick source of metaphors: its ~2,000 icons each carry search terms, so "send", "speed", or "filter" turns up the visual shorthand people already read (paper plane, gauge, funnel). Studio sites already install it (`@fortawesome/fontawesome-free`, used by `<fa-icon>`), so search the copy in the project's `node_modules`:
+
+```sh
+node -e 'const m = require("@fortawesome/fontawesome-free/metadata/icon-families.json");
+for (const [name, icon] of Object.entries(m))
+  if (icon.search?.terms?.some((t) => t.includes(process.argv[1]))) console.log(name, "·", icon.label)' send
+```
+
+Open a hit at `@fortawesome/fontawesome-free/svgs/solid/<name>.svg` to see the shape. Use it as inspiration only, then carry the idea with letters & `decorations` (a paper plane becomes a folded corner or a forward lean; a funnel becomes a narrowing pipe):
+
+- Never paste a Font Awesome path into a mark. The icons are CC BY 4.0, which needs attribution wherever the mark appears, & the `brands` set is other companies' trademarks.
+- A stock icon reads as stock: the project's mark should be recognisable as the project's.
+- Offer the metaphor in words first ("a paper plane for envoy: messages sent onward"), & build it as one of the three concepts only if the maintainer likes the idea.
 
 ## Running the loop
 
@@ -20,6 +37,8 @@ Learned building the dashly mark. Each rule says what to do & why.
 - Judge at header height (32 px) & at 16 px before the master size: that is where a mark lives.
 
 ## Letters
+
+- Space Grotesk is the first choice for wordmarks: its squared terminals & distinct `a`, `g`, & `y` stay recognisable at 32 px. Instrument Sans is the second choice. Other OFL faces that held up in trials: Bricolage Grotesque (expressive; set `opsz` near 48 for small sizes), Sora & Manrope (clean & wide), Archivo (has a `wdth` axis for long names), & Fraunces for a serif. Any font is fine for a mark, because it is outlined: the site never loads it.
 
 - Outline the real glyph every time. A hand-drawn bar standing in for an `l` differs from the font's `l`, & the maintainer will see it.
 - Skew is a fake italic. Up close it looks slightly mechanical; at header size it reads as motion. The studio ships Instrument Sans Italic too: offer it as a concept when the lean matters more than the exact angle.

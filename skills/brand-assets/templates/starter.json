@@ -1,0 +1,12 @@
+{
+	"$schema": "../schema/brand.schema.json",
+	"name": "project-name",
+	"concept": "One line: the idea this direction carries.",
+	"font": { "file": "../../../assets/fonts/space-grotesk-var.woff2", "axes": { "wght": 700 } },
+	"palette": {
+		"ink": { "light": "#16181d", "dark": "#eceef3" },
+		"accent": { "light": "#d22d6f", "dark": "#ff7aa8" }
+	},
+	"paint": { "*": "ink" },
+	"favicon": { "tile": "accent", "ink": "#ffffff", "fit": "x-height" }
+}

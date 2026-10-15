@@ -12,7 +12,7 @@ One JSON file per design direction. `scripts/build.js` reads it; `schema/brand.s
 
 ## The dashly spec, annotated
 
-`tests/fixtures/dashly.json` rebuilds the shipped dashly mark. Copy it as a starting point.
+`tests/fixtures/dashly.json` rebuilds the shipped dashly mark: a fuller example than `templates/starter.json`, which new specs start from.
 
 | Field | dashly value | Why |
 | --- | --- | --- |
@@ -20,7 +20,7 @@ One JSON file per design direction. `scripts/build.js` reads it; `schema/brand.s
 | `skew` | `11` | Forward lean for speed |
 | `paint` | `{ "*": "ink", "4-5": "@sunrise" }` | Letters 4 & 5 (`l`, `y`) share one gradient |
 | `motion.lines` | lengths `0.56`, `0.92`, `0.40` | Three speed lines, longest in the middle |
-| `favicon` | `d` on the `@tile` gradient, white, two dashes | Two dashes survive at 16 px; three do not |
+| `favicon` | `d` on the `@tile` gradient, white, two dashes, `fit: em` | Two dashes survive at 16 px; three do not. `em` keeps the shipped size; new specs use the `x-height` default |
 
 ## Fields
 
@@ -40,7 +40,7 @@ One JSON file per design direction. `scripts/build.js` reads it; `schema/brand.s
 | `paint` | Which paint each letter takes |
 | `motion` | Speed lines behind the leading letter: `lines`, `thickness`, `gap`, `inset` |
 | `decorations` | Rectangles relative to the baseline origin for stripes, cursors, or bars; `skew` makes them lean with the letters |
-| `favicon` | `glyph`, `tile`, `ink`, `radius`, `scale`, `dashes` |
+| `favicon` | `glyph`, `tile`, `ink`, `radius`, `fit` & `fill` (sizing), `align` & `lift` (placement), `scale` (for `fit: em`), `dashes` |
 | `og` | `tagline`, `url`, `accent` for the Open Graph image |
 
 The origin for `decorations` is the pen position at the baseline: `y` is negative above it. The x-height band runs from `-xHeight` to `0`; `fonts.js` prints the x-height per 1000 units (Instrument Sans: 510, so `-0.51`).

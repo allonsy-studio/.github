@@ -154,7 +154,8 @@ export function validateFamily(family) {
  * @returns {object}
  */
 export function packagePatch(pkg) {
-	const favicon = {};
+	// A family shares one baseline, so ascenders & descenders read as part of the letter, not a shift.
+	const favicon = { align: "baseline" };
 	if (pkg.glyph) favicon.glyph = pkg.glyph;
 	if (pkg.tile) favicon.tile = pkg.tile;
 	// Without a wordmark the letters drawn are only the glyph, so a name with characters the font lacks still builds.

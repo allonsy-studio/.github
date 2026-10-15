@@ -58,6 +58,19 @@ export async function loadFont(file) {
 	return font;
 }
 
+/** Style words variable subsets often append to the family name, such as "Space Grotesk Light". */
+const STYLE_SUFFIX = /(?:\s+(?:\d+pt|Thin|Hairline|ExtraLight|UltraLight|Light|Regular|Book|Medium|SemiBold|DemiBold|Bold|ExtraBold|UltraBold|Black|Heavy|Italic|Oblique))+$/i;
+
+/**
+ * The typographic family name: the preferred family when the font has one, else its family without style words.
+ * @param {import("fontkit").Font} font
+ * @returns {string}
+ */
+export function familyOf(font) {
+	const preferred = font.getName?.("preferredFamily");
+	return preferred || String(font.familyName ?? "").replace(STYLE_SUFFIX, "") || String(font.familyName ?? "");
+}
+
 /**
  * Describe a loaded font: family, axes, named instances, metrics.
  * @param {import("fontkit").Font} font
@@ -70,7 +83,7 @@ export function describeFont(font) {
 	}
 	return {
 		file: font.sourceFile ?? "",
-		family: font.familyName,
+		family: familyOf(font),
 		postscriptName: font.postscriptName,
 		unitsPerEm: font.unitsPerEm,
 		axes,
@@ -81,7 +94,7 @@ export function describeFont(font) {
 			capHeight: font.capHeight ?? font.ascent * 0.7,
 			xHeight: font.xHeight ?? font.ascent * 0.5,
 		},
-		forbidden: isForbidden(font.familyName),
+		forbidden: isForbidden(familyOf(font)),
 	};
 }
 
@@ -99,9 +112,9 @@ export function isForbidden(family) {
  * @param {import("fontkit").Font} font
  */
 export function assertAllowed(font) {
-	if (isForbidden(font.familyName)) {
+	if (isForbidden(familyOf(font))) {
 		throw new Error(
-			`${font.familyName} is reserved for signatures & never used for a wordmark. Pick the project's sans or display face.`,
+			`${familyOf(font)} is reserved for signatures & never used for a wordmark. Pick the project's sans or display face.`,
 		);
 	}
 }
@@ -194,7 +207,7 @@ export function outline(font, text, { size, tracking = 0 }) {
 		const pathBox = glyph.path.commands.length ? glyph.path.bbox : null;
 		const char = glyph.codePoints.length ? String.fromCodePoint(...glyph.codePoints) : chars[index] ?? "";
 		if (glyph.id === 0 && char.trim()) {
-			throw new Error(`${font.familyName} has no glyph for "${char}".`);
+			throw new Error(`${familyOf(font)} has no glyph for "${char}".`);
 		}
 		glyphs.push({
 			char,
