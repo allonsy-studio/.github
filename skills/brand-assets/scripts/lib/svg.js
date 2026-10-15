@@ -12,6 +12,8 @@ const PREFIX = "b-";
 
 /** Favicon artboard; the 64 px master scales cleanly to 16, 32, 48, & 180. */
 export const TILE = 64;
+/** Widest share of the tile the glyph & dashes may cover, so iOS masks & rounded corners never clip them. */
+const MAX_FILL = 0.8;
 
 /**
  * Escape text for XML.
@@ -292,6 +294,9 @@ export function buildFavicon(spec, font, { square = false } = {}) {
 	}
 
 	const box = union(boxes);
+	// Monograms & wide glyphs shrink until they keep a margin inside the tile.
+	const fit = (MAX_FILL * TILE) / Math.max(box.maxX - box.minX, box.maxY - box.minY);
+	if (fit < 1) return buildFavicon({ ...spec, favicon: { ...favicon, scale: favicon.scale * fit * 0.999 } }, font, { square });
 	const ox = TILE / 2 - (box.minX + box.maxX) / 2;
 	const oy = TILE / 2 - (box.minY + box.maxY) / 2;
 	const radius = square ? 0 : favicon.radius * TILE;

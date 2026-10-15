@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { before, describe, it } from "node:test";
 
-import { exportBuild } from "../scripts/export.js";
+import { exportBuild, leftInk, ogWordmarkSize } from "../scripts/export.js";
 import { browserAvailable, rasterize, withBrowser } from "../scripts/lib/browser.js";
 import { BUILD_FILES, buildToDir } from "../scripts/lib/build.js";
 import { readIco, readPngHeader } from "../scripts/lib/png.js";
@@ -42,6 +42,13 @@ describe("build & variants", () => {
 	});
 });
 
+describe("ogWordmarkSize", () => {
+	it("fits the wordmark to 180 px tall, or 800 px wide when it is long", () => {
+		assert.deepEqual(ogWordmarkSize('<svg viewBox="0 0 456 129">'), { width: 636, height: 180 });
+		assert.deepEqual(ogWordmarkSize('<svg viewBox="0 0 1000 100">'), { width: 800, height: 80 });
+	});
+});
+
 describe("sheetHtml", () => {
 	it("matches the golden layout for a stub build", () => {
 		const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"/>';
@@ -51,6 +58,15 @@ describe("sheetHtml", () => {
 			rasters: new Map([["a", { light16: "data:16", light32: "data:32" }]]),
 		});
 		assert.equal(html, golden("sheet.html", html));
+		assert.doesNotMatch(html, /<h2>Together<\/h2>/, "one build needs no side-by-side strip");
+	});
+
+	it("adds a side-by-side strip for families", () => {
+		const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"/>';
+		const build = (label) => ({ label, note: "", failures: [], wordmark: null, favicon: svg, square: null });
+		const html = sheetHtml([build("a"), build("b")], { header: 32, title: "Family", rasters: new Map() });
+		assert.match(html, /<h2>Together<\/h2>/);
+		assert.equal(html.match(/class="strip"/g).length, 2);
 	});
 });
 
@@ -131,13 +147,43 @@ describe("browser steps", () => {
 		if (!available) return t.skip("Chromium unavailable");
 		const build = path.join(tempDir(), "b");
 		await buildToDir(DASHLY, build);
-		const results = await exportBuild(build, { og: true });
-		assert.deepEqual(results.map((r) => r.file), ["apple-touch-icon.png", "favicon.ico", "og.png"]);
+		const { source, files, warnings } = await exportBuild(build, { og: true });
+		assert.equal(source, "build");
+		assert.deepEqual(warnings, []);
+		assert.deepEqual(files.map((r) => r.file), ["apple-touch-icon.png", "favicon.ico", "og.png"]);
 		assert.deepEqual(readPngHeader(readFileSync(path.join(build, "apple-touch-icon.png"))), { width: 180, height: 180, colorType: 2, alpha: false });
 		assert.deepEqual(readIco(readFileSync(path.join(build, "favicon.ico"))).map((e) => e.width), [16, 32, 48]);
 		const og = readPngHeader(readFileSync(path.join(build, "og.png")));
 		assert.equal(og.width, 1200);
 		assert.equal(og.height, 630);
+	});
+
+	it("exports hand-made SVGs, asking for a background for transparent corners", async (t) => {
+		if (!available) return t.skip("Chromium unavailable");
+		const built = path.join(tempDir(), "b");
+		await buildToDir(DASHLY, built);
+		const hand = tempDir();
+		for (const name of ["wordmark.svg", "favicon.svg"]) copyFileSync(path.join(built, name), path.join(hand, name));
+		await assert.rejects(exportBuild(hand, { og: true }), /transparent pixels.*--background/s);
+		const { source, files } = await exportBuild(hand, { og: true, background: "#d22d6f", accent: "#d22d6f", name: "dashly" });
+		assert.equal(source, "hand-made");
+		assert.deepEqual(files.map((r) => r.file), ["apple-touch-icon.png", "favicon.ico", "og.png"]);
+		assert.equal(readPngHeader(readFileSync(path.join(hand, "apple-touch-icon.png"))).alpha, false);
+	});
+
+	it("refuses a hand-made wordmark that relies on a font", async (t) => {
+		if (!available) return t.skip("Chromium unavailable");
+		const hand = tempDir();
+		writeFileSync(path.join(hand, "favicon.svg"), '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><title>x</title><rect width="8" height="8"/></svg>');
+		writeFileSync(path.join(hand, "wordmark.svg"), '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 20"><text>x</text></svg>');
+		await assert.rejects(exportBuild(hand, { og: true }), /wordmark\.svg cannot ship as an <img>:\n.*<text>/);
+	});
+
+	it("measures where the wordmark's ink starts", async (t) => {
+		if (!available) return t.skip("Chromium unavailable");
+		const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20" width="100" height="20"><rect x="30" width="40" height="20"/></svg>';
+		const pixels = await withBrowser((browser) => rasterize(browser, svg, { width: 100, height: 20 }));
+		assert.equal(leftInk(pixels), 30);
 	});
 
 	it("renders light, dark, & forced-colours sheets", async (t) => {

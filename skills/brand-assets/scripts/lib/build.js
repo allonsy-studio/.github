@@ -3,12 +3,12 @@
  * @module build
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { contrastRows } from "./audit.js";
 import { assertAllowed, describeFont, instance, loadFont } from "./font.js";
-import { loadSpec, mergePatch, resolveSpec } from "./spec.js";
+import { loadSpec, mergePatch } from "./spec.js";
 import { buildFavicon, buildWordmark } from "./svg.js";
 
 /** Files every build writes. */
@@ -49,48 +49,31 @@ export async function buildSpec(spec) {
  * Build a spec file (optionally patched) into a folder, then confirm every file landed.
  * @param {string} specFile
  * @param {string} outDir
- * @param {{ patch?: object, extra?: object }} [options] `extra` is merged into meta.json, e.g. a variant label.
+ * @param {{ patch?: object, extra?: object, skip?: string[] }} [options]
+ *   `extra` is merged into meta.json, e.g. a variant label. `skip` leaves files out, e.g. a package's wordmark.svg; a stale copy is removed.
  * @returns {Promise<object>} meta.json contents plus `dir` & `bytes`.
  */
-export async function buildToDir(specFile, outDir, { patch, extra } = {}) {
+export async function buildToDir(specFile, outDir, { patch, extra = {}, skip = [] } = {}) {
 	const spec = loadSpec(specFile, patch);
 	const raw = mergePatch(JSON.parse(readFileSync(specFile, "utf8")), patch ?? {});
 	raw.font.file = spec.font.path;
 	delete raw.$schema;
-	return writeBuild(spec, outDir, extra, raw);
-}
-
-/**
- * @param {object} rawSpec An unresolved spec object.
- * @param {string} baseDir
- * @param {string} outDir
- * @returns {Promise<object>}
- */
-export async function buildObjectToDir(rawSpec, baseDir, outDir) {
-	const spec = resolveSpec(rawSpec, baseDir);
-	return writeBuild(spec, outDir, {}, { ...structuredClone(rawSpec), font: { ...rawSpec.font, file: spec.font.path } });
-}
-
-/**
- * @param {object} spec
- * @param {string} outDir
- * @param {object} extra
- * @param {object} raw The spec as written, with an absolute font path; saved as spec.json so wire.js can keep it with the site.
- * @returns {Promise<object>}
- */
-async function writeBuild(spec, outDir, extra, raw) {
 	const { files, meta } = await buildSpec(spec);
 	files["spec.json"] = JSON.stringify(raw, null, "\t") + "\n";
 	mkdirSync(outDir, { recursive: true });
 	const bytes = {};
 	for (const [name, content] of Object.entries(files)) {
 		const file = path.join(outDir, name);
+		if (skip.includes(name)) {
+			rmSync(file, { force: true });
+			continue;
+		}
 		writeFileSync(file, content);
 		bytes[name] = Buffer.byteLength(content);
 	}
 	const full = { ...meta, ...extra, bytes };
 	writeFileSync(path.join(outDir, "meta.json"), JSON.stringify(full, null, "\t") + "\n");
-	const missing = [...BUILD_FILES, "meta.json"].filter((name) => !existsSync(path.join(outDir, name)));
+	const missing = [...BUILD_FILES, "meta.json"].filter((name) => !skip.includes(name) && !existsSync(path.join(outDir, name)));
 	if (missing.length) throw new Error(`Build did not write: ${missing.join(", ")} in ${outDir}`);
 	return { ...full, dir: outDir };
 }

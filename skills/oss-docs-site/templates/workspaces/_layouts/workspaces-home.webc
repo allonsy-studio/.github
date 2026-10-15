@@ -23,6 +23,6 @@ layout: base.webc
 <section id="packages" aria-labelledby="packages-title">
 	<h2 id="packages-title">Packages</h2>
 	<package-index
-		:@packages="$data.workspaces.map((workspace) => ({ name: workspace.name, description: workspace.description, href: workspace.url }))"
+		:@packages="$data.workspaces.map((workspace) => ({ name: workspace.name, description: workspace.description, href: workspace.url, icon: workspace.icon }))"
 	></package-index>
 </section>

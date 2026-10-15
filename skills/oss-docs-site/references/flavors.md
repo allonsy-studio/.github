@@ -52,4 +52,6 @@ Ask in one message: the flavor, the reason, & the tooling. Accept a yes or anoth
 | Docs | A home page plus a sidebar & pager over `content/*.md` | Markdown files; front matter `title`, `description`, & `order` |
 | Workspaces | A home page indexing the packages, plus one page per workspace | Each workspace's `SKILL.md`, else its `README.md` |
 
+A Workspaces site shows a package's icon on its card & beside its page heading when `content/assets/img/packages/<slug>.svg` exists, & a package wordmark in place of the heading text when `<slug>-wordmark.svg` exists. The `brand-assets` skill makes both.
+
 Workspaces read the root `package.json` `workspaces` globs, honoring `!` exclusions. A page drops the file's front matter & its first heading, & takes its title & description from the workspace's `package.json`.

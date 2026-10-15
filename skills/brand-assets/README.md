@@ -13,11 +13,12 @@ A skill that designs a wordmark & icon set for an Allons-y Studio open source pr
 | `favicon.ico` | 16, 32, & 48 px legacy icon |
 | `apple-touch-icon.png` | 180 px opaque home-screen icon |
 | `og.png` | 1200×630 link preview |
+| `packages/<slug>.svg` | Workspaces sites: one icon per package, with an optional package wordmark |
 | `brand.json` | The spec, kept beside the site for later changes |
 
 ## Requirements
 
-Node 24+, `yarn install` in this directory, & Chromium for Playwright (`npx playwright install chromium`, or point `PLAYWRIGHT_BROWSERS_PATH` at an existing install).
+Node 24+, `touch yarn.lock && yarn install` in this directory (the lock is gitignored; it keeps Yarn from treating the skill as part of the org repo), & Chromium for Playwright (`npx playwright install chromium`, or point `PLAYWRIGHT_BROWSERS_PATH` at an existing install).
 
 ## Usage
 
@@ -31,6 +32,12 @@ node scripts/contrast.js final.json                              # WCAG table; e
 node scripts/build.js final.json --out out/final --flat
 node scripts/export.js out/final --og --project .                # touch icon, .ico, Open Graph
 node scripts/wire.js out/final --repo . --dry-run                # then without --dry-run
+
+node scripts/export.js my-svgs --og --background "#d22d6f"       # rasters from hand-made SVGs
+
+node scripts/family.js init --repo . --spec docs/brand.json      # Workspaces: propose package icons
+node scripts/family.js build family.json --out out/packages
+node scripts/wire.js --packages out/packages --repo . --family family.json
 ```
 
 ## Layout

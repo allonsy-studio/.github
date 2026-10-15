@@ -108,6 +108,13 @@
 		font-size: 1.25rem;
 	}
 
+	li > article > img {
+		justify-self: start;
+		inline-size: 3rem;
+		block-size: 3rem;
+		border-radius: var(--radius);
+	}
+
 	li > article > h3 {
 		font-size: 1.2rem;
 	}

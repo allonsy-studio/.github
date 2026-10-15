@@ -93,6 +93,19 @@ export function sheetHtml(builds, { header, title, rasters }) {
 		}
 		return `<section>${parts.join("")}</section>`;
 	});
+	const icons = builds.filter((build) => build.favicon);
+	const together =
+		icons.length > 1
+			? "<section><h2>Together</h2><p>Every icon side by side, as a package index or a row of tabs shows them.</p>" +
+				`<div class="icons">${icons.map((b) => `<figure><img src="${svgUri(b.favicon)}" width="48" height="48" alt=""><figcaption>${escapeXml(b.label)}</figcaption></figure>`).join("")}</div>` +
+				Object.entries(TAB_BARS)
+					.map(
+						([name, bg]) =>
+							`<div class="strip" style="background:${bg}">${icons.map((b) => `<img src="${svgUri(b.favicon)}" width="16" height="16" alt="">`).join("")}<span style="color:${name === "dark" ? "#e8eaed" : "#3c4043"}">${name} tabs</span></div>`,
+					)
+					.join("") +
+				"</section>"
+			: "";
 	return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="color-scheme" content="light dark"><title>${escapeXml(title)}</title>
 <style>
@@ -108,9 +121,10 @@ section{display:grid;gap:12px;padding-block-end:24px;border-block-end:1px solid 
 .icons{display:flex;align-items:end;gap:20px;flex-wrap:wrap}
 figure{margin:0;display:grid;justify-items:center;gap:4px}figcaption{font-size:12px;color:var(--muted)}
 .px{image-rendering:pixelated}.mask{border-radius:22%}
+.strip{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:8px;font-size:13px}.strip span{margin-inline-start:auto}
 .tabs{display:flex;gap:12px}.tab{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px 8px 0 0;font-size:13px;min-inline-size:180px}
 @media (forced-colors:active){.header,.tab{border:1px solid CanvasText}}
-</style></head><body><h1>${escapeXml(title)}</h1>${rows.join("")}</body></html>
+</style></head><body><h1>${escapeXml(title)}</h1>${together}${rows.join("")}</body></html>
 `;
 }
 

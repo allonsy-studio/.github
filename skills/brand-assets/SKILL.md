@@ -1,13 +1,13 @@
 ---
 name: brand-assets
-description: "Designs an Allons-y Studio open source project's wordmark & icon set from outlined font glyphs: three concepts on a light & dark contact sheet, one change per round until the maintainer picks, then the favicon, 180px touch icon, legacy .ico, & 1200×630 Open Graph image, contrast-checked & wired into the oss-docs-site project.json. Use whenever the user asks for a wordmark, logo, favicon, touch icon, social or Open Graph image for an allonsy-studio project, says a project needs a mark, wants accent or brand colour options for an existing logo, or when oss-docs-site reports the project has no wordmark. Do not trigger for mascots or illustration, raster-only logos, trademark questions, the studio's own locked marks (banner, footer credit, mark.svg), or brands outside Allons-y Studio."
+description: "Designs an Allons-y Studio open source project's wordmark & icon set from outlined font glyphs: three concepts on a light & dark contact sheet, one change per round until the maintainer picks, then the favicon, 180px touch icon, legacy .ico, & 1200×630 Open Graph image, contrast-checked & wired into the oss-docs-site project.json; also one icon per package for Workspaces sites, & rasters from a maintainer's own hand-made SVGs. Use whenever the user asks for a wordmark, logo, favicon, touch icon, package icons, social or Open Graph image for an allonsy-studio project, says a project needs a mark, wants accent or brand colour options for an existing logo, has an SVG logo that needs the icon set, or when oss-docs-site reports the project has no wordmark. Do not trigger for mascots or illustration, raster-only logos, trademark questions, the studio's own locked marks (banner, footer credit, mark.svg), or brands outside Allons-y Studio."
 ---
 
 # Brand assets
 
 Turns a project name into an outlined SVG wordmark & a matching icon set. The maintainer steers; scripts do every repeatable step. The loop "show three, pick, refine one change" is the product: budget for 4 to 8 rounds.
 
-Needs Node 24+ & `yarn install` in this directory, plus Chromium for Playwright (`npx playwright install chromium`, or an existing `PLAYWRIGHT_BROWSERS_PATH`). Run scripts as `node <skill-path>/scripts/<name>.js`. Work in a scratch folder; only `wire.js` writes into the project.
+Needs Node 24+ & `touch yarn.lock && yarn install` in this directory (the empty, gitignored lock keeps Yarn from treating the skill as part of the org repo), plus Chromium for Playwright (`npx playwright install chromium`, or an existing `PLAYWRIGHT_BROWSERS_PATH`). Run scripts as `node <skill-path>/scripts/<name>.js`. Work in a scratch folder; only `wire.js` writes into the project.
 
 ## Modes
 
@@ -15,7 +15,9 @@ Needs Node 24+ & `yarn install` in this directory, plus Chromium for Playwright 
 | --- | --- | --- |
 | "Design a wordmark / logo", no mark yet | Wordmark | All of the workflow |
 | Has a logo, needs favicon, touch icon, .ico, or OG image | Icons | 1, 2, then a spec with only `favicon` tuned; steps 6 to 9; `wire.js --icons-only` |
+| Has hand-made `wordmark.svg` & `favicon.svg`, needs rasters | Hand-made | Copy them into one folder, then steps 7 to 9; `export.js` checks them first (`references/icons.md`) |
 | "Try other colours", "update the brand colours" | Colour | Load `<site>/brand.json`, then steps 5, 6, 8, 9 |
+| Workspaces project: "icons for each package" | Packages | Needs the project's spec first; then `references/packages.md` |
 
 ## Workflow
 
@@ -57,6 +59,7 @@ Needs Node 24+ & `yarn install` in this directory, plus Chromium for Playwright 
 | Every spec field, with the dashly spec annotated | `references/spec.md` |
 | Concept ideas, motion, skew, gradients, what failed before | `references/design-rules.md` |
 | Contrast roles, deepening, the logotype exemption | `references/colour.md` |
-| Favicon, touch icon, .ico, & Open Graph rules | `references/icons.md` |
+| Favicon, touch icon, .ico, & Open Graph rules; hand-made SVGs | `references/icons.md` |
+| One icon per Workspaces package, optional package wordmarks | `references/packages.md` |
 | Script errors & fixes | `references/troubleshooting.md` |
-| Field definitions | `schema/brand.schema.json` |
+| Field definitions | `schema/brand.schema.json`, `schema/family.schema.json` |

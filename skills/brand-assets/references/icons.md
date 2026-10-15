@@ -9,6 +9,19 @@ All icons come from the spec's `favicon` block; `build.js` writes `favicon.svg` 
 | `apple-touch-icon.png` | 180×180 | Opaque RGB, no alpha, square corners: iOS applies its own mask | `appleTouchIcon` |
 | `og.png` | 1200×630 | Light theme, wordmark, tagline, optional URL line & accent bar | `ogImage` |
 
+## Hand-made SVGs
+
+A maintainer's own `wordmark.svg` & `favicon.svg` (no `meta.json` beside them) export & wire too. Both scripts check them first & refuse any that would break as an `<img>`:
+
+| Refused | Why |
+| --- | --- |
+| `<text>`, `@font-face`, `@import` | An `<img>` SVG loads no fonts; outline the text |
+| External `href` | An `<img>` SVG fetches nothing |
+| Script or `on…` handlers | They never run & some hosts strip the file |
+| No `viewBox`; a favicon that is not square | It cannot scale to the header or icon sizes |
+
+Missing `<title>`, missing dark-mode rules, & embedded raster images are warnings in the output. Without a spec, pass what it would have supplied: `--background` (fills transparent corners on the touch icon; required when there are any), `--accent` (the Open Graph bar; none otherwise), `--font` (the tagline face; system UI otherwise), `--name`, & `--url`. The contrast check needs a spec, so look at the sheet instead: `sheet.js` reads any folder.
+
 ## Favicon
 
 - Judge at 16 px first. The contact sheet shows a magnified 16 px raster: that is what a tab shows, not the scaled SVG.

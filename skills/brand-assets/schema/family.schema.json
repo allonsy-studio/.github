@@ -1,0 +1,35 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://github.com/allonsy-studio/.github/blob/main/skills/brand-assets/schema/family.schema.json",
+	"title": "Package icon family",
+	"description": "One icon per workspace package, all built from the project's spec. scripts/family.js init writes a starter; scripts/family.js build reads it.",
+	"type": "object",
+	"required": ["base", "packages"],
+	"additionalProperties": false,
+	"properties": {
+		"$schema": { "type": "string" },
+		"base": { "description": "The project's brand spec, relative to this file. Every package inherits its font, palette, skew, & favicon style.", "type": "string" },
+		"packages": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"required": ["slug"],
+				"additionalProperties": false,
+				"properties": {
+					"slug": {
+						"description": "The last segment of the package name; the site's page URL & the icon file name.",
+						"type": "string",
+						"pattern": "^[a-z0-9][a-z0-9._-]*$"
+					},
+					"name": { "description": "Full package name: the SVG title. Defaults to `slug`.", "type": "string" },
+					"glyph": { "description": "One to three letters on the tile. Defaults to the slug's first letter.", "type": "string", "minLength": 1, "maxLength": 3 },
+					"tile": { "description": "A palette name, `@gradient`, or literal colour from the base spec. Defaults to the base favicon tile.", "type": "string" },
+					"wordmark": { "description": "Also build a wordmark of `text` for this package.", "type": "boolean", "default": false },
+					"text": { "description": "Wordmark letters; defaults to `slug`.", "type": "string", "minLength": 1 },
+					"patch": { "description": "Any other spec changes for this package, deep-merged last.", "type": "object" }
+				}
+			}
+		}
+	}
+}

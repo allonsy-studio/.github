@@ -1,5 +1,6 @@
 // One entry per workspace of the repository: its package.json & its page,
-// the workspace's SKILL.md or else its README.md.
+// the workspace's SKILL.md or else its README.md, plus its icon & wordmark
+// when content/assets/img/packages/ holds <slug>.svg or <slug>-wordmark.svg.
 
 import { existsSync, globSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -10,6 +11,8 @@ import { highlightFences } from "../utilities/highlight.js";
 
 // Two levels up from <site>/_data.
 const root = path.resolve(import.meta.dirname, "..", "..");
+const packageImages = path.resolve(import.meta.dirname, "..", "content", "assets", "img", "packages");
+const image = (name) => (existsSync(path.join(packageImages, name)) ? `/assets/img/packages/${name}` : "");
 const md = markdownIt();
 highlightFences(md);
 
@@ -41,6 +44,8 @@ export default function () {
 				description: pkg.description,
 				slug,
 				url: `/${slug}/`,
+				icon: image(`${slug}.svg`),
+				wordmark: image(`${slug}-wordmark.svg`),
 				html: source ? md.render(body(readFileSync(source, "utf8"))) : "",
 			};
 		});
