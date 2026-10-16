@@ -33,7 +33,12 @@
 
 <link rel="preload" href="/assets/fonts/pt-mono.woff2" as="font" type="font/woff2" crossorigin />
 
-<link webc:keep rel="stylesheet" href="/assets/styles/core.css" />
+<!--- tokens.css leads: it declares the cascade layers. Load order: references/styling.md --->
+<link webc:keep rel="stylesheet" href="/assets/styles/tokens.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/reset.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/layout.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/components.css" />
+<link webc:keep rel="stylesheet" href="/assets/styles/studio.css" />
 <link webc:keep rel="stylesheet" href="/assets/styles/project.css" />
 <script webc:keep type="module" src="/assets/scripts/copy-code.js"></script>
 <script webc:keep type="module" src="/assets/scripts/code-highlight.js"></script>

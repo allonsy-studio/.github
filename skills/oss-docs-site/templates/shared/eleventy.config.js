@@ -3,7 +3,6 @@
 // Build:  PATH_PREFIX=/my-project/ eleventy --config=docs/eleventy.config.js
 // PATH_PREFIX is the path the site is served from (default "/").
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { HtmlBasePlugin } from "@11ty/eleventy";
@@ -17,9 +16,6 @@ const here = path.relative(process.cwd(), import.meta.dirname) || ".";
 const at = (...parts) => path.posix.join(here.split(path.sep).join("/"), ...parts);
 
 const pathPrefix = process.env.PATH_PREFIX || "/";
-
-// Core sheets, bundled into assets/styles/core.css in this order (tokens first: it declares the cascade layers); project.css stays separate.
-const CORE_SHEETS = ["tokens", "reset", "layout", "components", "studio"];
 
 /** @param {import("@11ty/eleventy").UserConfig} config */
 export default function (config) {
@@ -49,18 +45,8 @@ export default function (config) {
 		return { prev: pages[index - 1], next: pages[index + 1] };
 	});
 
-	config.addPassthroughCopy(
-		{ [at("content/assets")]: "assets" },
-		{ filter: ["**/*", `!styles/{${CORE_SHEETS.join(",")}}.css`] },
-	);
+	config.addPassthroughCopy({ [at("content/assets")]: "assets" });
 	config.addWatchTarget(at("content/assets/styles"));
-	// `directories.output` is where this build writes (the audit overrides it); `dir.output` is only the config's.
-	config.on("eleventy.after", ({ directories }) => {
-		const out = path.join(directories.output, "assets/styles");
-		mkdirSync(out, { recursive: true });
-		const core = CORE_SHEETS.map((name) => readFileSync(at("content/assets/styles", `${name}.css`), "utf8"));
-		writeFileSync(path.join(out, "core.css"), core.join("\n"));
-	});
 
 	return {
 		pathPrefix,

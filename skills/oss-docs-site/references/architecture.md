@@ -17,7 +17,7 @@ See `REPO_DEV_DEPENDENCIES` in `scripts/lib/layers.js` for what default dependen
 
 | Part | Contents |
 | --- | --- |
-| CSS | Reset, tokens (`--accent`, text-safe shades, `--font-*`), layout, base components, & a print block, each in a cascade layer (`references/styling.md`). Light & dark via `light-dark()`. An `eleventy.after` hook joins the five core sheets into `assets/styles/core.css` in the active output directory (`directories.output`, which follows an output override such as the Cypress audit's); `project.css` stays separate, so its `@import` & font rules work. A project overrides tokens only, in `project.css` |
+| CSS | Reset, tokens (`--accent`, text-safe shades, `--font-*`), layout, base components, & a print block, each in a cascade layer (`references/styling.md`). Light & dark via `light-dark()`. Five core sheets load from the head partial in a fixed order, then `project.css`, so its `@import` & font rules work (`references/styling.md`). A project overrides tokens only, in `project.css` |
 | JS | Small dependency-free modules (the code copy button, syntax highlight ranges). Progressive enhancement: every page works without them |
 | WebC components | In `templates/shared/_includes/`. The `studio-*` components are locked (`Studio layer`); the rest are customizable. Comments use WebC's server-only `<!--- --->` so they stay out of the page |
 | Eleventy | Base & flavor layouts, head partial (meta, Open Graph, theme color, favicon & apple-touch links), site facts resolved from `package.json` into `_data/site.js`, plugins (HtmlBasePlugin, WebC), Prism tokenizing, inline Font Awesome Free icons (`<fa-icon>`, from `@fortawesome/fontawesome-free`), Pages workflow |
