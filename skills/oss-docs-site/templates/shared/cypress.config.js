@@ -33,9 +33,9 @@ export default defineConfig({
 			});
 			await eleventy.init();
 			await eleventy.write();
-			// Without core.css every page is unstyled & axe fails opaquely.
-			if (!existsSync(join(BUILD_DIR, "assets/styles/core.css"))) {
-				throw new Error("core.css was not written to the audit build; check the eleventy.after hook.");
+			// Without the sheets every page is unstyled & axe fails opaquely.
+			if (!existsSync(join(BUILD_DIR, "assets/styles/tokens.css"))) {
+				throw new Error("The styles were not copied to the audit build; check the passthrough copy.");
 			}
 			await eleventy.serve(PORT);
 			on("after:run", () => eleventy.stopWatch());

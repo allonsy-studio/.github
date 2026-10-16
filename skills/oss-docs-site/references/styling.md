@@ -22,6 +22,30 @@ li > article { gap: var(--space-xs); }
 
 Every sheet sits in a cascade layer, in the order `tokens.css` declares: `reset`, `tokens`, `base`, `layout`, `components`, `studio`, `print`. A later layer wins whatever the specificity; project styles outside a layer beat all of them.
 
+## Loading the styles
+
+`_includes/site-head.webc` links the sheets from `assets/styles/`, in this order:
+
+| Order | File | Why here |
+| --- | --- | --- |
+| 1 | `tokens.css` | Declares the layer order, so it leads |
+| 2 | `reset.css` | `reset` layer |
+| 3 | `layout.css` | `base`, `layout`, & `print` layers |
+| 4 | `components.css` | `components` layer |
+| 5 | `studio.css` | `studio` layer (locked) |
+| 6 | `project.css` | Accent, fonts, & overrides; unlayered, so it beats every layer |
+
+Pick the order for the goal:
+
+| Goal | Load |
+| --- | --- |
+| Default site | The six files above, in order, as separate stylesheets |
+| Fewer requests | Concatenate files 1 to 5 in order with a post processor (Lightning CSS, esbuild, PostCSS), link the result, then `project.css` unbundled so its `@import` & font rules keep working |
+| Smaller CSS | Run the same post processor over the output to minify or prune; keep `tokens.css` first & leave `project.css` last |
+| Override a token or component | Edit `project.css` only; it already loads last |
+
+Reordering files 2 to 5 changes nothing, since layers fix their precedence, but `tokens.css` must come before any other layered sheet, & `project.css` must come after the core.
+
 Hook on tags & native attributes, not classes:
 
 | Hook | Used for |
