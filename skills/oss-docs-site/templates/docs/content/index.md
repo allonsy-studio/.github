@@ -1,4 +1,4 @@
 ---
-layout: docs-home.webc
+layout: norn-docs-home.webc
 permalink: /index.html
 ---
