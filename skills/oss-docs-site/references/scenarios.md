@@ -1,6 +1,6 @@
 # Situations
 
-`node scripts/suggest.js --repo <repo-root>` reports `scenario` as `new` or `migrate` & declines the fourth. For `new` it also returns an `existingSiteQuestion`: ask whether a website already exists that isn't built with 11ty. Yes means a rework; no means a new site.
+`node scripts/suggest.js --repo <repo-root>` reports `scenario` as `new` or `migrate` & declines the fourth. For `new` it also returns an `existingSiteQuestion`: ask whether a website already exists that isn't built with 11ty. Yes means a rework; no means a new site. For `migrate` it returns `legacySite`: true when the site still holds files the older scaffold copied.
 
 ## New site
 
@@ -21,12 +21,31 @@ The scaffold never writes into a directory that has files but was never scaffold
 
 ## Migrate a site this skill built
 
-`scenario: migrate`: `package.json` records `oss-docs`. Both kinds are non-destructive:
+`scenario: migrate`: `package.json` records `oss-docs`. Two kinds, both non-destructive until `--prune`.
 
-- **Another flavor.** Set `oss-docs.flavor` or pass `--flavor <name>`, preview with `--dry-run`, then rerun. Unedited files are replaced, edited ones kept as drift, & unused ones left as orphans (`--prune` removes them). Update the `project.json` fields the new flavor uses. Detail: `references/site-config.md`.
-- **Newer templates.** Run `node scripts/scaffold.js --update --dry-run`, read what changes, then rerun without `--dry-run`. A locked studio file that differs is restored; other drift is never overwritten without `--update`.
+- **Another flavor.** Set `oss-docs.flavor` or pass `--flavor <name>`, preview with `--dry-run`, then rerun. Unedited pages & config are replaced, edited pages are kept, & unused files are left as orphans (`--prune` removes them). Update the `project.json` fields the new flavor uses. Detail: `references/site-config.md`. To move the site to another directory, pass `--target <new directory>`: the old one is left as it was.
+- **Newer scaffold.** Run `node scripts/scaffold.js --update --dry-run`, read what changes, then rerun without `--dry-run`. Edited files that the scaffold owns are never replaced without `--update`.
 
-To move the site to another directory, pass `--target <new directory>`: the old one is left as it was.
+## Move a site off the copied templates
+
+`legacySite: true`: the site was made when the scaffold copied the layouts, components, styles, scripts, fonts, & studio files into the project. The Norn packages provide all of them now, & the build fails while the old fonts stay, because they collide with the packaged ones.
+
+1. **Commit.** Pruned files are only in version control. Note any local edits to the old layouts or includes: the replacement is to copy a Norn layout & leave the packaged one out (`layouts` option of the Norn plugin).
+2. **Preview.** `node scripts/scaffold.js --update --prune --dry-run`. The report lists:
+   - `legacy`, the copied files, as orphans that `--prune` removes: `_includes/*.webc` (`site-*`, `studio-*`, `docs-*`, `fa-icon`, & the rest), `_layouts/`, `_data/studio.js`, `utilities/`, the old styles & scripts, `content/assets/img/studio/`, & the four fonts.
+   - `review`, the project files that still point at the past.
+3. **Apply.** Rerun without `--dry-run`. `--update` replaces the old `eleventy.config.js`, `_data/site.js`, `_data/workspaces.js`, Cypress config, & directory data, & changes only the layout name in pages (`docs.webc` to `norn-docs.webc`). `--prune` removes the copies & the folders they leave empty. A `studio: false` setting becomes `oss: false`.
+4. **Work through the review list.**
+
+| File | What to do |
+| --- | --- |
+| `content/assets/styles/project.css` | Rename `--accent` to `--norn-ui-accent`, `--font-sans` to `--norn-font-body`, `--font-display` to `--norn-font-heading`. The file is never rewritten for you |
+| `_data/project.json` | Drop `features[].icon` & `faviconIco`, which nothing renders now |
+| `content/*.md` | Replace `{% %}` & `{{ }}` tags with the value: templating is off, so they print as text |
+| `package.json` | Remove `prismjs`, `@fortawesome/fontawesome-free`, `@11ty/eleventy-fetch`, & `markdown-it` unless the project uses them itself. Run `yarn install` |
+| `_includes/` | A component the project wrote itself stays. One named `norn-*` or `oss-*` fails the build: rename it |
+
+5. **Build & check.** `yarn docs:build` & `yarn docs:test`.
 
 ## Outside the org
 
