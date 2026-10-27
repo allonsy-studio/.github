@@ -9,10 +9,6 @@ export default [
 	// Org templates: placeholders & task lists the Markdown rules misread.
 	{ ignores: ["PULL_REQUEST_TEMPLATE.md", "ISSUE_TEMPLATE/**", "templates/**"] },
 	{
-		files: ["skills/oss-docs-site/templates/shared/content/assets/scripts/**/*.js"],
-		languageOptions: { globals: { CSS: "readonly", document: "readonly", Highlight: "readonly", Range: "readonly" } },
-	},
-	{
 		// Code passed to Playwright's page.evaluate runs in the browser.
 		files: ["skills/brand-assets/scripts/lib/browser.js"],
 		languageOptions: { globals: { document: "readonly", Image: "readonly" } },
