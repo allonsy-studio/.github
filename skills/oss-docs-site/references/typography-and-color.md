@@ -6,22 +6,23 @@ A project may bring its own font families, but the monospace is the same everywh
 
 | Token | Rule |
 | --- | --- |
-| `--font-sans` | Default: `--sans-stack`, the system UI stack from `tokens.css`. A project may put its own family in front of it |
-| `--font-display` | Headings & the brand link; defaults to `--font-sans`. |
-| `--font-signature` | Yellowtail. Flourish only, a limited use; never headings, tag lines, or running text. The one exception is the studio layer, which signs the studio name in the call to action title. |
-| `--font-mono` | Locked: PT Mono, then the platform monospace fonts. Not overridable |
+| `--norn-font-body` | Default: the system UI stack from the patterns package. A project may put its own family in front of it |
+| `--norn-font-heading` | Headings & the brand link; follows `--norn-font-body` until set |
+| `--norn-font-mono` | Locked: PT Mono, then the platform monospace fonts, set by the studio tokens. Do not override it |
 
-Every site self-hosts its fonts from `content/assets/fonts/`, copied from the org's `assets/fonts/`, & `tokens.css` declares them, each with a metric-matched fallback face: PT Mono (preloaded in the head), Instrument Sans (regular & italic, 400 to 700), & Yellowtail. A face downloads only when text uses it, so unused ones cost nothing. A project sets its fonts in `content/assets/styles/project.css`: put the bundled family first, as `--font-sans: "Instrument Sans", "Instrument Sans Fallback", var(--sans-stack);`, or load another family there (`@font-face` or `@import`, with `font-display: swap`). No font request goes to another host; nothing redeclares `--font-mono`.
+Yellowtail is the studio's signature face. It is a flourish only, a limited use: never headings, tag lines, or running text. The one use is the studio layer, which signs the studio name in the call to action title.
+
+`@allons-y/webc-oss-site` self-hosts the fonts & declares them, each with a metric-matched fallback face: PT Mono (preloaded in the head), Instrument Sans (regular & italic, 400 to 700), & Yellowtail. The plugin copies the files to `assets/fonts`, & a face downloads only when text uses it, so unused ones cost nothing. A project sets its fonts in `content/assets/styles/project.css`: put the bundled family first, as `--norn-font-body: "Instrument Sans", "Instrument Sans Fallback", ui-sans-serif, system-ui, sans-serif;`, or load another family there (`@font-face` or `@import`, with `font-display: swap`). No font request goes to another host. The project does not copy font files into the site, & a copy at `content/assets/fonts/` collides with the packaged one & fails the build.
 
 ## Accent
 
-Set one `--accent` in `content/assets/styles/project.css` (any CSS color; the scaffold's `--accent` option seeds it). `tokens.css` derives the rest in CSS, so there is no per-project color math:
+Set one `--norn-ui-accent` in `content/assets/styles/project.css` (any CSS color; the scaffold's `--accent` option seeds it). The patterns package derives the rest in CSS, so there is no per-project color math:
 
-- `--accent-text`: `light-dark(oklch(from color-mix(in oklch, var(--accent) 82%, black) min(l, 0.52) c h), color-mix(in oklch, var(--accent) 55%, white))`. The accent is darkened on light surfaces (with its lightness capped at 0.52, so a bright accent such as yellow or orange still holds 4.5:1 on white) & lightened on dark ones, so one expression gives readable text & links on either.
-- `--on-accent`: `oklab(from var(--accent) clamp(0, calc((0.58 - l) * 1000), 1) 0 0)`. Relative color syntax turns the accent's lightness into black or white; `color-mix()` alone cannot choose between two colors.
+- `--norn-text-accent`: the accent darkened on light surfaces & lightened on dark ones, with its lightness bounded, so one expression gives readable text & links on either. A bright accent such as yellow or orange still reads on white.
+- `--norn-text-on-accent`: black or white, chosen from the accent's lightness, for text on an accent surface such as a primary button.
 
-The 82% & 55% mixes, the 0.52 lightness cap, & the 0.58 threshold are the knobs. A bright yellow gets dark button text & a darker text shade in light mode, as intended. A mid-tone accent near the threshold can still leave button text under 4.5:1: the Cypress audit reports it, & the fix is a slightly different accent.
+A project can set either one directly to override the derived value. A mid-tone accent near the switch point can still leave button text under 4.5:1: the Cypress audit reports it, & the fix is a slightly different accent. The footer's npm badges take their color from the accent: `accentHex` reads `--norn-ui-accent` as a hex value from `project.css`, so set it as `#rrggbb` to color them.
 
 ## Contrast
 
-Surfaces & text are fixed in `tokens.css`. The targets are 4.5:1 for normal text & 3:1 for large text (24 px, or 18.66 px bold) & UI such as the focus ring. The Cypress audit measures rendered text in light & dark (`references/testing.md`); axe does not check non-text contrast.
+Surfaces & text are the package's. The targets are 4.5:1 for normal text & 3:1 for large text (24 px, or 18.66 px bold) & UI such as the focus ring. The Cypress audit measures rendered text in light & dark (`references/testing.md`); axe does not check non-text contrast.
