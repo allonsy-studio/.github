@@ -1,6 +1,7 @@
 /* Project styles: the accent & fonts. Edit freely; the scaffold never overwrites this file. */
 :root {
-	--accent: {{ACCENT}};
-	/* Fonts: Instrument Sans is bundled; uncomment it, or load your own (@font-face or @import) & put the family first.
-	--font-sans: "Instrument Sans", "Instrument Sans Fallback", var(--sans-stack); */
+	--norn-ui-accent: {{ACCENT}};
+	/* Fonts: the Allons-y Studio pairing is bundled; uncomment it, or load your own (@font-face or @import) & put the family first.
+	--norn-font-body: "Instrument Sans", "Instrument Sans Fallback", ui-sans-serif, system-ui, sans-serif;
+	--norn-font-heading: "Yellowtail", "Yellowtail Fallback", var(--norn-font-body); */
 }

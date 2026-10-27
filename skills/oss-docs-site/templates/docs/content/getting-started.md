@@ -6,7 +6,7 @@ order: 1
 Install the package:
 
 ```sh
-{% if project.install %}{{ project.install }}{% else %}npm install {{ site.packageName }}{% endif %}
+npm install {{PACKAGE_NAME}}
 ```
 
 Replace this page with the first thing a new user needs to do.

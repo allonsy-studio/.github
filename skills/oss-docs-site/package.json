@@ -2,7 +2,7 @@
   "private": true,
   "name": "@allons-y/skill-oss-docs-site",
   "version": "0.0.0",
-  "description": "Scaffold and check single-page landing sites for Allons-y Studio open source projects.",
+  "description": "Scaffold, migrate, and check project sites built on the Norn packages for Allons-y Studio open source projects.",
   "type": "module",
   "skill": {
     "category": "Documentation",
@@ -14,14 +14,20 @@
       "check this project site against the studio brand",
       "set up GitHub Pages with PR previews for this project",
       "which site flavor fits this project",
-      "change the site flavor for this project"
+      "change the site flavor for this project",
+      "move this project site onto the Norn packages"
     ]
+  },
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\""
+  },
+  "engines": {
+    "node": ">=24"
   },
   "dependencies": {
     "@npmcli/package-json": "^7.0.5",
     "ajv": "^8.17.1",
-    "hosted-git-info": "^8.1.0",
-    "semver": "^7.7.0"
+    "hosted-git-info": "^8.1.0"
   },
   "keywords": [
     "branding",
