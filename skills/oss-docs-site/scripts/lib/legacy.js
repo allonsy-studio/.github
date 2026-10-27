@@ -117,12 +117,9 @@ export function legacyTokens(css) {
 }
 
 /**
- * Whether Markdown uses Liquid or Nunjucks tags outside code. Templating is off in the new config, so they print as text.
+ * Whether Markdown uses Liquid or Nunjucks tags. The previous config rendered them, even inside code; templating is off now, so they print as text.
  *
  * @param {string} markdown
  * @returns {boolean}
  */
-export function hasTemplateTags(markdown) {
-	const prose = markdown.replace(/^(`{3,}|~{3,})[\s\S]*?^\1/gm, "").replace(/`[^`\n]*`/g, "");
-	return /\{%|\{\{/.test(prose.replace(/^---\n[\s\S]*?\n---\n/, ""));
-}
+export const hasTemplateTags = (markdown) => /\{%|\{\{/.test(markdown.replace(/^---\n[\s\S]*?\n---\n/, ""));

@@ -66,8 +66,8 @@ const layoutOf = (text) => text.match(/^layout:\s*["']?([^"'\s]+)/m)?.[1];
 const filesUnder = (dir, pattern) =>
 	existsSync(dir)
 		? readdirSync(dir, { recursive: true })
-				.map((rel) => posix(String(rel)))
-				.filter((rel) => pattern.test(rel))
+			.map((rel) => posix(String(rel)))
+			.filter((rel) => pattern.test(rel))
 		: [];
 
 /**
@@ -280,8 +280,8 @@ export async function scaffold({
 				flag(file, `Names a previous layout: change ${names}, or rerun with --update to change only the layout name.`);
 			}
 		}
-		if (rel.endsWith(".md") && !isOwnedPage(rel) && hasTemplateTags(text)) {
-			flag(file, "Uses {% %} or {{ }} tags outside code. Templating is off in the new config, so they print as text. Write the value in place.");
+		if (legacy.length && rel.endsWith(".md") && !isOwnedPage(rel) && hasTemplateTags(text)) {
+			flag(file, "Uses {% %} or {{ }} tags. The previous config rendered them; templating is off now, so they print as text. Write the value in place.");
 		}
 	}
 
@@ -356,6 +356,8 @@ export async function scaffold({
 	const settingsProblems = settingsSchema ? schemaProblems(settingsSchema, changes.settings.after) : [];
 
 	const next = nextSteps({
+		update,
+		prune,
 		dryRun,
 		siteRel,
 		pkg,
@@ -403,11 +405,18 @@ function removeEmptyParents(file, stop) {
 	}
 }
 
-function nextSteps({ dryRun, siteRel, pkg, drift, orphans, legacy, lockedEdits, review, projectProblems, schemaFound, settingsProblems, changes, movedFrom }) {
+/** The migration step: what the copies were, & which flags finish the move. */
+function legacyStep({ legacy, update, prune, dryRun }) {
+	const copies = `${plural(legacy.length, "copied file")} (layouts, components, styles, scripts, fonts, studio files) that the Norn packages now provide`;
+	if (prune) return `${dryRun ? "Would remove" : "Removed"} ${copies}.`;
+	const flags = [update ? "" : "--update", "--prune"].filter(Boolean).join(" ");
+	return `Moving from the previous scaffold: ${copies}. The build fails until they are removed, because the old fonts collide with the packaged ones. Rerun with ${flags} to ${update ? "" : "replace the old config & data and "}remove them. Commit first: removed files are only in version control.`;
+}
+
+function nextSteps({ update, prune, dryRun, siteRel, pkg, drift, orphans, legacy, lockedEdits, review, projectProblems, schemaFound, settingsProblems, changes, movedFrom }) {
 	const previousFlavor = orphans.filter((file) => !legacy.includes(file));
 	return [
-		legacy.length &&
-			`Moving from the previous scaffold: ${plural(legacy.length, "copied file")} (layouts, components, styles, scripts, fonts, studio files) now come from the Norn packages. Rerun with --update --prune to replace the old config & data and remove the copies. Commit first: pruned files are only in version control.`,
+		legacy.length && legacyStep({ legacy, update, prune, dryRun }),
 		lockedEdits.length &&
 			`${lockedEdits.join(", ")} has the name of a locked studio component, so the build fails. Delete it, or opt out of the studio layer with "oss": false under \`${CONFIG_KEY}\` in package.json.`,
 		drift.length &&
@@ -425,7 +434,7 @@ function nextSteps({ dryRun, siteRel, pkg, drift, orphans, legacy, lockedEdits, 
 		changes.scripts.length && `${dryRun ? "Would add" : "Added"} scripts to package.json: ${changes.scripts.join(", ")}.`,
 		changes.scriptConflicts.length &&
 			`package.json already defines ${changes.scriptConflicts.join(", ")} differently. They are kept: point them at ${siteRel}/eleventy.config.js & \`cypress run --project ${siteRel}\`.`,
-		pkg.type !== "module" && `Set "type": "module" in package.json: the Norn packages & the generated files are ES modules.`,
+		pkg.type !== "module" && "Set \"type\": \"module\" in package.json: the Norn packages & the generated files are ES modules.",
 		`Repository tooling every project carries: ${Object.entries(REPO_DEV_DEPENDENCIES)
 			.map(([name, range]) => `${name}@${range}`)
 			.join(", ")}.`,
