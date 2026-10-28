@@ -58,5 +58,9 @@
   {
     "query": "Write release notes for allonsy-studio/example-cli 2.0 from the merged pull requests.",
     "should_trigger": false
+  },
+  {
+    "query": "Our project site still has the old copied layouts and studio files. Move it onto the Norn packages.",
+    "should_trigger": true
   }
 ]

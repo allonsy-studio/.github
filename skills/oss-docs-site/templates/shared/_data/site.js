@@ -1,53 +1,20 @@
-// Site facts, resolved from package.json when the scaffold ran: edit them here.
+// Site facts for the layouts, read from package.json & project.json when Eleventy runs.
 
-import { readFileSync } from "node:fs";
-import Fetch from "@11ty/eleventy-fetch";
-import project from "./project.json" with { type: "json" };
+import path from "node:path";
 
-/**
- * Whether the package has a release on npm, so the footer badges have something to show.
- * A missing package, or no network, counts as no release.
- *
- * @param {string} name package name
- * @returns {Promise<boolean>}
- */
-async function hasNpmRelease(name) {
-	try {
-		const info = await Fetch(`https://registry.npmjs.org/${name}`, { duration: "1h", type: "json" });
-		return Boolean(info["dist-tags"]?.latest);
-	} catch {
-		return false;
-	}
-}
+import { accentHex, buildSite, npmRelease } from "@allons-y/webc-patterns/project";
+import { host } from "@allons-y/webc-oss-site";
 
-/**
- * The project accent as a bare hex for badge URLs, read from project.css.
- *
- * @returns {string}
- */
-function accentHex() {
-	const css = readFileSync(new URL("../content/assets/styles/project.css", import.meta.url), "utf8");
-	return css.match(/--accent:\s*#([0-9a-f]{6})\b/i)?.[1] ?? "2346d4";
-}
-
-const site = {
-	name: "{{NAME}}",
-	packageName: "{{PACKAGE_NAME}}",
-	tagline: project.tagline ?? "{{TAGLINE}}",
-	description: "{{DESCRIPTION}}",
-	studio: "{{STUDIO}}",
-	license: "{{LICENSE}}",
-	licenseUrl: "{{LICENSE_URL}}",
-	repo: "{{REPO}}",
-	repoName: "{{REPO_NAME}}",
-	npm: "{{NPM}}",
-	node: "{{NODE}}",
-	url: (project.url ?? "{{URL}}").replace(/\/?$/, "/"),
-	issuesUrl: "{{ISSUES_URL}}",
-	contributingUrl: "{{CONTRIBUTING_URL}}",
-	changelogUrl: "{{CHANGELOG_URL}}",
+export default async () => {
+	const site = buildSite({
+		packagePath: path.resolve(import.meta.dirname, "{{PACKAGE_PATH_FROM_DATA}}"),
+		projectPath: path.join(import.meta.dirname, "project.json"),
+		host,
+	});
+	// The footer shows npm badges once the package has a release.
+	return {
+		...site,
+		npmRelease: await npmRelease(site.packageName),
+		badgeColor: accentHex(path.join(import.meta.dirname, "../content/assets/styles/project.css")),
+	};
 };
-
-export default async function () {
-	return { ...site, npmRelease: await hasNpmRelease(site.packageName), badgeColor: accentHex() };
-}

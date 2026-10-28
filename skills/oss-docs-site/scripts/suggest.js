@@ -13,8 +13,9 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
 import { readRepoFacts } from "./lib/facts.js";
+import { findLegacy } from "./lib/legacy.js";
 import { assertInScope } from "./lib/scope.js";
-import { CONFIG_KEY, readSiteConfig } from "./lib/settings.js";
+import { CONFIG_KEY, DEFAULT_SITE, readSiteConfig } from "./lib/settings.js";
 import { chooseSite, useRecorded } from "./lib/flavor.js";
 
 const EXISTING_SITE_QUESTION =
@@ -27,6 +28,16 @@ function yesNo(value) {
 	if (value === "no") return false;
 	throw new Error(`Expected yes or no, found "${value}".`);
 }
+
+/**
+ * Whether the site still holds files the previous scaffold copied, which the Norn packages now provide.
+ *
+ * @param {string} repo
+ * @param {{ site?: unknown } | undefined} config
+ * @returns {boolean}
+ */
+const hasLegacyFiles = (repo, config) =>
+	findLegacy(path.resolve(repo, typeof config?.site === "string" ? config.site : DEFAULT_SITE)).length > 0;
 
 /**
  * A recorded flavor is used without asking or scanning; `reconsider` scans anyway & `choose` overrides it.
@@ -60,6 +71,7 @@ export function suggest({
 			project: pkg.name ?? path.basename(path.resolve(repo)),
 			scenario: "migrate",
 			recordedFlavor: recorded,
+			legacySite: hasLegacyFiles(repo, config),
 			...useRecorded(recorded),
 			note: "Recorded flavor used. Rerun with --reconsider to compare it with a fresh suggestion.",
 		};
@@ -77,6 +89,7 @@ export function suggest({
 	const out = { project: facts.name, scenario, signals: facts.signals, ...result };
 	if (scenario === "new" && !unattended) out.existingSiteQuestion = EXISTING_SITE_QUESTION;
 	if (recorded !== undefined) out.recordedFlavor = recorded;
+	if (scenario === "migrate") out.legacySite = hasLegacyFiles(repo, config);
 	if (recorded !== undefined && result.flavor !== recorded && result.applied) out.switchFrom = recorded;
 	return out;
 }

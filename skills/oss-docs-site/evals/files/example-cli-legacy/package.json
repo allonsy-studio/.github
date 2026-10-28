@@ -1,0 +1,28 @@
+{
+  "name": "@allons-y/example-cli",
+  "version": "1.0.0",
+  "description": "A command-line tool that does one job.",
+  "license": "MPL-2.0",
+  "repository": "allonsy-studio/example-cli",
+  "type": "module",
+  "bin": {
+    "example": "cli.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "docs:build": "eleventy --config=docs/eleventy.config.js"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.5",
+    "@11ty/eleventy-fetch": "^5.1.0",
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "prismjs": "^1.30.0"
+  },
+  "oss-docs": {
+    "site": "docs",
+    "flavor": "landing",
+    "studio": false
+  }
+}

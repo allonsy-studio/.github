@@ -33,9 +33,9 @@ export default defineConfig({
 			});
 			await eleventy.init();
 			await eleventy.write();
-			// Without the sheets every page is unstyled & axe fails opaquely.
-			if (!existsSync(join(BUILD_DIR, "assets/styles/tokens.css"))) {
-				throw new Error("The styles were not copied to the audit build; check the passthrough copy.");
+			// Without the project styles the accent is lost & axe fails opaquely.
+			if (!existsSync(join(BUILD_DIR, "assets/styles/project.css"))) {
+				throw new Error("The project styles were not copied to the audit build; check the passthrough copy.");
 			}
 			await eleventy.serve(PORT);
 			on("after:run", () => eleventy.stopWatch());
