@@ -4,7 +4,7 @@ import path from "node:path";
 import { describe, it } from "node:test";
 
 import { suggest } from "../scripts/suggest.js";
-import { findLegacy, hasTemplateTags, legacyLayouts, legacyTokens, LEGACY_FILES, migrateLayouts } from "../scripts/lib/legacy.js";
+import { findLegacy, hasTemplateTags, legacyLayouts, legacyProjectKeys, legacyTokens, LEGACY_FILES, migrateLayouts, migrateProject } from "../scripts/lib/legacy.js";
 import { listing, put, read, readJson, run, snapshot, statusOf, tempProject } from "./helpers.js";
 
 const OLD_PACKAGES = { "@11ty/eleventy-fetch": "^5.1.0", "@fortawesome/fontawesome-free": "^7.3.1", "markdown-it": "^14.1.0", prismjs: "^1.30.0", cypress: "^15.21.1" };
@@ -26,7 +26,7 @@ function legacyProject(overrides = {}) {
 	put(dir, "docs/content/getting-started.md", "---\ntitle: Getting started\n---\n```sh\nnpm install {{ site.packageName }}\n```\n");
 	put(dir, "docs/content/usage.md", "---\ntitle: Usage\nlayout: docs.webc\n---\nMine.\n");
 	put(dir, "docs/content/assets/styles/project.css", ":root { --accent: #6b2fc2; --font-sans: Georgia, serif; }\n");
-	put(dir, "docs/_data/project.json", '{ "lede": "Mine.", "features": [{ "title": "A", "description": "b", "icon": "plug" }] }\n');
+	put(dir, "docs/_data/project.json", '{ "lede": "Mine.", "features": [{ "title": "A", "body": "b", "icon": "plug" }] }\n');
 	return dir;
 }
 
@@ -73,7 +73,8 @@ describe("a site from the previous scaffold", () => {
 		assert.match(reviewed["docs/content/getting-started.md"], /tags/);
 		assert.match(reviewed["docs/content/assets/styles/project.css"], /--accent is now --norn-ui-accent, --font-sans is now --norn-font-body/);
 		assert.match(reviewed["package.json"], /@11ty\/eleventy-fetch, @fortawesome\/fontawesome-free, markdown-it, prismjs/);
-		assert.ok(!("docs/_data/project.json" in reviewed));
+		assert.match(reviewed["docs/_data/project.json"], /features\[0\]\.body is now description/);
+		assert.match(reviewed["docs/_data/project.json"], /--update/);
 		assert.ok(result.next[0].includes("The build fails until they are removed"));
 		assert.ok(result.next.some((line) => line.includes("features[].icon is not rendered")));
 	});
@@ -110,18 +111,60 @@ describe("a site from the previous scaffold", () => {
 		assert.match(read(dir, "docs/content/index.11tydata.js"), /layout: "norn-docs\.webc"/);
 		assert.equal(read(dir, "docs/content/usage.md"), "---\ntitle: Usage\nlayout: norn-docs.webc\n---\nMine.\n");
 		assert.equal(read(dir, "docs/content/getting-started.md").includes("{{ site.packageName }}"), true);
-		assert.equal(read(dir, "docs/_data/project.json").includes('"icon": "plug"'), true);
+		assert.equal(read(dir, "docs/_data/project.json").includes('"body": "b"'), true);
+		assert.equal(statusOf(result, "docs/_data/project.json"), "kept (project layer)");
+		assert.match(result.review.find((r) => r.path === "docs/_data/project.json").note, /rename them by hand/);
 		assert.equal(read(dir, "docs/content/assets/styles/project.css"), ":root { --accent: #6b2fc2; --font-sans: Georgia, serif; }\n");
 	});
 
-	it("never touches project.json or project.css, with any flags", async () => {
+	it("never touches project.json without --update, or project.css with any flags", async () => {
 		const dir = legacyProject();
 		const json = read(dir, "docs/_data/project.json");
 		const css = read(dir, "docs/content/assets/styles/project.css");
-		await run(dir, { update: true, prune: true });
-		await run(dir, { update: true, prune: true });
+		await run(dir, { prune: true });
 		assert.equal(read(dir, "docs/_data/project.json"), json);
+		await run(dir, { update: true, prune: true });
+		await run(dir, { update: true, prune: true });
 		assert.equal(read(dir, "docs/content/assets/styles/project.css"), css);
+	});
+
+	it("--update renames the item keys in project.json & keeps everything else", async () => {
+		const dir = legacyProject();
+		const raw = JSON.stringify(
+			{
+				lede: "Mine.",
+				features: [{ title: "A", body: "b", href: "/a/", icon: "plug" }],
+				packages: [{ name: "pkg", description: "d", href: "https://example.com", extra: 1 }],
+				url: "https://example.com",
+			},
+			null,
+			"\t",
+		);
+		put(dir, "docs/_data/project.json", raw + "\n");
+		const result = await run(dir, { update: true });
+		assert.equal(statusOf(result, "docs/_data/project.json"), "updated (features[0].body → description, packages[0].name → title)");
+		const after = read(dir, "docs/_data/project.json");
+		assert.equal(after, raw.replace('"body"', '"description"').replace('"name"', '"title"') + "\n");
+		assert.deepEqual(Object.keys(JSON.parse(after).features[0]), ["title", "description", "href", "icon"]);
+		const again = await run(dir, { update: true });
+		assert.equal(statusOf(again, "docs/_data/project.json"), "kept (project layer)");
+	});
+
+	it("--update --dry-run reports the project.json rename & writes nothing", async () => {
+		const dir = legacyProject();
+		put(dir, "docs/_data/project.json", JSON.stringify({ features: [{ title: "A", body: "b" }] }, null, "  ") + "\n");
+		const json = read(dir, "docs/_data/project.json");
+		const result = await run(dir, { update: true, dryRun: true });
+		assert.equal(read(dir, "docs/_data/project.json"), json);
+		assert.equal(statusOf(result, "docs/_data/project.json"), "updated (features[0].body → description)");
+	});
+
+	it("leaves project.json that is not valid JSON alone", async () => {
+		const dir = legacyProject();
+		put(dir, "docs/_data/project.json", "{ not json\n");
+		const result = await run(dir, { update: true });
+		assert.equal(read(dir, "docs/_data/project.json"), "{ not json\n");
+		assert.equal(statusOf(result, "docs/_data/project.json"), "kept (project layer)");
 	});
 
 	it("keeps a project's own components when pruning", async () => {
@@ -193,5 +236,27 @@ describe("the legacy helpers", () => {
 	it("finds template tags outside front matter", () => {
 		assert.equal(hasTemplateTags("---\npermalink: x\n---\n{% if a %}b{% endif %}"), true);
 		assert.equal(hasTemplateTags("Plain text.\n"), false);
+	});
+});
+
+describe("the project.json item keys", () => {
+	it("finds the old keys by position", () => {
+		assert.deepEqual(
+			legacyProjectKeys({ features: [{ title: "A", body: "b" }, { title: "B", description: "c" }], packages: [{ name: "p" }] }),
+			[
+				{ path: "features[0].body", to: "description" },
+				{ path: "packages[0].name", to: "title" },
+			],
+		);
+		assert.deepEqual(legacyProjectKeys({ features: [{ title: "A", description: "b" }], name: "top-level stays" }), []);
+		assert.deepEqual(legacyProjectKeys(null), []);
+		assert.deepEqual(legacyProjectKeys({ features: "no", packages: [null, 3] }), []);
+	});
+
+	it("renames in place & never overwrites a key that exists", () => {
+		const { project, moved } = migrateProject({ features: [{ title: "A", body: "b", icon: "x" }, { title: "B", body: "old", description: "new" }] });
+		assert.deepEqual(Object.keys(project.features[0]), ["title", "description", "icon"]);
+		assert.deepEqual(project.features[1], { title: "B", body: "old", description: "new" });
+		assert.deepEqual(moved, ["features[0].body → description"]);
 	});
 });

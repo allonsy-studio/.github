@@ -11,7 +11,7 @@ A site is the Norn packages plus a few files the project owns. Nothing from the 
 | Studio | `@allons-y/webc-oss-site` (locked) | The brand tokens, the self-hosted fonts, `oss-bar`, `oss-cta`, `oss-credit`, & the `oss-docs` settings schema | Opt out only |
 | Scaffold | This skill | The config, data files, accessibility check, Pages workflow, `package.json` wiring | Edit; drift is reported |
 | Flavor | This skill | The pages for Landing, Docs, or Workspaces, suggested from the repo & confirmed by the maintainer | Pick one |
-| Project | Maintainer | Accent & fonts (`project.css`), copy (`project.json`), logo & favicon, the Markdown pages | Yes. Never overwritten |
+| Project | Maintainer | Accent & fonts (`project.css`), copy (`project.json`), logo & favicon, the Markdown pages | Yes. Never overwritten (`--update` renames only the old item keys in `project.json`) |
 
 `REPO_DEV_DEPENDENCIES` in `scripts/lib/layers.js` lists the tooling every repository carries. The scaffold prints it & does not add it.
 

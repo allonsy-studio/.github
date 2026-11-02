@@ -62,6 +62,47 @@ const TOKENS = Object.freeze({
 	"--font-display": "--norn-font-heading",
 });
 
+/** Item keys in project.json that the Norn item shape renames, by list. */
+const PROJECT_KEYS = Object.freeze({ features: { body: "description" }, packages: { name: "title" } });
+
+/**
+ * @param {unknown} project the parsed project.json
+ * @returns {{ path: string, to: string }[]} the old item keys it still uses, as `features[0].body`
+ */
+export function legacyProjectKeys(project) {
+	const found = [];
+	if (project === null || typeof project !== "object") return found;
+	for (const [list, renames] of Object.entries(PROJECT_KEYS)) {
+		if (!Array.isArray(project[list])) continue;
+		project[list].forEach((item, index) => {
+			if (item === null || typeof item !== "object") return;
+			for (const [from, to] of Object.entries(renames)) {
+				if (from in item && !(to in item)) found.push({ path: `${list}[${index}].${from}`, to });
+			}
+		});
+	}
+	return found;
+}
+
+/**
+ * Renames the old item keys where they stand, so key order is kept. A key whose new name is already set is left alone.
+ *
+ * @param {Record<string, any>} project the parsed project.json
+ * @returns {{ project: Record<string, any>, moved: string[] }} a renamed copy & one note per rename
+ */
+export function migrateProject(project) {
+	const moved = legacyProjectKeys(project).map(({ path, to }) => `${path} → ${to}`);
+	const copy = structuredClone(project);
+	for (const [list, renames] of Object.entries(PROJECT_KEYS)) {
+		if (!Array.isArray(copy[list])) continue;
+		copy[list] = copy[list].map((item) => {
+			if (item === null || typeof item !== "object") return item;
+			return Object.fromEntries(Object.entries(item).map(([key, value]) => [key in renames && !(renames[key] in item) ? renames[key] : key, value]));
+		});
+	}
+	return { project: copy, moved };
+}
+
 /** Packages the previous scaffold added that the Norn packages make unnecessary. */
 export const LEGACY_DEPENDENCIES = Object.freeze(["@11ty/eleventy-fetch", "@fortawesome/fontawesome-free", "markdown-it", "prismjs"]);
 

@@ -1,6 +1,6 @@
 # Project layer
 
-Everything a maintainer owns about their site is `docs/_data/project.json` (copy), `docs/content/assets/styles/project.css` (accent & fonts), the Markdown pages in `docs/content/`, & the logo & favicon files `project.json` names. The scaffold creates them once & never overwrites them, with any flag.
+Everything a maintainer owns about their site is `docs/_data/project.json` (copy), `docs/content/assets/styles/project.css` (accent & fonts), the Markdown pages in `docs/content/`, & the logo & favicon files `project.json` names. The scaffold creates them once & never overwrites them. The one edit is `--update` renaming the old item keys in `project.json`: `features[].body` to `description` & `packages[].name` to `title`. It rewrites only a file that is plain `JSON.stringify` output (tabs or spaces); any other file is reported for a rename by hand.
 
 The schema for `project.json` (draft 2020-12) is `@allons-y/webc-patterns/schema/project.schema.json`. It defines the fields: types, defaults, & what each does. It ships in the package & is not copied into projects, so a new `project.json` links it with `$schema` for editors. Nothing is required.
 

@@ -35,7 +35,7 @@ The scaffold records `site` & `flavor` on its first run & afterward edits only t
 | `--flavor <name>` | The flavor. Default: the recorded one, else `landing` |
 | `--accent <color>` | The starter accent for a new `project.css` |
 | `--dry-run` | Plan everything, write nothing |
-| `--update` | Replace edited files the scaffold owns; rename old layout names in pages. Never touches `project.json`, `project.css`, or page content |
+| `--update` | Replace edited files the scaffold owns; rename old layout names in pages. Renames the old item keys in `project.json` (`features[].body`, `packages[].name`); never touches `project.css` or page content |
 | `--prune` | Remove unedited files from the previous flavor & the copies the older scaffold made |
 | `--adopt` | Scaffold into a directory that has files the scaffold did not make. Differing files are kept as drift |
 | `--json` | Print the result as JSON |
@@ -44,7 +44,7 @@ The JSON result has `flavor`, `site`, `actions` (`path` & `status`), `lockedEdit
 
 ## Drift
 
-The scaffold owns a few files: the config, `_data/site.js`, `_data/workspaces.js`, the directory data, `content/workspaces.md`, the Cypress files, & the Pages workflow. A file that differs from its template is reported as `drift`, & `--update` takes the template version. The project's files, `project.json`, `project.css`, & the Markdown pages, are created once & kept: a rerun reports `kept (project file)` & changes nothing.
+The scaffold owns a few files: the config, `_data/site.js`, `_data/workspaces.js`, the directory data, `content/workspaces.md`, the Cypress files, & the Pages workflow. A file that differs from its template is reported as `drift`, & `--update` takes the template version. The project's files, `project.json`, `project.css`, & the Markdown pages, are created once & kept: a rerun reports `kept (project file)` & changes nothing. The exception is `--update` renaming the old item keys in `project.json`.
 
 ## Changing the flavor
 
@@ -66,7 +66,7 @@ A file that still matches any flavor's template byte for byte was never edited, 
 | Edited page | Kept as the project's. A layout the new flavor does not use is listed for review |
 | New-flavor file with no counterpart | Created |
 | Unedited, unused by the new flavor | Left as `orphaned`. `--prune` removes it. Edited files are never touched |
-| `project.json`, `project.css`, & edited pages | Never touched |
+| `project.json`, `project.css`, & edited pages | Never touched, except the old item keys in `project.json` with `--update` |
 
 `--dry-run` shows all of it & writes nothing.
 

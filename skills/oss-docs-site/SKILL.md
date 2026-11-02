@@ -56,7 +56,7 @@ The scripts need Node 24+ & `yarn install` in this directory. Sites need Node 22
 - Theme follows the system (light & dark). No theme switcher.
 - Monospace is locked (PT Mono, `--norn-font-mono`). Projects set `--norn-font-body` & `--norn-font-heading` only.
 - The accent is one value, `--norn-ui-accent`. The package derives the link color & the text on the accent from it. Never assume white text on it: the Cypress audit catches a failing pair.
-- Never overwrite a project's `project.json`, `project.css`, or pages. The scaffold never does, with any flag.
+- Never overwrite a project's `project.json`, `project.css`, or pages. The scaffold edits only what migrating needs, with `--update`: the old layout names in pages, & the old item keys in `project.json` (`features[].body` to `description`, `packages[].name` to `title`).
 
 ## Reference
 

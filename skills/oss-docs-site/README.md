@@ -35,7 +35,7 @@ The scaffold records the site directory & flavor under `oss-docs` in the project
 | --- | --- |
 | `docs/eleventy.config.js` | Adds the OSS site plugin & maps the data to the layout props |
 | `docs/_data/site.js` | The site facts from `package.json`, through `buildSite` |
-| `docs/_data/project.json`, `docs/content/assets/styles/project.css` | The project's copy, accent, & fonts. Never overwritten |
+| `docs/_data/project.json`, `docs/content/assets/styles/project.css` | The project's copy, accent, & fonts. Never overwritten; `--update` renames only the old item keys in `project.json` |
 | `docs/content/*.md` | The pages for the flavor, each with a `layout: norn-*.webc`. Never overwritten |
 | `docs/cypress.config.js`, `docs/cypress/` | The accessibility check |
 | `.github/workflows/pages.yml` | Pages deploy & PR previews |

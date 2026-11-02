@@ -24,7 +24,7 @@ import {
 	templateFiles,
 	WORKFLOW_TEMPLATE,
 } from "./lib/layers.js";
-import { findLegacy, hasTemplateTags, isLegacyContent, LEGACY_DEPENDENCIES, legacyLayouts, legacyTokens, migrateLayouts } from "./lib/legacy.js";
+import { findLegacy, hasTemplateTags, isLegacyContent, LEGACY_DEPENDENCIES, legacyLayouts, legacyProjectKeys, legacyTokens, migrateLayouts, migrateProject } from "./lib/legacy.js";
 import { writePackage } from "./lib/package-config.js";
 import { checkProject } from "./lib/project.js";
 import { loadSchema, schemaProblems, SETTINGS_SCHEMA } from "./lib/schemas.js";
@@ -294,8 +294,36 @@ export async function scaffold({
 	let projectProblems = [];
 	let schemaFound = true;
 	if (existsSync(projectFile)) {
+		// The one edit to a project's data: the item keys the Norn shape renames, with --update only.
+		let status = "kept (project layer)";
+		const text = readFileSync(projectFile, "utf8");
+		let parsed;
+		try {
+			parsed = JSON.parse(text);
+		} catch {
+			parsed = undefined;
+		}
+		const old = legacyProjectKeys(parsed);
+		if (old.length) {
+			// Rewrite only a file that JSON.stringify reproduces exactly, so no formatting is lost.
+			const indent = text.match(/^([ \t]+)"/m)?.[1];
+			const canonical = indent !== undefined && JSON.stringify(parsed, null, indent) + (text.endsWith("\n") ? "\n" : "") === text;
+			if (update && canonical) {
+				const { project, moved } = migrateProject(parsed);
+				write(projectFile, Buffer.from(JSON.stringify(project, null, indent) + (text.endsWith("\n") ? "\n" : "")), dryRun);
+				status = `updated (${moved.join(", ")})`;
+			} else {
+				const list = old.map(({ path, to }) => `${path} is now ${to}`).join(", ");
+				flag(
+					projectRel,
+					update
+						? `Uses old item keys: ${list}. The file's formatting is not plain JSON.stringify output, so --update left it alone: rename them by hand.`
+						: `Uses old item keys: ${list}. The schema rejects them: rename them, or rerun with --update to rename only these keys.`,
+				);
+			}
+		}
 		({ problems: projectProblems, schemaFound } = checkProject(projectFile, repoRoot));
-		actions.push({ path: projectRel, status: "kept (project layer)" });
+		actions.push({ path: projectRel, status });
 	} else {
 		write(projectFile, Buffer.from(JSON.stringify(starterProject(flavor), null, "\t") + "\n"), dryRun);
 		actions.push({ path: projectRel, status: "created (project layer)" });
