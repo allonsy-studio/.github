@@ -1,6 +1,7 @@
 // Site config. The OSS site plugin adds the Norn plugin, its layouts, & the studio layer.
 // Build:  PATH_PREFIX=/my-project/ eleventy --config={{SITE_DIR}}/eleventy.config.js
 // PATH_PREFIX is the path the site is served from (default "/").
+// ELEVENTY_OUTPUT_DIR moves the output (relative to the working directory): the bundle plugin ignores an API override.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -36,7 +37,7 @@ export default function (config) {
 
 	return {
 		pathPrefix: process.env.PATH_PREFIX || "/",
-		dir: { input: at("content"), output: at("{{OUTPUT_DIR}}"), includes: "../_includes", layouts: "../_layouts", data: "../_data" },
+		dir: { input: at("content"), output: process.env.ELEVENTY_OUTPUT_DIR || at("{{OUTPUT_DIR}}"), includes: "../_includes", layouts: "../_layouts", data: "../_data" },
 		templateFormats: ["md", "webc"],
 		markdownTemplateEngine: false,
 	};
