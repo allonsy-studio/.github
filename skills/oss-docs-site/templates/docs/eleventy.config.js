@@ -18,7 +18,7 @@ const withOss = ossEnabled({ packagePath: path.resolve(import.meta.dirname, "{{P
 
 /** The docs pages, in order, for the sidebar, the pager, & the home page's contents. */
 const docsOf = (data) =>
-	(data.collections?.docs ?? []).map((page) => ({ url: page.url, title: page.data.title, description: page.data.description, icon: page.data.icon }));
+	(data.collections?.docs ?? []).map((page) => ({ href: page.url, title: page.data.title, description: page.data.description, icon: page.data.icon }));
 
 /** @param {import("@11ty/eleventy").UserConfig} config */
 export default function (config) {

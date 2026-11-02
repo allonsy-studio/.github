@@ -43,14 +43,14 @@
 				"type": "object",
 				"required": [
 					"title",
-					"body"
+					"description"
 				],
 				"properties": {
 					"title": {
 						"type": "string",
 						"minLength": 1
 					},
-					"body": {
+					"description": {
 						"type": "string",
 						"minLength": 1
 					}
@@ -63,11 +63,11 @@
 			"items": {
 				"type": "object",
 				"required": [
-					"name",
+					"title",
 					"description"
 				],
 				"properties": {
-					"name": {
+					"title": {
 						"type": "string",
 						"minLength": 1
 					},
