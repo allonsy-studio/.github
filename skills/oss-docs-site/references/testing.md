@@ -17,7 +17,7 @@ yarn docs:build   # the site, with PATH_PREFIX from the environment
 yarn docs:test    # Cypress builds docs/_a11y unprefixed, serves it with Eleventy on 127.0.0.1:8080, & audits it
 ```
 
-The Cypress config builds & serves its own unprefixed copy (`PATH_PREFIX=/`, through Eleventy's API) because a local server serves from `/`, while Pages builds are prefixed. The config fails fast when `project.css` is missing from the audit build. The page list comes from the built files, so new pages are audited with no list to keep.
+The Cypress config builds & serves its own unprefixed copy (`PATH_PREFIX=/`, through Eleventy's API) because a local server serves from `/`, while Pages builds are prefixed. It sets the output directory through the site config (`ELEVENTY_OUTPUT_DIR`, which the config reads), not through the API: the bundle plugin writes the WebC bundle (every component's CSS & JS) to the config's output directory, so an API override leaves the audited pages unstyled. The config fails fast when `project.css` or a `bundle/` with CSS is missing from the audit build. The page list comes from the built files, so new pages are audited with no list to keep.
 
 Cypress downloads its runner on install (`download.cypress.io`): a restricted network must allow that host. It needs Node 22, 24, or 26+ & an installed Chrome (`defaultBrowser: "chrome"`), since Electron is deprecated for tests & media emulation needs a Chromium-family browser. GitHub-hosted runners have Chrome. cypress-axe supports Cypress up to 15; stay there until it adds 16.
 

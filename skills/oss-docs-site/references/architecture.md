@@ -19,11 +19,11 @@ A site is the Norn packages plus a few files the project owns. Nothing from the 
 
 | File | Owner after the first run |
 | --- | --- |
-| `eleventy.config.js` | Scaffold. Adds the OSS site plugin, the head hook (the reset & `project.css`), & the props mapping |
+| `eleventy.config.js` | Scaffold. Adds the OSS site plugin, the head hook (the reset & `project.css`), & the props mapping. The output is `_site`, or `ELEVENTY_OUTPUT_DIR` when set |
 | `_data/site.js` | Scaffold. `buildSite` with the OSS site `host`, plus the npm release check & badge color for the footer |
 | `_data/workspaces.js` | Scaffold (Workspaces). `buildWorkspaces` over the repository root |
 | `content/index.11tydata.js`, `content/workspaces.11tydata.js`, `content/workspaces.md` | Scaffold. The directory layout for Docs, & the one page per workspace |
-| `cypress.config.js`, `cypress/` | Scaffold. The accessibility check (`references/testing.md`) |
+| `cypress.config.js`, `cypress/` | Scaffold. The accessibility check (`references/testing.md`); builds `_a11y` by setting `ELEVENTY_OUTPUT_DIR` |
 | `.github/workflows/pages.yml` | Scaffold |
 | `_data/project.json` | Project |
 | `content/assets/styles/project.css` | Project |
@@ -35,6 +35,8 @@ Nothing else is written: no layouts, includes, styles, scripts, fonts, icons, hi
 ## The config
 
 One config per flavor, shaped like the Norn fixtures. It adds the OSS site plugin (or the plain Norn plugin when the project opts out), which owns the one WebC registration. Do not add `@11ty/eleventy-plugin-webc` again, or add the Norn plugin beside the OSS site plugin: both fail the build. The `props` mapping turns the data (`site`, `project`, the docs collection, the workspaces) into the layout props. Projects add their own components in `_includes/`, with a prefix other than `norn-` & `oss-`.
+
+The output directory is set in the config (`ELEVENTY_OUTPUT_DIR`, else `_site`), never through the Eleventy API or `--output`: the bundle plugin writes `bundle/` to the config's directory, so an override would split the pages from their CSS & JS. The audit build sets the variable to `_a11y`.
 
 ## Studio layer
 

@@ -62,7 +62,7 @@ describe("a fresh scaffold", () => {
 			const config = read(dir, "docs/eleventy.config.js");
 			assert.match(config, /from "@allons-y\/webc-oss-site"/);
 			assert.match(config, /ossEnabled\(\{ packagePath: path\.resolve\(import\.meta\.dirname, "\.\.\/package\.json"\) \}\)/);
-			assert.match(config, /output: at\("_site"\)/);
+			assert.match(config, /output: process\.env\.ELEVENTY_OUTPUT_DIR \|\| at\("_site"\)/);
 			assert.match(config, /markdownTemplateEngine: false/);
 			assert.doesNotMatch(config, /\{\{|prism|utilities/i);
 			for (const file of ["docs/eleventy.config.js", "docs/_data/site.js"]) {
@@ -71,6 +71,18 @@ describe("a fresh scaffold", () => {
 			}
 		});
 	}
+
+	it("builds the audit through the config's output, not the Eleventy API", async () => {
+		const dir = tempProject();
+		await run(dir, { flavor: "docs" });
+		const cypress = read(dir, "docs/cypress.config.js");
+		assert.match(cypress, /process\.env\.ELEVENTY_OUTPUT_DIR = /);
+		assert.match(cypress, /new Eleventy\(undefined, undefined, \{/);
+		assert.doesNotMatch(cypress, /source: "cli"/);
+		assert.match(cypress, /bundle/);
+		const check = spawnSync(process.execPath, ["--check", path.join(dir, "docs/cypress.config.js")], { encoding: "utf8" });
+		assert.equal(check.status, 0, check.stderr);
+	});
 
 	it("builds the site data from the packages", async () => {
 		const dir = tempProject();
