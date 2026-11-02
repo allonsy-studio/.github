@@ -10,7 +10,7 @@ First match wins:
 2. Slim & focused on a single action: **landing**.
 3. Everything else: **docs**, the default.
 
-Tooling is suggested beside the flavor, & both can apply: TypeScript source suggests **typedoc**, JavaScript resources suggest **jsdoc**. Landing grows into Docs without a rewrite: same core.
+Tooling is suggested beside the flavor, & both can apply: TypeScript source suggests **typedoc**, JavaScript resources suggest **jsdoc**.
 
 ## How facts are read
 
@@ -46,12 +46,12 @@ Ask in one message: the flavor, the reason, & the tooling. Accept a yes or anoth
 
 ## What each flavor builds
 
-| Flavor | Pages | Content comes from |
-| --- | --- | --- |
-| Landing | One page: hero, install, usage, features | `project.json` |
-| Docs | A home page plus a sidebar & pager over `content/*.md` | Markdown files; front matter `title`, `description`, & `order` |
-| Workspaces | A home page indexing the packages, plus one page per workspace | Each workspace's `SKILL.md`, else its `README.md` |
+| Flavor | Layouts | Pages | Content comes from |
+| --- | --- | --- | --- |
+| Landing | `norn-landing` | One page: hero, install, usage, features | `project.json` |
+| Docs | `norn-docs-home`, `norn-docs` | A home page plus a sidebar, contents, & pager over `content/*.md` | Markdown files; front matter `title`, `description`, `order`, & an optional sidebar `icon` |
+| Workspaces | `norn-workspaces-home`, `norn-workspace` | A home page indexing the packages, plus one page per workspace | Each workspace's `SKILL.md`, else its `README.md` |
 
-A Workspaces site shows a package's icon on its card & beside its page heading when `content/assets/img/packages/<slug>.svg` exists, & a package wordmark in place of the heading text when `<slug>-wordmark.svg` exists. The `brand-assets` skill makes both.
+Workspaces read the root `package.json` `workspaces` globs, honoring `!` exclusions (`buildWorkspaces`). A page drops the file's front matter & its first heading, & takes its title & description from the workspace's `package.json`. The Norn layouts show no per-package image: the sidebar icon is a `norn-icon` name, not a file. The per-package icons from `brand-assets` are made, but nothing on a Workspaces site displays them yet.
 
-Workspaces read the root `package.json` `workspaces` globs, honoring `!` exclusions. A page drops the file's front matter & its first heading, & takes its title & description from the workspace's `package.json`.
+Landing grows into Docs without a rewrite: the same config & data, & `project.json` stays.

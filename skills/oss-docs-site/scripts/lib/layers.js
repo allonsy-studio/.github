@@ -1,22 +1,16 @@
-// Layer map for the scaffold. Core & flavor templates mirror the site directory;
-// the studio SVGs come from the org's assets/svg.
+// What the scaffold writes. The layouts, components, styles, fonts, & studio layer ship in
+// the Norn packages, so a site holds only its config, data, pages, & accessibility check.
 
 import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const SKILL_ROOT = path.resolve(
-	path.dirname(fileURLToPath(import.meta.url)),
-	"..",
-	"..",
-);
+export const SKILL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const TEMPLATES_DIR = path.join(SKILL_ROOT, "templates");
-export const CORE_DIR = path.join(TEMPLATES_DIR, "shared");
-const posix = (p) => p.split(path.sep).join("/");
-
-export const ORG_ASSETS_DIR = path.resolve(SKILL_ROOT, "..", "..", "assets", "svg");
-export const ORG_FONTS_DIR = path.resolve(SKILL_ROOT, "..", "..", "assets", "fonts");
+export const SHARED_DIR = path.join(TEMPLATES_DIR, "shared");
 export const WORKFLOW_TEMPLATE = path.join(TEMPLATES_DIR, "workflows", "pages.yml");
+
+const posix = (p) => p.split(path.sep).join("/");
 
 /** The directory Eleventy writes the built site to, inside the site directory. */
 export const OUTPUT_DIR = "_site";
@@ -24,43 +18,22 @@ export const OUTPUT_DIR = "_site";
 /** The site flavors. */
 export const FLAVORS = Object.freeze(["landing", "docs", "workspaces"]);
 
-/** Studio SVGs: site-relative destination to the file in ORG_ASSETS_DIR. */
-export const STUDIO_ASSETS = Object.freeze({
-	"content/assets/img/studio/mark.svg": "mark.svg",
-	"content/assets/img/studio/oss-banner.svg": "oss-banner.svg",
-	"content/assets/img/studio/oss-footer-dark.svg": "oss-footer-dark.svg",
-	"content/assets/img/studio/oss-footer-light.svg": "oss-footer-light.svg",
-});
+/** The release of the Norn packages the scaffold pins. */
+export const NORN_RANGE = "^0.1.0-beta.1";
 
-/** Self-hosted fonts: site-relative destination to the file in ORG_FONTS_DIR. */
-export const FONT_ASSETS = Object.freeze({
-	"content/assets/fonts/instrument-sans-italic-var.woff2": "instrument-sans-italic-var.woff2",
-	"content/assets/fonts/instrument-sans-var.woff2": "instrument-sans-var.woff2",
-	"content/assets/fonts/pt-mono.woff2": "pt-mono.woff2",
-	"content/assets/fonts/yellowtail.woff2": "yellowtail.woff2",
-});
-
-/** Site-relative paths of the locked studio layer. */
-export const STUDIO_FILES = Object.freeze([
-	"_includes/studio-banner.webc",
-	"_includes/studio-cta.webc",
-	"_includes/studio-footer.webc",
-	"_data/studio.js",
-	"content/assets/styles/studio.css",
-	...Object.keys(STUDIO_ASSETS),
-]);
+/** The Norn packages a site installs. */
+export const NORN_PACKAGES = Object.freeze(
+	Object.fromEntries(["webc-code-sample", "webc-oss-site", "webc-patterns"].map((name) => [`@allons-y/${name}`, NORN_RANGE])),
+);
 
 /** Packages the site build & its accessibility check need. */
 export const SITE_DEV_DEPENDENCIES = Object.freeze({
-	"@11ty/eleventy": "^3.1.5",
-	"@11ty/eleventy-fetch": "^5.1.0",
+	"@11ty/eleventy": "^3.1.6",
 	"@11ty/eleventy-plugin-webc": "^0.11.2",
-	"@fortawesome/fontawesome-free": "^7.3.1",
+	...NORN_PACKAGES,
 	"axe-core": "^4.11.0",
 	cypress: "^15.21.1",
 	"cypress-axe": "^1.7.0",
-	"markdown-it": "^14.1.0",
-	prismjs: "^1.30.0",
 });
 
 /** Studio tooling every repository carries: opx for linting, dashly for template skills. */
@@ -71,6 +44,21 @@ export const REPO_DEV_DEPENDENCIES = Object.freeze({
 	"@allons-y/opx-lint-json": "^0.1.0-beta.0",
 	"@allons-y/opx-lint-md": "^0.1.0-beta.0",
 });
+
+/** The site's starter styles: the accent & fonts. The project's from the first run, never overwritten. */
+export const PROJECT_CSS = "content/assets/styles/project.css";
+
+/** Pages that are config, not content: the pagination stub a Workspaces site needs. */
+const CONFIG_PAGES = new Set(["content/workspaces.md"]);
+
+/**
+ * Whether a site-relative path is the project's own after the first run: its styles & its Markdown pages.
+ * The scaffold creates them once, switches an unedited page with its flavor, & never overwrites them otherwise.
+ *
+ * @param {string} rel
+ * @returns {boolean}
+ */
+export const isProjectFile = (rel) => rel === PROJECT_CSS || (/^content\/.+\.md$/.test(rel) && !CONFIG_PAGES.has(rel));
 
 /**
  * @param {string} dir
@@ -84,61 +72,21 @@ function listFiles(dir) {
 }
 
 /**
- * A flavor's own template files.
+ * The template files of a flavor: the shared ones, then the flavor's own, which win a clash.
  *
  * @param {string} flavor
- * @returns {{ rel: string, source: string }[]}
+ * @param {{ sharedDir?: string }} [dirs]
+ * @returns {{ rel: string, source: string, layer: "core" | "flavor" }[]}
  */
-export function flavorFiles(flavor) {
-	const dir = path.join(TEMPLATES_DIR, flavor);
-	if (!existsSync(dir)) return [];
-	return listFiles(dir).map((rel) => ({ rel, source: path.join(dir, rel) }));
-}
-
-/**
- * Core, studio, & flavor template files.
- *
- * @param {string} flavor
- * @param {{ coreDir?: string, assetsDir?: string, fontsDir?: string }} [dirs]
- * @returns {{ rel: string, source: string, layer: "core" | "studio" | "flavor" }[]}
- */
-export function templateFiles(
-	flavor,
-	{ coreDir = CORE_DIR, assetsDir = ORG_ASSETS_DIR, fontsDir = ORG_FONTS_DIR } = {},
-) {
-	if (!existsSync(assetsDir)) {
-		throw new Error(
-			`The studio SVGs are read from ${assetsDir}. Run this skill from a checkout of allonsy-studio/.github, where assets/svg/ is the single source.`,
-		);
+export function templateFiles(flavor, { sharedDir = SHARED_DIR } = {}) {
+	const layers = [
+		{ dir: sharedDir, layer: /** @type {const} */ ("core") },
+		{ dir: path.join(TEMPLATES_DIR, flavor), layer: /** @type {const} */ ("flavor") },
+	];
+	const files = new Map();
+	for (const { dir, layer } of layers) {
+		if (!existsSync(dir)) continue;
+		for (const rel of listFiles(dir)) files.set(rel, { rel, source: path.join(dir, rel), layer });
 	}
-	if (!existsSync(fontsDir)) {
-		throw new Error(
-			`The fonts are read from ${fontsDir}. Run this skill from a checkout of allonsy-studio/.github, where assets/fonts/ is the single source.`,
-		);
-	}
-	const files = listFiles(coreDir).map((rel) => ({
-		rel,
-		source: path.join(coreDir, rel),
-		layer: /** @type {const} */ ("core"),
-	}));
-	const fonts = Object.entries(FONT_ASSETS).map(([rel, name]) => ({
-		rel,
-		source: path.join(fontsDir, name),
-		layer: /** @type {const} */ ("core"),
-	}));
-	const flavorDir = path.join(TEMPLATES_DIR, flavor);
-	const assets = Object.entries(STUDIO_ASSETS).map(([rel, name]) => ({
-		rel,
-		source: path.join(assetsDir, name),
-		layer: /** @type {const} */ ("studio"),
-	}));
-	return files.concat(
-		fonts,
-		assets,
-		listFiles(flavorDir).map((rel) => ({
-			rel,
-			source: path.join(flavorDir, rel),
-			layer: /** @type {const} */ ("flavor"),
-		})),
-	);
+	return [...files.values()];
 }

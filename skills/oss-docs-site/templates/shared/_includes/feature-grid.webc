@@ -1,6 +1,0 @@
-<!--- Prop: features, an array of { title, body, icon? }. --->
-<ul>
-	<li webc:for="feature of features">
-		<project-card :@title="feature.title" :@body="feature.body" :@icon="feature.icon"></project-card>
-	</li>
-</ul>
