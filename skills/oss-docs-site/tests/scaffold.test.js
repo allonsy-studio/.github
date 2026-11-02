@@ -231,7 +231,7 @@ describe("re-running", () => {
 		const checked = await run(dir);
 		const line = checked.next.find((l) => l.includes("project.json has"));
 		assert.ok(line, "problems reported");
-		assert.match(line, /body is required/);
+		assert.match(line, /description is required/);
 		assert.match(line, /accent is not set here/);
 		assert.match(line, /flavor is a site setting/);
 		assert.ok(!checked.next.some((l) => l.includes("was not checked")));

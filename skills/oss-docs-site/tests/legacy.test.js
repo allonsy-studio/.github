@@ -26,7 +26,7 @@ function legacyProject(overrides = {}) {
 	put(dir, "docs/content/getting-started.md", "---\ntitle: Getting started\n---\n```sh\nnpm install {{ site.packageName }}\n```\n");
 	put(dir, "docs/content/usage.md", "---\ntitle: Usage\nlayout: docs.webc\n---\nMine.\n");
 	put(dir, "docs/content/assets/styles/project.css", ":root { --accent: #6b2fc2; --font-sans: Georgia, serif; }\n");
-	put(dir, "docs/_data/project.json", '{ "lede": "Mine.", "features": [{ "title": "A", "body": "b", "icon": "plug" }] }\n');
+	put(dir, "docs/_data/project.json", '{ "lede": "Mine.", "features": [{ "title": "A", "description": "b", "icon": "plug" }] }\n');
 	return dir;
 }
 
