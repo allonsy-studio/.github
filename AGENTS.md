@@ -1,8 +1,8 @@
 # Allons-y Studio: shared conventions
 
-The studio-wide reference: voice, style, licensing, & brand. Individual repos carry
-their own `AGENTS.md` for their stack, commands, & testing: this file covers only
-what holds across all of them.
+The studio-wide reference: voice, style, licensing, brand, testing, & repository
+configuration. Individual repos carry their own `AGENTS.md` for their stack, commands,
+& layout: this file covers only what holds across all of them.
 
 ## About the studio
 
@@ -97,6 +97,30 @@ Styling defaults (detail in [`skills/oss-docs-site/references/styling.md`](skill
 - Screen first, then a tuned `@media print` block.
 
 To build a project site with the studio brand, use [`skills/oss-docs-site/SKILL.md`](skills/oss-docs-site/SKILL.md).
+
+## Testing
+
+Full rules in [`docs/testing.md`](docs/testing.md).
+
+- Vitest for web packages, AVA for lightweight plugins & CLIs, Cypress with axe for
+  rendered pages. The host ecosystem's own test technique wins when it has one.
+- Tests live in `test/` beside `src/`, as `<module>.test.ts`, with the license header.
+- `describe` names the unit; `it` states the behavior in the present tense, lowercase,
+  without "should".
+- New behavior & bug fixes ship with a test in the same PR.
+
+## Repository configuration
+
+Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
+
+- Node 26 in `.nvmrc`, `>=24` in `engines`, CI on both. Yarn 4 through Corepack, ESM only
+  with `.js` files (never `.mjs`). TypeScript only where strong typing pays off; vanilla JS
+  elsewhere.
+- Shared config files (`.nvmrc`, `.yarnrc.yml`, `.prettierrc`, `.opx/`, `.husky/`,
+  `renovate.json`, `release.yml`) are copied unchanged from this repo.
+- CI runs lint, build, then test.
+- Build with `opx-build-*` if one exists, else esbuild. Compile CSS with PostCSS.
+- Releases go through `opx release` for any change a consumer would notice.
 
 ## Commits & pull requests
 
