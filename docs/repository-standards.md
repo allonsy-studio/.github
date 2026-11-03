@@ -53,7 +53,7 @@ version still supported, & CI must pass on it.
 | `workspaces`      | `packages/*`, `plugins/*`, & `site` as the repo needs                                 |
 | `license`         | Per the [licensing rules](../AGENTS.md#licensing)                                     |
 | `repository`      | `git+https://github.com/allonsy-studio/<repo>.git`                                    |
-| `devDependencies` | Shared tooling lives here, not in each package                                        |
+| `devDependencies` | Shared tooling lives here, not in each package. Include `typescript` even in a JS-only repo: `opx-lint-js` lists it as an optional peer, but `typescript-eslint` needs it, & lint fails in a clean install without it |
 | `lint-staged`     | Keep only if a hook runs it, & only with scripts that exist      |
 
 Root scripts:
