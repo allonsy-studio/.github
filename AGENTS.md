@@ -100,11 +100,10 @@ To build a project site with the studio brand, use [`skills/oss-docs-site/SKILL.
 
 ## Testing
 
-Full rules in [`docs/testing.md`](docs/testing.md), modeled on
-[webc-docs](https://github.com/allonsy-studio/webc-docs).
+Full rules in [`docs/testing.md`](docs/testing.md).
 
-- Vitest for TypeScript packages; `node:test` only for zero-dependency JS scripts;
-  Cypress with axe for rendered pages.
+- Vitest for web packages, AVA for lightweight plugins & CLIs, Cypress with axe for
+  rendered pages. The host ecosystem's own test technique wins when it has one.
 - Tests live in `test/` beside `src/`, as `<module>.test.ts`, with the license header.
 - `describe` names the unit; `it` states the behavior in the present tense, lowercase,
   without "should".
@@ -114,11 +113,14 @@ Full rules in [`docs/testing.md`](docs/testing.md), modeled on
 
 Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
 
-- Node 24, Yarn 4 through Corepack, ESM only, TypeScript strict on `NodeNext`.
+- Node 26 in `.nvmrc`, `>=24` in `engines`, CI on both. Yarn 4 through Corepack, ESM only
+  with `.js` files (never `.mjs`). TypeScript only where strong typing pays off; vanilla JS
+  elsewhere.
 - Shared config files (`.nvmrc`, `.yarnrc.yml`, `.prettierrc`, `.opx/`, `.husky/`,
   `renovate.json`, `release.yml`) are copied unchanged from this repo.
 - CI runs lint, build, then test.
-- Releases use Changesets for any change a consumer would notice.
+- Build with `opx-build-*` if one exists, else esbuild. Compile CSS with PostCSS.
+- Releases go through `opx release` for any change a consumer would notice.
 
 ## Commits & pull requests
 
