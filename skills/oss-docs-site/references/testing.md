@@ -31,11 +31,11 @@ The config is `cypress.config.js` in a `"type": "module"` project (the default t
 
 ## The skill's own tests
 
-`tests/` holds a `node:test` suite for the scaffold, with no network & no browser. Run it from this directory:
+`test/` holds a `node:test` suite for the scaffold, with no network & no browser. Run it from this directory:
 
 ```text
 yarn install
-node --test "tests/**/*.test.js"
+node --test "test/**/*.test.js"
 ```
 
 It covers a fresh scaffold per flavor (the files & the layout names), re-runs, `--dry-run`, flavor switching, scope checks, the `package.json` wiring, & the move from a site made with the older scaffold (detection, `--prune`, `--update`). It does not build a site: that needs the packages installed.

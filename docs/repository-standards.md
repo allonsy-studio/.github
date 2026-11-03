@@ -52,7 +52,7 @@ Bump Node in `.nvmrc` & `engines` together.
 | `license`         | Per the [licensing rules](../AGENTS.md#licensing)                                     |
 | `repository`      | `git+https://github.com/allonsy-studio/<repo>.git`                                    |
 | `devDependencies` | Shared tooling lives here, not in each package                                        |
-| `lint-staged`     | Keep only if a hook runs it, & only with scripts that exist (see the gaps below)      |
+| `lint-staged`     | Keep only if a hook runs it, & only with scripts that exist. Neither baseline repo uses it      |
 
 Root scripts:
 
@@ -61,6 +61,7 @@ Root scripts:
 | `build`     | `yarn workspaces foreach -A --topological run build`   | Build in dependency order                    |
 | `ci`        | `yarn workspaces foreach -A --topological run ci`      | Everything a Pages build needs               |
 | `test`      | `yarn workspaces foreach -A run test`                  | Every workspace's tests                      |
+| `typecheck` | `tsc -p tsconfig.test.json`                            | Type-check `src` & `test`; TypeScript repos  |
 | `lint`      | `opx lint`                                             | JS, TS, JSON, & Markdown                     |
 | `format`    | `opx lint --fix`                                       | Apply lint fixes                             |
 | `prepare`   | `husky`                                                | Install hooks                                |
@@ -100,6 +101,7 @@ A private workspace (the docs site) sets `"private": true`, omits `exports`, `fi
 | --------------------- | --------------------------------------------------------------------------------------------------------- |
 | `tsconfig.base.json`  | `target: ES2022`, `module` & `moduleResolution: NodeNext`, `strict`, `declaration`, `declarationMap`, `sourceMap`, `isolatedModules`, `verbatimModuleSyntax` |
 | `<package>/tsconfig.json` | `extends` the base; set `rootDir: src` & `outDir: dist`; `include: ["src"]`                           |
+| `tsconfig.test.json`  | At the root: `extends` the base, `noEmit`, `include` every package's `src` & `test`; `yarn typecheck` runs it |
 
 Imports keep the `.js` extension. Type-only imports use `import type`.
 
@@ -124,12 +126,13 @@ Imports keep the `.js` extension. Type-only imports use `import type`.
 
 | File                          | Rule                                                                                         |
 | ----------------------------- | -------------------------------------------------------------------------------------------- |
-| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version-file: .nvmrc` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn test` |
+| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version-file: .nvmrc` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test` |
 | `.github/workflows/pages.yml` | Calls the org's reusable `pages.yml@main` with `output-dir`; grants `contents: write` & `pull-requests: write` |
 | `.github/renovate.json`       | The baseline above, with `reviewers` naming the maintainer                                   |
 
-Order in CI is lint, build, test: a type error or a style break fails fast, & CLI tests
-need the build.
+Order in CI is lint, build, typecheck, test: a style break or a type error fails fast, &
+CLI tests need the build. A repository with nothing to build drops `build` & `typecheck`,
+as this one does.
 
 ## Documentation
 
@@ -158,13 +161,4 @@ confirmed.
 6. Add `.changeset/` if the repo publishes.
 7. Add `ci.yml` & `pages.yml`.
 8. Add `AGENTS.md` & link [testing.md](testing.md) from its Testing section.
-9. Run `yarn lint`, `yarn build`, & `yarn test`.
-
-## Known gaps
-
-| Where                            | Gap                                                                                          |
-| -------------------------------- | -------------------------------------------------------------------------------------------- |
-| webc-docs & this repo            | `lint-staged` runs `yarn g:lint` & `g:lint:styles`, which no `package.json` defines; no pre-commit hook calls it |
-| This repo                        | No `ci.yml`: lint & the skills' tests run nowhere in CI                                      |
-| `templates/contribution.md`      | Links `.github/CONTRIBUTING.md` & `.github/CODE_OF_CONDUCT.md`; repos without local copies, such as webc-docs, get dead links |
-| webc-docs `AGENTS.md`            | Layout omits `webcdoc-schema` & `webcdoc-tools`                                              |
+9. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.

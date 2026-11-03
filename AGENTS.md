@@ -117,7 +117,7 @@ Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
 - Node 24, Yarn 4 through Corepack, ESM only, TypeScript strict on `NodeNext`.
 - Shared config files (`.nvmrc`, `.yarnrc.yml`, `.prettierrc`, `.opx/`, `.husky/`,
   `renovate.json`, `release.yml`) are copied unchanged from this repo.
-- CI runs lint, build, then test.
+- CI runs lint, build, typecheck, then test.
 - Releases use Changesets for any change a consumer would notice.
 
 ## Commits & pull requests

@@ -10,9 +10,9 @@ each rule below points at the file that shows it. Repository files & settings li
 | Layer                               | Tool                                         | Use when                                                      | Example                                                                                                  |
 | ----------------------------------- | -------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Unit & integration, TypeScript      | [Vitest](https://vitest.dev)                 | Default for any package with a build step or dependencies     | [`packages/webcdoc/test`](https://github.com/allonsy-studio/webc-docs/tree/main/packages/webcdoc/test)  |
-| Unit & integration, plain JS scripts | `node:test` & `node:assert/strict`           | Zero-dependency scripts with no build step, such as skills    | [`skills/brand-assets/tests`](../skills/brand-assets/tests)                                              |
+| Unit & integration, plain JS scripts | `node:test` & `node:assert/strict`           | Zero-dependency scripts with no build step, such as skills    | [`skills/brand-assets/test`](../skills/brand-assets/test)                                              |
 | Accessibility & rendered pages      | [Cypress](https://www.cypress.io) & [cypress-axe](https://github.com/component-driven/cypress-axe) | Any site or UI; WCAG 2.2 AA in light, dark, & forced-colors | [`skills/oss-docs-site/references/testing.md`](../skills/oss-docs-site/references/testing.md) |
-| Types                               | `tsc` through `yarn build`                   | Every TypeScript package; CI builds before it tests           | [`ci.yml`](https://github.com/allonsy-studio/webc-docs/blob/main/.github/workflows/ci.yml)              |
+| Types                               | `tsc` through `yarn build` & `yarn typecheck` | Every TypeScript package; `typecheck` covers `src` & `test`  | [`ci.yml`](https://github.com/allonsy-studio/webc-docs/blob/main/.github/workflows/ci.yml)              |
 | Style & license headers             | `opx lint`                                   | Every repository; CI runs it first                            | [`eslint.config.js`](https://github.com/allonsy-studio/webc-docs/blob/main/eslint.config.js)            |
 
 Python projects use pytest, as the `repo-scaffold` Python template does.
@@ -27,9 +27,9 @@ No test makes a network call. Browser tests run only in the accessibility layer.
 | Test file          | `<module>.test.ts`, named for the `src/` module it covers                              | `src/scan.ts` → `test/scan.test.ts`                                                                                                   |
 | Cross-cutting file | Named for the surface it exercises                                                     | `cli.test.ts`, `fixtures.test.ts`, `stubs.test.ts`                                                                                    |
 | Input fixtures     | `test/fixtures/`, one file per case, named for the case                                | `test/fixtures/skip-link.webc`                                                                                                        |
-| Shared helpers     | `test/helpers.ts`: factories & setup used by more than one file                        | `makeRecord` in [`webcdoc-tools/test/fixtures.ts`](https://github.com/allonsy-studio/webc-docs/blob/main/packages/webcdoc-tools/test/fixtures.ts) |
+| Shared helpers     | `test/helpers.ts`: factories & setup used by more than one file                        | `makeRecord` in [`webcdoc-lint/test/helpers.ts`](https://github.com/allonsy-studio/webc-docs/blob/main/packages/webcdoc-lint/test/helpers.ts) |
 | Snapshots          | `test/__snapshots__/`, Vitest's default, committed                                     | `fixtures.test.ts.snap`                                                                                                               |
-| Golden files       | `test/golden/`; `UPDATE_GOLDEN=1` rewrites them. Node-test suites only                 | [`skills/brand-assets/tests/helpers.js`](../skills/brand-assets/tests/helpers.js)                                                     |
+| Golden files       | `test/golden/`; `UPDATE_GOLDEN=1` rewrites them. Node-test suites only                 | [`skills/brand-assets/test/helpers.js`](../skills/brand-assets/test/helpers.js)                                                     |
 | License header     | Every file under `test/` starts with the block from `.license-header.js`; lint enforces it | [`eslint.config.js`](https://github.com/allonsy-studio/webc-docs/blob/main/eslint.config.js)                                       |
 | Imports            | The public entry (`../src/index.js`) first; a deep `../src/<module>.js` import only for internals. Keep the `.js` extension (NodeNext) | `predicates.test.ts` vs `stubs.test.ts`                      |
 | Workspace imports  | Sibling packages by name, never by relative path                                       | `@allons-y/webcdoc-schema`                                                                                                            |
@@ -79,7 +79,8 @@ Run all of these from the repository root.
 | `yarn vitest run --project <package name>`    | Run one workspace, such as `--project @allons-y/webcdoc`         |
 | `yarn vitest run --project <package name> -u` | Update that workspace's snapshots; read the diff first           |
 | `yarn vitest`                                 | Watch mode across every workspace                                |
-| `yarn build && yarn test`                     | What CI runs after lint; CLI tests need `dist/`                  |
+| `yarn typecheck`                              | Type-check `src` and `test` with `tsconfig.test.json`; build first |
+| `yarn build && yarn typecheck && yarn test`   | What CI runs after lint; CLI tests need `dist/`                  |
 
 Each package's `test` script is `vitest run`. A package with no tests yet uses
 `vitest run --passWithNoTests`; drop the flag with the first test.
@@ -106,20 +107,13 @@ The PR template's checklist asks for the same.
 
 1. Add `vitest` to the root `devDependencies` & a `test` script to each package.
 2. Move tests to `test/<module>.test.ts` & add the license header.
-3. Add `vitest.config.ts` with `projects` at the root of a monorepo.
-4. Add `test` to the CI job after `build`.
-5. Add the Testing section to the repository's `AGENTS.md`, linking this file.
+3. Add `tsconfig.test.json` (extends the base, `noEmit`, includes every `src` & `test`) & a `typecheck` script.
+4. Add `vitest.config.ts` with `projects` at the root of a monorepo.
+5. Add `typecheck` & `test` to the CI job after `build`.
+6. Add the Testing section to the repository's `AGENTS.md`, linking this file.
 
 ## Known gaps
 
-| Where                                                  | Gap                                                                                          |
-| ------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| This repo's `skills/*/tests/`                          | Folder is `tests/`, not `test/`; rename when a skill's suite is next touched                  |
-| webc-docs `webcdoc-tools/test/fixtures.ts`             | Holds helpers, so `helpers.ts` under this standard                                           |
-| webc-docs `webcdoc-schema`                             | Has a test but still runs `--passWithNoTests`                                                |
-| webc-docs `cem-plugin-webc`                            | No tests                                                                                     |
-| webc-docs `.env.example`                               | Does not list `WEBC_STUBS_DIR`                                                               |
-| webc-docs `AGENTS.md`                                  | Documents `yarn workspace @allons-y/webcdoc run test`, which fails with `command not found: vitest` |
-| webc-docs tests                                        | `tsc` compiles `src` only, so test files are not type-checked                                |
-| Coverage                                               | No tool or threshold is set anywhere; none is required until one is chosen                   |
-| This repo                                              | No CI job runs lint or the skills' `node:test` suites                                        |
+| Where    | Gap                                                                        |
+| -------- | -------------------------------------------------------------------------- |
+| Coverage | No tool or threshold is set anywhere; none is required until one is chosen |

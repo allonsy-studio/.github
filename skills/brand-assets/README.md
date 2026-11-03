@@ -47,7 +47,7 @@ node scripts/wire.js --packages out/packages --repo . --family family.json
 | `SKILL.md`, `references/` | Agent instructions & the detail behind them |
 | `scripts/` | One CLI per step, with shared code in `lib/` |
 | `schema/brand.schema.json` | The spec format |
-| `tests/` | `node --test` suite; `fixtures/dashly.json` rebuilds the dashly mark |
+| `test/` | `node --test` suite; `fixtures/dashly.json` rebuilds the dashly mark |
 | `evals/` | Task evals & trigger queries |
 
 ## Contributing
