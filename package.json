@@ -9,10 +9,14 @@
     "url": "git+https://github.com/allonsy-studio/.github.git"
   },
   "type": "module",
+  "workspaces": [
+    "skills/*"
+  ],
   "scripts": {
     "format": "opx lint --fix",
     "lint": "opx lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "yarn workspaces foreach -A run test"
   },
   "devDependencies": {
     "@allons-y/envoy": "^1.1.0",
@@ -26,7 +30,7 @@
     "@eslint/markdown": "^8.0.3",
     "eslint": "^10.8.0",
     "husky": "^9.1.7",
-    "lint-staged": "^17.3.0"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=24"
@@ -36,14 +40,5 @@
     "maintained node versions",
     "not dead"
   ],
-  "lint-staged": {
-    "*": [
-      "yarn g:lint --fix"
-    ],
-    "*.css": [
-      "yarn g:lint:styles --fix"
-    ],
-    ".github/renovate.json": "npx --yes --package renovate -- renovate-config-validator --strict"
-  },
   "packageManager": "yarn@4.18.1"
 }

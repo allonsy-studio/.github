@@ -21,7 +21,7 @@ export function tempDir() {
 
 /**
  * Compare with a golden file; UPDATE_GOLDEN=1 rewrites it.
- * @param {string} name File under tests/golden/.
+ * @param {string} name File under test/golden/.
  * @param {string} actual
  * @returns {string} The expected content.
  */

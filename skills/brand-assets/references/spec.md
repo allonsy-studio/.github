@@ -12,7 +12,7 @@ One JSON file per design direction. `scripts/build.js` reads it; `schema/brand.s
 
 ## The dashly spec, annotated
 
-`tests/fixtures/dashly.json` rebuilds the shipped dashly mark: a fuller example than `templates/starter.json`, which new specs start from.
+`test/fixtures/dashly.json` rebuilds the shipped dashly mark: a fuller example than `templates/starter.json`, which new specs start from.
 
 | Field | dashly value | Why |
 | --- | --- | --- |

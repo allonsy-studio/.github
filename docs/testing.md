@@ -11,7 +11,7 @@ files & settings live in [repository-standards.md](repository-standards.md).
 | Unit & integration, lightweight plugins & CLIs | [AVA](https://github.com/avajs/ava)                                                                  | Small Node plugins & command-line tools in plain JS                       |
 | Ecosystem-defined                              | The host's recommended technique                                                                     | The tool a plugin extends documents a test approach: follow it over the two defaults |
 | Accessibility & rendered pages                 | [Cypress](https://www.cypress.io) & [cypress-axe](https://github.com/component-driven/cypress-axe)  | Any site or UI; WCAG 2.2 AA in light, dark, & forced-colors. See [`oss-docs-site` testing](../skills/oss-docs-site/references/testing.md) |
-| Types                                          | `tsc` through `yarn build`                                                                           | Every TypeScript package; CI builds before it tests                       |
+| Types                                          | `tsc` through `yarn build` & `yarn typecheck`                                                        | Every TypeScript package; `typecheck` covers `src` & `test`               |
 | Style & license headers                        | `opx lint`                                                                                           | Every repository; CI runs it first                                        |
 
 Python projects use pytest.
@@ -88,7 +88,8 @@ Run all of these from the repository root.
 | `yarn vitest`                                 | Vitest: watch mode across every workspace                                |
 | `yarn ava <file>`                             | AVA: run one file                                                        |
 | `yarn ava --update-snapshots`                 | AVA: update snapshots; read the diff first                               |
-| `yarn build && yarn test`                     | What CI runs after lint; CLI tests need `dist/`                          |
+| `yarn typecheck`                              | Type-check `src` & `test` with `tsconfig.test.json`; build first          |
+| `yarn build && yarn typecheck && yarn test`   | What CI runs after lint; CLI tests need `dist/`                          |
 
 Each package's `test` script is `vitest run` or `ava`. A Vitest package with no tests
 yet uses `vitest run --passWithNoTests`; drop the flag with the first test.
@@ -118,13 +119,14 @@ The PR template's checklist asks for the same.
 3. Put tests in `test/<module>.test.<ext>` & add the license header.
 4. Vitest in a monorepo: add `vitest.config.ts` with `projects` at the root. AVA: add the
    `ava.files` setting.
-5. Add `test` to the CI job after `build`.
-6. Add the Testing section to the repository's `AGENTS.md`, linking this file.
+5. TypeScript packages: add `tsconfig.test.json` (extends the base, `noEmit`, includes every
+   `src` & `test`) & a `typecheck` script.
+6. Add `typecheck` & `test` to the CI job after `build`.
+7. Add the Testing section to the repository's `AGENTS.md`, linking this file.
 
 ## Known gaps
 
 | Where                         | Gap                                                                                        |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| This repo's `skills/*/tests/` | Folder is `tests/`, not `test/`, & the suites use `node:test`, not AVA                      |
-| This repo                     | No CI job runs lint or the skills' suites                                                  |
+| This repo's `skills/*/test/`  | The suites use `node:test`, not AVA                                                         |
 | Coverage                      | No tool or threshold is set anywhere; none is required until one is chosen                 |

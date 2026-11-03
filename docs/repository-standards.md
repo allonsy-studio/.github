@@ -11,7 +11,7 @@ note allows.
 
 | File                     | Baseline in this repo        | Note                                             |
 | ------------------------ | ---------------------------- | ------------------------------------------------ |
-| `.nvmrc`                 | `.nvmrc`                     | Node major only; `26` under this standard        |
+| `.nvmrc`                 | `.nvmrc`                     | Node major only                                  |
 | `.yarnrc.yml`            | `.yarnrc.yml`                | Points at the committed Yarn release             |
 | `.prettierrc`            | `.prettierrc`                | Tabs, width 4, print width 500                   |
 | `.opx/config.json`       | `.opx/config.json`           | Routes JS, JSON, & Markdown to one ESLint config; `opx enable release` adds `"release": true` |
@@ -53,8 +53,8 @@ version still supported, & CI must pass on it.
 | `workspaces`      | `packages/*`, `plugins/*`, & `site` as the repo needs                                 |
 | `license`         | Per the [licensing rules](../AGENTS.md#licensing)                                     |
 | `repository`      | `git+https://github.com/allonsy-studio/<repo>.git`                                    |
-| `devDependencies` | Shared tooling lives here, not in each package                                        |
-| `lint-staged`     | Keep only if a hook runs it, & only with scripts that exist (see the gaps below)      |
+| `devDependencies` | Shared tooling lives here, not in each package. Include `typescript` even in a JS-only repo: `opx-lint-js` lists it as an optional peer, but `typescript-eslint` needs it, & lint fails in a clean install without it |
+| `lint-staged`     | Keep only if a hook runs it, & only with scripts that exist      |
 
 Root scripts:
 
@@ -63,6 +63,7 @@ Root scripts:
 | `build`     | `yarn workspaces foreach -A --topological run build`   | Build in dependency order                    |
 | `ci`        | `yarn workspaces foreach -A --topological run ci`      | Everything a Pages build needs               |
 | `test`      | `yarn workspaces foreach -A run test`                  | Every workspace's tests                      |
+| `typecheck` | `tsc -p tsconfig.test.json`                            | Type-check `src` & `test`; TypeScript repos  |
 | `lint`      | `opx lint`                                             | JS, TS, JSON, & Markdown                     |
 | `format`    | `opx lint --fix`                                       | Apply lint fixes                             |
 | `prepare`   | `husky`                                                | Install hooks                                |
@@ -101,6 +102,7 @@ A private workspace (the docs site) sets `"private": true`, omits `exports`, `fi
 | --------------------- | --------------------------------------------------------------------------------------------------------- |
 | `tsconfig.base.json`  | `target: ES2022`, `module` & `moduleResolution: NodeNext`, `strict`, `declaration`, `declarationMap`, `sourceMap`, `isolatedModules`, `verbatimModuleSyntax` |
 | `<package>/tsconfig.json` | `extends` the base; set `rootDir: src` & `outDir: dist`; `include: ["src"]`                           |
+| `tsconfig.test.json`  | At the root: `extends` the base, `noEmit`, `include` every package's `src` & `test`; `yarn typecheck` runs it |
 
 Imports keep the `.js` extension. Type-only imports use `import type`.
 
@@ -167,12 +169,12 @@ it is not adopted yet.
 
 | File                          | Rule                                                                                         |
 | ----------------------------- | -------------------------------------------------------------------------------------------- |
-| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version-file: .nvmrc` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn test`. Runs on the `.nvmrc` version & again on Node 24, as a matrix or two jobs; both are required checks |
+| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version-file: .nvmrc` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test`. Runs on the `.nvmrc` version & again on Node 24, as a matrix or two jobs; both are required checks |
 | `.github/workflows/pages.yml` | Calls the org's reusable `pages.yml@main` with `output-dir`; grants `contents: write` & `pull-requests: write` |
 | `.github/renovate.json`       | The baseline above, with `reviewers` naming the maintainer                                   |
 
-Order in CI is lint, build, test: a type error or a style break fails fast, & CLI tests
-need the build.
+Order in CI is lint, build, typecheck, test: a style break or a type error fails fast, &
+CLI tests need the build. A repository with nothing to build drops `build` & `typecheck`.
 
 ## Documentation
 
@@ -201,14 +203,10 @@ status checks. Add the rest here once confirmed.
 6. If the repo publishes, add `@allons-y/opx-release` & run `opx enable release`.
 7. Add `ci.yml` with the Node 26 & Node 24 jobs, & `pages.yml`.
 8. Add `AGENTS.md` & link [testing.md](testing.md) from its Testing section.
-9. Run `yarn lint`, `yarn build`, & `yarn test`.
+9. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.
 
 ## Known gaps
 
-| Where                       | Gap                                                                                          |
-| --------------------------- | -------------------------------------------------------------------------------------------- |
-| This repo                   | `lint-staged` runs `yarn g:lint` & `g:lint:styles`, which no `package.json` defines; no pre-commit hook calls it |
-| This repo                   | No `ci.yml`: lint & the skills' tests run nowhere in CI                                      |
-| This repo                   | `.nvmrc` says `24`, & no CI job runs Node 26 and 24 side by side                             |
-| This repo                   | The root `package.json` is named `@allons-y/core`, a scoped name for an unpublished package  |
-| `templates/contribution.md` | Links `.github/CONTRIBUTING.md` & `.github/CODE_OF_CONDUCT.md`; repos without local copies get dead links |
+| Where     | Gap                                                                                         |
+| --------- | ------------------------------------------------------------------------------------------- |
+| This repo | The root `package.json` is named `@allons-y/core`, a scoped name for an unpublished package |

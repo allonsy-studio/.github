@@ -61,7 +61,7 @@ An earlier version of this skill copied the layouts, components, styles, scripts
 | `templates/shared/` | Files every flavor writes: the site data, starter styles, & the Cypress audit |
 | `templates/<flavor>/` | The Eleventy config & pages for each flavor |
 | `templates/workflows/` | The Pages workflow |
-| `tests/` | The `node:test` suite |
+| `test/` | The `node:test` suite |
 | `evals/` | Task evals & trigger queries |
 
 The schemas are not here: they ship in the packages.
@@ -69,7 +69,7 @@ The schemas are not here: they ship in the packages.
 ## Tests
 
 ```text
-node --test "tests/**/*.test.js"
+node --test "test/**/*.test.js"
 ```
 
 ## Contributing

@@ -118,7 +118,7 @@ Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
   elsewhere.
 - Shared config files (`.nvmrc`, `.yarnrc.yml`, `.prettierrc`, `.opx/`, `.husky/`,
   `renovate.json`, `release.yml`) are copied unchanged from this repo.
-- CI runs lint, build, then test.
+- CI runs lint, build, typecheck, then test.
 - Build with `opx-build-*` if one exists, else esbuild. Compile CSS with PostCSS.
 - Releases go through `opx release` for any change a consumer would notice.
 
