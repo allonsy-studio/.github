@@ -10,8 +10,17 @@ permissions:
 
 jobs:
   check:
-    name: Lint and test
+    name: Lint and test (${{ matrix.label }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The version in .nvmrc, plus the oldest supported (engines.node).
+          - label: .nvmrc
+            node-version-file: .nvmrc
+          - label: Node 24
+            node-version: 24
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -21,10 +30,11 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Use Node version from .nvmrc
+      - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version-file: .nvmrc
+          node-version-file: ${{ matrix.node-version-file }}
+          node-version: ${{ matrix.node-version }}
           cache: yarn
 
       - name: Install dependencies
