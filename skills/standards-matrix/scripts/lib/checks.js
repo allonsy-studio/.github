@@ -34,6 +34,13 @@ const tsPackages = (repo) => repo.packages().filter((p) => repo.has(p.dir === ".
 const workflow = (repo, name) => repo.read(`.github/workflows/${name}`) ?? "";
 const workflowNames = (repo) => repo.files().filter((f) => /^\.github\/workflows\/[^/]+\.ya?ml$/.test(f)).map((f) => f.split("/").pop());
 const allWorkflows = (repo) => workflowNames(repo).map((name) => workflow(repo, name)).join("\n");
+/** Node majors a workflow runs: a matrix list (`node: [26, 24]`) or explicit `node-version` values. */
+function nodeMajors(text) {
+	const majors = new Set();
+	for (const list of text.matchAll(/\bnode:\s*\[([^\]]*)\]/g)) for (const n of list[1].matchAll(/\d+/g)) majors.add(Number(n[0]));
+	for (const m of text.matchAll(/node-version:\s*["']?(\d+)/g)) majors.add(Number(m[1]));
+	return majors;
+}
 const runsStep = (text, step) => new RegExp(`(?:yarn|npm|pnpm)\\s+(?:run\\s+)?${step}\\b`).test(text);
 const hooksOf = (repo) => repo.files().filter((f) => /^\.husky\/[^/_]+$/.test(f)).map((f) => f.split("/").pop()).filter((n) => n !== "common.sh");
 
@@ -73,7 +80,7 @@ export const CHECKS = [
 			const problems = [];
 			if (nvmrc !== "26") problems.push(`.nvmrc is ${nvmrc ?? "missing"}`);
 			if (!/^>=\s*24(\.\d+){0,2}$/.test(engines ?? "")) problems.push(`engines.node is ${engines ?? "missing"}`);
-			if (!/node-version:\s*["']?24\b/.test(ci)) problems.push("CI has no Node 24 job");
+			if (!nodeMajors(ci).has(24)) problems.push("CI has no Node 24 job");
 			return problems.length ? gap(`${problems.join("; ")}.`) : ok(".nvmrc 26, engines >=24, CI matrix runs both.");
 		},
 	},
@@ -345,7 +352,7 @@ export const CHECKS = [
 		id: "ci",
 		area: "CI",
 		tool: "ci.yml",
-		std: "Lint, build, typecheck, test, run on the .nvmrc version and on Node 24; both required.",
+		std: "One job named CI (node26) and CI (node24), running lint, build, typecheck, & test; both required.",
 		src: ".github/workflows/ci.yml",
 		run(repo) {
 			const names = workflowNames(repo);
@@ -359,11 +366,13 @@ export const CHECKS = [
 			const ts = hasTypeScript(repo);
 			const need = ["lint", "test", ...(ts ? ["build", "typecheck"] : [])];
 			const missing = need.filter((step) => !runsStep(everything, step));
-			const matrix = /node-version:\s*\[?\s*["']?24\b/.test(ci) && /node-version-file:/.test(ci);
+			const majors = nodeMajors(ci);
+			const named = /name:\s*CI \(node(?:\$\{\{\s*matrix\.node\s*\}\}|\d+)\)/.test(ci);
 			const problems = [];
 			if (file !== "ci.yml") problems.push(`the CI workflow is ${file}, not ci.yml`);
 			if (missing.length) problems.push(`no ${joinList(missing)} step in any workflow`);
-			if (!matrix) problems.push("no .nvmrc & Node 24 matrix");
+			if (!(majors.has(26) && majors.has(24))) problems.push("no node 26 & node 24 jobs");
+			if (!named) problems.push("the jobs are not named CI (node26) & CI (node24)");
 			if (problems.length) return gap(sentence(problems));
 			return ok(ts ? "Lint, build, typecheck, & test on both Node versions." : "Lint & test on both Node versions; build & typecheck are omitted because nothing builds.");
 		},

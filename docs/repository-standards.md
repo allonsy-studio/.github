@@ -41,8 +41,8 @@ each repository.
 | Releases          | `opx release`, which wraps Changesets     | [Releases](#releases)                              |
 | Browserslist      | `defaults and fully supports es6-module`, `maintained node versions`, `not dead` | root `package.json` |
 
-`.nvmrc` is the version used for development, CI, & deploys. `engines.node` is the oldest
-version still supported, & CI must pass on it.
+`.nvmrc` is the version used for development & deploys, & equals the newest Node major in the
+CI matrix. `engines.node` is the oldest version still supported, & CI must pass on it.
 
 ## Root `package.json`
 
@@ -179,12 +179,32 @@ on the same files where it is not adopted yet.
 
 | File                          | Rule                                                                                         |
 | ----------------------------- | -------------------------------------------------------------------------------------------- |
-| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version-file: .nvmrc` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test`. Runs on the `.nvmrc` version & again on Node 24, as a matrix or two jobs; both are required checks |
+| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version: ${{ matrix.node }}` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test`. One job named `CI (node${{ matrix.node }})` over `node: [26, 24]`, so the checks are `CI (node26)` & `CI (node24)`; both are required |
 | `.github/workflows/pages.yml` | Calls the org's reusable `pages.yml@main` with `output-dir`; grants `contents: write` & `pull-requests: write` |
 | `.github/renovate.json`       | The baseline above, with `reviewers` naming the maintainer                                   |
 
 Order in CI is lint, build, typecheck, test: a style break or a type error fails fast, &
 CLI tests need the build. A repository with nothing to build drops `build` & `typecheck`.
+
+Every repository names its jobs the same way, so a required-check list reads the same
+across the org. CI never reads `.nvmrc`: explicit versions keep a job name true to the Node
+it runs.
+
+```yaml
+jobs:
+  check:
+    name: CI (node${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [26, 24]
+    steps:
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+```
 
 ## Documentation
 
@@ -200,7 +220,7 @@ that have been run.
 ## Not covered
 
 GitHub-side settings (branch protection, required checks, merge options, Pages source)
-are not files. The one rule that depends on them: both Node jobs in `ci.yml` are required
+are not files. The one rule that depends on them: `CI (node26)` & `CI (node24)` are required
 status checks. Add the rest here once confirmed.
 
 ## Adopting the standard
@@ -211,6 +231,6 @@ status checks. Add the rest here once confirmed.
 4. Add `eslint.config.js` with the license-header rule, & `.license-header.js`.
 5. Add the root scripts & the workspace scripts.
 6. If the repo publishes, add `@allons-y/opx-release` & run `opx enable release`.
-7. Add `ci.yml` with the Node 26 & Node 24 jobs, & `pages.yml`.
+7. Add `ci.yml` from the snippet above, which gives the `CI (node26)` & `CI (node24)` jobs, & `pages.yml`.
 8. Add `AGENTS.md` & link [testing.md](testing.md) from its Testing section.
 9. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.

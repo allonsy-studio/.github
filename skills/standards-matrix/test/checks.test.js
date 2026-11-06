@@ -6,7 +6,7 @@
 import test from "ava";
 import { HEADER, runCheck } from "./helpers.js";
 
-const CI_BOTH = "jobs:\n  check:\n    steps:\n      - uses: actions/setup-node@v6\n        with:\n          node-version-file: ${{ matrix.node-version-file }}\n          node-version: 24\n      - run: yarn lint\n      - run: yarn test\n";
+const CI_BOTH = "jobs:\n  check:\n    name: CI (node${{ matrix.node }})\n    strategy:\n      matrix:\n        node: [26, 24]\n    steps:\n      - uses: actions/setup-node@v6\n        with:\n          node-version: ${{ matrix.node }}\n      - run: yarn lint\n      - run: yarn test\n";
 
 test("node passes with .nvmrc 26, engines >=24, & a Node 24 job", (t) => {
 	const [status] = runCheck("node", { ".nvmrc": "26\n", "package.json": { engines: { node: ">=24" } }, ".github/workflows/ci.yml": CI_BOTH });
@@ -193,4 +193,16 @@ test("agents wants the org link & every standard section outside the org reposit
 	const [status, state] = runCheck("agents", { "AGENTS.md": "## Stack\n" }, { baseline: { "AGENTS.md": "# Org\n" } });
 	t.is(status, "gap");
 	t.regex(state, /link to the org file/);
+});
+
+test("ci: old-style job labels are a gap about names", (t) => {
+	const old = "jobs:\n  check:\n    name: Lint and test (${{ matrix.label }})\n    strategy:\n      matrix:\n        node: [26, 24]\n    steps:\n      - uses: actions/setup-node@v6\n        with:\n          node-version: ${{ matrix.node }}\n      - run: yarn lint\n      - run: yarn test\n";
+	const [status, state] = runCheck("ci", { ".github/workflows/ci.yml": old });
+	t.is(status, "gap");
+	t.regex(state, /CI \(node26\)/);
+});
+
+test("ci: literal job names count", (t) => {
+	const literal = CI_BOTH.replace("CI (node${{ matrix.node }})", "CI (node26)");
+	t.is(runCheck("ci", { ".github/workflows/ci.yml": literal })[0], "ok");
 });
