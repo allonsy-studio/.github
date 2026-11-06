@@ -62,17 +62,16 @@ test("skipped repositories pass through with their reasons", (t) => {
 });
 
 test("the org repository is compared against nothing & the others against it", (t) => {
-	const hook = "#!/usr/bin/env sh\nexit 0\n";
 	const scan = runScan({
 		repos: [
-			{ name: ".github", dir: tempRepo({ ".husky/post-commit": hook }) },
-			{ name: "example", dir: tempRepo({ ".husky/post-commit": `${hook}# changed\n` }) },
+			{ name: ".github", dir: tempRepo({ "renovate.json": { extends: ["config:recommended"] } }) },
+			{ name: "example", dir: tempRepo({ "renovate.json": { extends: ["config:base"] } }) },
 		],
 		asOf: "2026-11-06",
 	});
-	const husky = (repo) => scan.rows.find((r) => r.repo === repo && r.tool === "Husky");
-	t.is(husky(".github").status, "ok");
-	t.is(husky("example").status, "gap");
+	const renovate = (repo) => scan.rows.find((r) => r.repo === repo && r.tool === "Renovate");
+	t.is(renovate(".github").status, "ok");
+	t.is(renovate("example").status, "gap");
 });
 
 test("diffScans reports new, removed, & changed rows but not unchanged ones", (t) => {
