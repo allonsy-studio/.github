@@ -394,6 +394,7 @@ table.grid { border-collapse: separate; border-spacing: 0; width: max-content; m
       if (t.src) { var sc = el("span", "mono", t.src); row("Where", sc); }
       if (r.links && r.links.length) row("Pull request", linksOf(r));
       if (r.manual) row("Confirmed", r.verified ? "by you on " + r.verified : "not yet confirmed");
+      if (r.exempt) row("Scope decision", r.decided ? "made on " + r.decided : "made by you");
       d.appendChild(dl);
     } else if (s.kind === "tool") {
       var t2 = toolIndex[s.tool], c = toolStats[s.tool];

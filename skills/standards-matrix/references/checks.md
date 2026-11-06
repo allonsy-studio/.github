@@ -36,6 +36,10 @@ Samples are paths under `templates/`, `evals/`, `fixtures/`, or `golden/`. They 
 
 `data/manual.json` holds what no file shows. Each item: `area`, `tool`, `std`, optional `src`, `repos`: a map from repository name to `{ "status", "state", "verified", "links" }`, & an optional `default` entry that applies to every repository not named. `status` is `you` unless the maintainer has settled it. `verified` is the date the maintainer last confirmed the row.
 
+## Exemptions
+
+`data/exemptions.json` is an array of `{ "repo", "tool", "reason", "decided" }`. `tool` is a tool name from the table above (or a manual row) or `*` for every tool. The matching row becomes `na` with the state `Exempt: <reason>`. An entry that matches no row is listed in the scan as `unusedExemptions` & warned about.
+
 ## `prs.json`
 
 An array, newest first:
@@ -48,6 +52,6 @@ An array, newest first:
 
 ## Scan output
 
-`scan.js` writes `{ asOf, repos, skipped, rows, prs, changes? }`, where `skipped` is `[{ repo, reason }]`. A row is `{ repo, area, tool, std, src, status, state, links, manual?, verified? }`. `status` is one of `gap`, `you`, `pr`, `ok`, `na`. `changes` appears when `--previous` is given: each entry is `{ repo, tool, from, to, state }`, where `from` or `to` is null for a row that appeared or vanished.
+`scan.js` writes `{ asOf, repos, skipped, rows, prs, changes?, unusedExemptions? }`, where `skipped` is `[{ repo, reason }]`. A row is `{ repo, area, tool, std, src, status, state, links, manual?, verified? }`. `status` is one of `gap`, `you`, `pr`, `ok`, `na`. `changes` appears when `--previous` is given: each entry is `{ repo, tool, from, to, state }`, where `from` or `to` is null for a row that appeared or vanished.
 
 `build.js` embeds the scan in `templates/matrix.html` between `/*DATA:start*/` & `/*DATA:end*/`, so a later run can read it back from the published page.

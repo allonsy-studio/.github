@@ -37,6 +37,7 @@ node scripts/build.js --data matrix.json --out matrix.html
 | `scripts/lib/repo.js` | Read-only helpers over a checkout |
 | `templates/matrix.html` | The page: a tooling-by-repository grid with a detail panel, & a placeholder for the scan |
 | `data/manual.json` | Rows a scan cannot read: decisions & GitHub settings |
+| `data/exemptions.json` | Scope decisions: a tool that does not apply to a repository, with the reason |
 | `references/checks.md` | What each check decides, & the data formats |
 | `test/` | AVA tests for the checks & the scan |
 | `evals/` | Trigger queries & task evals |

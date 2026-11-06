@@ -55,6 +55,37 @@ test("a manual default applies to every repository the item does not name", (t) 
 	t.is(state("beta"), "Undecided.");
 });
 
+test("an exemption turns a gap into a not-applicable row that says why", (t) => {
+	const exemptions = [{ repo: "example", tool: "Node", reason: "A static site with no package.json.", decided: "2026-11-06" }];
+	const scan = runScan({ repos: [{ name: "example", dir: tempRepo(BEFORE) }], exemptions, asOf: "2026-11-06" });
+	const row = nodeRow(scan, "example");
+	t.is(row.status, "na");
+	t.is(row.state, "Exempt: A static site with no package.json.");
+	t.is(row.exempt, true);
+	t.is(row.decided, "2026-11-06");
+	t.is(scan.unusedExemptions, undefined);
+});
+
+test("a wildcard exemption covers every tool for the repository, & only that repository", (t) => {
+	const exemptions = [{ repo: "alpha", tool: "*", reason: "Out of scope." }];
+	const scan = runScan({ repos: [{ name: "alpha", dir: tempRepo(BEFORE) }, { name: "beta", dir: tempRepo(BEFORE) }], exemptions, asOf: "2026-11-06" });
+	t.true(scan.rows.filter((r) => r.repo === "alpha").every((r) => r.status === "na"));
+	t.is(nodeRow(scan, "beta").status, "gap");
+});
+
+test("an exemption also covers a manual row", (t) => {
+	const manual = [{ area: "Settings", tool: "Required checks", std: "x", default: { state: "Not verified." } }];
+	const exemptions = [{ repo: "example", tool: "Required checks", reason: "No branch protection planned." }];
+	const scan = runScan({ repos: [{ name: "example", dir: tempRepo(BEFORE) }], manual, exemptions, asOf: "2026-11-06" });
+	t.is(scan.rows.find((r) => r.tool === "Required checks").status, "na");
+});
+
+test("an exemption that matches nothing is reported", (t) => {
+	const exemptions = [{ repo: "example", tool: "Nonexistent tool", reason: "A typo." }];
+	const scan = runScan({ repos: [{ name: "example", dir: tempRepo(BEFORE) }], exemptions, asOf: "2026-11-06" });
+	t.deepEqual(scan.unusedExemptions, exemptions);
+});
+
 test("skipped repositories pass through with their reasons", (t) => {
 	const skipped = [{ repo: "forked", reason: "a fork" }];
 	t.deepEqual(runScan({ repos: [{ name: "example", dir: tempRepo(BEFORE) }], skipped, asOf: "2026-11-06" }).skipped, skipped);
