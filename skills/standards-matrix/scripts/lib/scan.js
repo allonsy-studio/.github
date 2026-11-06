@@ -31,10 +31,11 @@ function safely(check, repo) {
  * @param {object[]} [input.manual] Rows a scan cannot read: decisions & GitHub settings.
  * @param {PullRequest[]} [input.prs] Pull requests gathered from GitHub.
  * @param {{ repo: string, reason: string }[]} [input.skipped] Repositories left out, with why.
+ * @param {{ repo: string, tool: string, reason: string, decided?: string }[]} [input.exemptions] Scope decisions: a tool (or `*`) that does not apply to a repository.
  * @param {string} input.asOf Date in `YYYY-MM-DD` form.
  * @param {string} [input.baseline] Name of the org repository the others are compared with.
  */
-export function runScan({ repos, prHeads = [], manual = [], prs = [], skipped = [], asOf, baseline = ".github" }) {
+export function runScan({ repos, prHeads = [], manual = [], prs = [], skipped = [], exemptions = [], asOf, baseline = ".github" }) {
 	const baseEntry = repos.find((r) => r.name === baseline);
 	const baseRepo = baseEntry ? makeRepo(baseEntry.name, baseEntry.dir) : null;
 	const wrap = (name, dir) => (name === baseline ? makeRepo(name, dir) : makeRepo(name, dir, baseRepo));
@@ -42,6 +43,16 @@ export function runScan({ repos, prHeads = [], manual = [], prs = [], skipped = 
 	const heads = prHeads.map((h) => ({ ...h, repo: wrap(h.repo, h.dir) }));
 	const pullRequests = prs.map((p) => ({ ...p, url: p.url ?? `${GITHUB}/${p.repo}/pull/${p.n}`, open: p.open ?? /^open/i.test(p.state) }));
 	const urlOf = (repo, n) => pullRequests.find((p) => p.repo === repo && p.n === n)?.url ?? `${GITHUB}/${repo}/pull/${n}`;
+
+	const used = new Set();
+	/** An exemption turns a row into a not-applicable one that says why. */
+	const exempt = (repo, tool, row) => {
+		const index = exemptions.findIndex((e) => e.repo === repo && (e.tool === tool || e.tool === "*"));
+		if (index < 0) return row;
+		used.add(index);
+		const e = exemptions[index];
+		return { ...row, status: "na", state: `Exempt: ${e.reason}`, links: [], exempt: true, decided: e.decided };
+	};
 
 	/** @type {Row[]} */
 	const rows = [];
@@ -58,17 +69,18 @@ export function runScan({ repos, prHeads = [], manual = [], prs = [], skipped = 
 					}
 				}
 			}
-			rows.push({ repo: name, area: check.area, tool: check.tool, std: check.std, src: check.src, ...row });
+			rows.push(exempt(name, check.tool, { repo: name, area: check.area, tool: check.tool, std: check.std, src: check.src, ...row }));
 		}
 	}
 	for (const item of manual) {
 		for (const { name } of mains) {
 			const entry = item.repos?.[name] ?? item.default;
 			if (!entry) continue;
-			rows.push({ repo: name, area: item.area, tool: item.tool, std: item.std, src: item.src ?? "", status: entry.status ?? "you", state: entry.state, links: entry.links ?? [], manual: true, verified: entry.verified });
+			rows.push(exempt(name, item.tool, { repo: name, area: item.area, tool: item.tool, std: item.std, src: item.src ?? "", status: entry.status ?? "you", state: entry.state, links: entry.links ?? [], manual: true, verified: entry.verified }));
 		}
 	}
-	return { asOf, repos: mains.map((m) => m.name), skipped, rows, prs: pullRequests };
+	const unusedExemptions = exemptions.filter((_, i) => !used.has(i));
+	return { asOf, repos: mains.map((m) => m.name), skipped, rows, prs: pullRequests, ...(unusedExemptions.length ? { unusedExemptions } : {}) };
 }
 
 const keyOf = (row) => `${row.repo}\u0000${row.tool}`;

@@ -18,12 +18,13 @@ const USAGE = `Usage: node scan.js --repo <name>=<dir> [--repo ...] [options]
   --manual <file>         Rows a scan cannot read (default data/manual.json).
   --prs <file>            Pull requests gathered from GitHub, as JSON.
   --skip <name>=<reason>  A repository left out, & why (shown on the page). Repeat as needed.
+  --exemptions <file>     Scope decisions as JSON (default data/exemptions.json).
   --previous <file>       An earlier scan (JSON) or a built page (HTML), to report changes.
   --as-of <YYYY-MM-DD>    Date shown on the page (default today).
   --out <file>            Write the scan here (default stdout).`;
 
 function parse(argv) {
-	const opts = { repos: [], prs: [], skipped: [], baseline: ".github", manual: join(HERE, "..", "data", "manual.json") };
+	const opts = { repos: [], prs: [], skipped: [], baseline: ".github", manual: join(HERE, "..", "data", "manual.json"), exemptions: join(HERE, "..", "data", "exemptions.json") };
 	for (let i = 0; i < argv.length; i += 1) {
 		const flag = argv[i];
 		const value = () => {
@@ -42,6 +43,7 @@ function parse(argv) {
 		} else if (flag === "--baseline") opts.baseline = value();
 		else if (flag === "--manual") opts.manual = resolve(value());
 		else if (flag === "--prs") opts.prsFile = resolve(value());
+		else if (flag === "--exemptions") opts.exemptions = resolve(value());
 		else if (flag === "--skip") {
 			const [repo, reason] = splitOnce(value(), "=");
 			opts.skipped.push({ repo, reason });
@@ -76,6 +78,7 @@ try {
 		manual: readJson(opts.manual),
 		prs: opts.prsFile ? readJson(opts.prsFile) : [],
 		skipped: opts.skipped,
+		exemptions: readJson(opts.exemptions),
 		asOf,
 		baseline: opts.baseline,
 	});
@@ -97,6 +100,7 @@ try {
 		console.error(scan.changes.length ? `Changes since the previous scan: ${scan.changes.length}` : "No status changes since the previous scan.");
 		for (const c of scan.changes) console.error(`  ${c.repo} / ${c.tool}: ${c.from ?? "new"} -> ${c.to ?? "removed"}`);
 	}
+	if (scan.unusedExemptions) for (const e of scan.unusedExemptions) console.error(`warning: exemption matched nothing: ${e.repo} / ${e.tool}`);
 	const stale = scan.rows.filter((r) => r.manual);
 	if (stale.length) console.error(`${stale.length} manual rows need confirming with the user (see SKILL.md step 5).`);
 } catch (error) {
