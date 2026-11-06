@@ -1,0 +1,38 @@
+[
+	{
+		"query": "Refresh the standards matrix: scan .github and webc-docs and update the published page.",
+		"should_trigger": true
+	},
+	{
+		"query": "Which of our repositories still miss the testing standards, and which of those already have an open PR?",
+		"should_trigger": true
+	},
+	{
+		"query": "Is webc-docs up to date with the org repository standards? Check the actual files, not what we said last week.",
+		"should_trigger": true
+	},
+	{
+		"query": "What changed in the standards matrix since the last scan?",
+		"should_trigger": true
+	},
+	{
+		"query": "Add the new repo allonsy-studio/envoy to the standards matrix and scan it.",
+		"should_trigger": true
+	},
+	{
+		"query": "Write a testing standard for our repositories: tools, layout, and naming.",
+		"should_trigger": false
+	},
+	{
+		"query": "Move webc-docs to Node 26 and add a Node 24 CI job.",
+		"should_trigger": false
+	},
+	{
+		"query": "Design a wordmark and favicon for envoy.",
+		"should_trigger": false
+	},
+	{
+		"query": "Set up a project site with the studio branding for allonsy-studio/example-cli.",
+		"should_trigger": false
+	}
+]
