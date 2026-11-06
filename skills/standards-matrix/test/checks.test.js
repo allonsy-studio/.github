@@ -28,9 +28,59 @@ test("esm names the .mjs files it finds", (t) => {
 });
 
 test("root-name accepts the org exception only in the org repository", (t) => {
-	t.is(runCheck("root-name", { "package.json": { name: "@allons-y/core" } }, { name: ".github" })[0], "ok");
-	t.is(runCheck("root-name", { "package.json": { name: "@allons-y/core" } }, { name: "webc-docs" })[0], "gap");
-	t.is(runCheck("root-name", { "package.json": { name: "webc-docs" } }, { name: "webc-docs" })[0], "ok");
+	t.is(runCheck("root-name", { "package.json": { name: "@allons-y/core", private: true } }, { name: ".github" })[0], "ok");
+	t.is(runCheck("root-name", { "package.json": { name: "@allons-y/core", private: true } }, { name: "webc-docs" })[0], "gap");
+	t.is(runCheck("root-name", { "package.json": { name: "webc-docs", private: true } }, { name: "webc-docs" })[0], "ok");
+});
+
+test("root-name allows a scope when the root is the published package", (t) => {
+	const [status, state] = runCheck("root-name", { "package.json": { name: "@allons-y/envoy" } }, { name: "envoy" });
+	t.is(status, "ok");
+	t.regex(state, /published package/);
+});
+
+test("node accepts an engines floor written as >=24.0.0 & rejects one below 24", (t) => {
+	const files = (engines) => ({ ".nvmrc": "26\n", "package.json": { engines: { node: engines } }, ".github/workflows/ci.yml": CI_BOTH });
+	t.is(runCheck("node", files(">=24.0.0"))[0], "ok");
+	t.is(runCheck("node", files(">=22"))[0], "gap");
+});
+
+test("typescript reads a root tsconfig & follows extends to a base", (t) => {
+	const strict = { compilerOptions: { strict: true, module: "NodeNext", moduleResolution: "NodeNext" } };
+	t.is(runCheck("typescript", { "package.json": {}, "tsconfig.json": strict, "src/a.ts": "export {};\n" })[0], "ok");
+	const extended = { "package.json": {}, "tsconfig.base.json": strict, "packages/a/package.json": { name: "a" }, "packages/a/tsconfig.json": { extends: "../../tsconfig.base.json" }, "packages/a/src/a.ts": "export {};\n" };
+	t.is(runCheck("typescript", extended)[0], "ok");
+});
+
+test("typescript flags a package that is not strict on NodeNext", (t) => {
+	const [status, state] = runCheck("typescript", { "package.json": {}, "tsconfig.json": { compilerOptions: { strict: false } }, "src/a.ts": "export {};\n" });
+	t.is(status, "gap");
+	t.regex(state, /not strict on NodeNext/);
+});
+
+test("ci finds the workflow that runs tests when it is not called ci.yml", (t) => {
+	const [status, state] = runCheck("ci", { ".github/workflows/testing.yml": CI_BOTH });
+	t.is(status, "gap");
+	t.regex(state, /^The CI workflow is testing\.yml, not ci\.yml/);
+	t.notRegex(state, /no lint step|no test step/);
+});
+
+test("ci reports a repository with workflows but none that run tests", (t) => {
+	const [status, state] = runCheck("ci", { ".github/workflows/release.yml": "name: Release\n" });
+	t.is(status, "gap");
+	t.regex(state, /No CI workflow that runs tests \(workflows: release\.yml\)/);
+});
+
+test("husky names the hooks a repository has instead of post-commit", (t) => {
+	const [status, state] = runCheck("husky", { ".husky/pre-commit": "npx lint-staged\n", ".husky/commit-msg": "x\n", ".husky/common.sh": "x\n" });
+	t.is(status, "gap");
+	t.regex(state, /pre-commit, commit-msg|commit-msg, pre-commit/);
+	t.notRegex(state, /common\.sh/);
+});
+
+test("agents notes a CLAUDE.md that stands in for AGENTS.md", (t) => {
+	const [, state] = runCheck("agents", { "CLAUDE.md": "# Notes\n" }, { baseline: { "AGENTS.md": "# Org\n" } });
+	t.regex(state, /only CLAUDE\.md/);
 });
 
 test("internal-ranges flags workspace: ranges between local packages", (t) => {

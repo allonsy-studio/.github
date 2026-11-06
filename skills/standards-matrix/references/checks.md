@@ -6,11 +6,11 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 
 | Id | Tooling | Gap when | Not applicable when |
 | --- | --- | --- | --- |
-| `node` | Node | `.nvmrc` is not 26, `engines.node` is not `>=24`, or CI has no Node 24 job | never |
+| `node` | Node | `.nvmrc` is not 26, `engines.node` is not `>=24` (`>=24.0.0` counts), or CI has no Node 24 job | never |
 | `yarn` | Yarn | `packageManager` is not Yarn 4, or `.yarnrc.yml` lacks the node-modules linker | never |
 | `esm` | ESM | The root `package.json` is not `"type": "module"`, or a `.mjs` file exists outside samples | never |
-| `typescript` | TypeScript | `tsconfig.base.json` is not strict on NodeNext, where TypeScript exists | never (no TypeScript is `ok`) |
-| `root-name` | Root package name | The root name is scoped, except `@allons-y/core` in `.github` | never |
+| `typescript` | TypeScript | A TypeScript package's `tsconfig.json`, after following `extends`, is not strict on NodeNext | never (no TypeScript is `ok`) |
+| `root-name` | Root package name | A private root is scoped, except `@allons-y/core` in `.github`; a published root may carry the scope | never |
 | `internal-ranges` | Internal dependency ranges | A package depends on another local package with a `workspace:` range | No package depends on another |
 | `test-runner` | Test runner | A package runs `node:test`, or a TypeScript package does not run Vitest | No package defines a test script |
 | `test-layout` | Test layout | A folder is named `tests/` outside samples | No test folders |
@@ -21,12 +21,12 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 | `css` | CSS pipeline | never | No `postcss.config.js` |
 | `lint` | opx lint | `eslint.config.js` skips the `opx-lint-*` presets, or `typescript` is not a dev dependency | never |
 | `lint-staged` | lint-staged | It is configured & no `.husky/pre-commit` runs it | never |
-| `husky` | Husky | `.husky/post-commit` is missing or differs from the baseline | never |
+| `husky` | Husky | `.husky/post-commit` is missing (the state names the hooks it has instead) or differs from the baseline | never |
 | `opx-release` | opx release | A publishing repository lacks the plugin, `"release": true`, or the `changeset`, `version`, & `release` scripts | Nothing is published |
-| `ci` | ci.yml | `ci.yml` lacks lint, test, (build & typecheck for TypeScript), or the `.nvmrc` & Node 24 matrix | never |
+| `ci` | ci.yml | There is no workflow that runs tests, the workflow is not named `ci.yml`, no workflow runs lint, test, (build & typecheck for TypeScript), or the CI workflow lacks the `.nvmrc` & Node 24 matrix | never |
 | `pages` | Pages | A site exists & `pages.yml` does not call the shared workflow | It hosts the workflow, or there is no site |
 | `renovate` | Renovate | `renovate.json` is missing or differs from the baseline | never |
-| `agents` | AGENTS.md | Missing, or (outside `.github`) missing the org link or a standard section | never |
+| `agents` | AGENTS.md | Missing (a lone `CLAUDE.md` is noted), or (outside `.github`) missing the org link or a standard section | never |
 | `readme` | README & Weaver blocks | A relative contribution link has no target file | No Weaver blocks |
 | `env-example` | `.env.example` | It is missing, or lacks a variable read under `src/`, `test/`, or `bin/` (ambient ones such as `CI` are skipped) | never |
 
@@ -34,7 +34,7 @@ Samples are paths under `templates/`, `evals/`, `fixtures/`, or `golden/`. They 
 
 ## Manual rows
 
-`data/manual.json` holds what no file shows. Each item: `area`, `tool`, `std`, optional `src`, & `repos`: a map from repository name to `{ "status", "state", "verified", "links" }`. `status` is `you` unless the maintainer has settled it. `verified` is the date the maintainer last confirmed the row.
+`data/manual.json` holds what no file shows. Each item: `area`, `tool`, `std`, optional `src`, `repos`: a map from repository name to `{ "status", "state", "verified", "links" }`, & an optional `default` entry that applies to every repository not named. `status` is `you` unless the maintainer has settled it. `verified` is the date the maintainer last confirmed the row.
 
 ## `prs.json`
 
@@ -48,6 +48,6 @@ An array, newest first:
 
 ## Scan output
 
-`scan.js` writes `{ asOf, repos, rows, prs, changes? }`. A row is `{ repo, area, tool, std, src, status, state, links, manual?, verified? }`. `status` is one of `gap`, `you`, `pr`, `ok`, `na`. `changes` appears when `--previous` is given: each entry is `{ repo, tool, from, to, state }`, where `from` or `to` is null for a row that appeared or vanished.
+`scan.js` writes `{ asOf, repos, skipped, rows, prs, changes? }`, where `skipped` is `[{ repo, reason }]`. A row is `{ repo, area, tool, std, src, status, state, links, manual?, verified? }`. `status` is one of `gap`, `you`, `pr`, `ok`, `na`. `changes` appears when `--previous` is given: each entry is `{ repo, tool, from, to, state }`, where `from` or `to` is null for a row that appeared or vanished.
 
 `build.js` embeds the scan in `templates/matrix.html` between `/*DATA:start*/` & `/*DATA:end*/`, so a later run can read it back from the published page.

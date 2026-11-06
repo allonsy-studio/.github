@@ -24,7 +24,7 @@ node scripts/scan.js --repo .github=<dir> --repo webc-docs=<dir> --pr webc-docs#
 node scripts/build.js --data matrix.json --out matrix.html
 ```
 
-`scan.js --help` lists every option. `--previous` takes an earlier scan or the published page & reports which rows changed status.
+`scan.js --help` lists every option, including `--skip <name>=<reason>` for a repository left out. `--previous` takes an earlier scan or the published page & reports which rows changed status.
 
 ## Layout
 
@@ -35,7 +35,7 @@ node scripts/build.js --data matrix.json --out matrix.html
 | `scripts/lib/checks.js` | One check per row |
 | `scripts/lib/scan.js` | The scan, the pull request overlay, the diff, & the page injection |
 | `scripts/lib/repo.js` | Read-only helpers over a checkout |
-| `templates/matrix.html` | The page, with a placeholder for the scan |
+| `templates/matrix.html` | The page: an overview, a tooling-by-repository grid, & a detail panel, with a placeholder for the scan |
 | `data/manual.json` | Rows a scan cannot read: decisions & GitHub settings |
 | `references/checks.md` | What each check decides, & the data formats |
 | `test/` | AVA tests for the checks & the scan |

@@ -17,12 +17,13 @@ const USAGE = `Usage: node scan.js --repo <name>=<dir> [--repo ...] [options]
   --baseline <name>       The org repository the others are compared with (default .github).
   --manual <file>         Rows a scan cannot read (default data/manual.json).
   --prs <file>            Pull requests gathered from GitHub, as JSON.
+  --skip <name>=<reason>  A repository left out, & why (shown on the page). Repeat as needed.
   --previous <file>       An earlier scan (JSON) or a built page (HTML), to report changes.
   --as-of <YYYY-MM-DD>    Date shown on the page (default today).
   --out <file>            Write the scan here (default stdout).`;
 
 function parse(argv) {
-	const opts = { repos: [], prs: [], baseline: ".github", manual: join(HERE, "..", "data", "manual.json") };
+	const opts = { repos: [], prs: [], skipped: [], baseline: ".github", manual: join(HERE, "..", "data", "manual.json") };
 	for (let i = 0; i < argv.length; i += 1) {
 		const flag = argv[i];
 		const value = () => {
@@ -41,6 +42,10 @@ function parse(argv) {
 		} else if (flag === "--baseline") opts.baseline = value();
 		else if (flag === "--manual") opts.manual = resolve(value());
 		else if (flag === "--prs") opts.prsFile = resolve(value());
+		else if (flag === "--skip") {
+			const [repo, reason] = splitOnce(value(), "=");
+			opts.skipped.push({ repo, reason });
+		}
 		else if (flag === "--previous") opts.previous = resolve(value());
 		else if (flag === "--as-of") opts.asOf = value();
 		else if (flag === "--out") opts.out = resolve(value());
@@ -70,6 +75,7 @@ try {
 		prHeads: opts.prs,
 		manual: readJson(opts.manual),
 		prs: opts.prsFile ? readJson(opts.prsFile) : [],
+		skipped: opts.skipped,
 		asOf,
 		baseline: opts.baseline,
 	});

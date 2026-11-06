@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: summary strip, one sortable matrix of repository x tooling, then the pull request list. */
+/* Layout: an overview (worst gaps, repositories ranked), then a tool x repository grid that opens its detail below. */
 :root {
   --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -14,331 +14,496 @@
   --accent: #d22d6f;
   --on-accent: #ffffff;
   --focus: #1f91ad;
-  --ok-fg: #1b6a3a;   --ok-bg: #e0f3e7;
-  --pr-fg: #125b72;   --pr-bg: #dbeff5;
-  --gap-fg: #8a4300;  --gap-bg: #ffe7d1;
-  --you-fg: #a1174d;  --you-bg: #fbe0e9;
-  --na-fg: #655760;   --na-bg: #efe8ec;
+  --ok-fg: #1b6a3a;   --ok-bg: #d9f0e1;   --ok-bar: #3f9d62;
+  --pr-fg: #125b72;   --pr-bg: #d4ebf2;   --pr-bar: #2a8aa8;
+  --gap-fg: #8a4300;  --gap-bg: #ffe0c4;  --gap-bar: #e8742a;
+  --you-fg: #a1174d;  --you-bg: #fbdbe6;  --you-bar: #d22d6f;
+  --na-fg: #8b7d85;   --na-bg: #efe8ec;   --na-bar: #d9cdd3;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #181116; --surface: #241b21; --fg: #f4edf0; --muted: #b7a8b0; --rule: #3b2e35;
     --accent: #ff6fa3; --on-accent: #2a0d1a; --focus: #5fc3de;
-    --ok-fg: #86dba3;  --ok-bg: #153020;
-    --pr-fg: #84d3ea;  --pr-bg: #12323d;
-    --gap-fg: #ffb980; --gap-bg: #3a2312;
-    --you-fg: #ff9bbd; --you-bg: #3f1727;
-    --na-fg: #b7a8b0;  --na-bg: #2b2127;
+    --ok-fg: #86dba3;  --ok-bg: #153020;  --ok-bar: #4cae72;
+    --pr-fg: #84d3ea;  --pr-bg: #12323d;  --pr-bar: #3a9dbb;
+    --gap-fg: #ffb980; --gap-bg: #3a2312; --gap-bar: #f08a43;
+    --you-fg: #ff9bbd; --you-bg: #3f1727; --you-bar: #ff6fa3;
+    --na-fg: #8d7f88;  --na-bg: #2b2127;  --na-bar: #4a3c44;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #181116; --surface: #241b21; --fg: #f4edf0; --muted: #b7a8b0; --rule: #3b2e35;
   --accent: #ff6fa3; --on-accent: #2a0d1a; --focus: #5fc3de;
-  --ok-fg: #86dba3;  --ok-bg: #153020;
-  --pr-fg: #84d3ea;  --pr-bg: #12323d;
-  --gap-fg: #ffb980; --gap-bg: #3a2312;
-  --you-fg: #ff9bbd; --you-bg: #3f1727;
-  --na-fg: #b7a8b0;  --na-bg: #2b2127;
+  --ok-fg: #86dba3;  --ok-bg: #153020;  --ok-bar: #4cae72;
+  --pr-fg: #84d3ea;  --pr-bg: #12323d;  --pr-bar: #3a9dbb;
+  --gap-fg: #ffb980; --gap-bg: #3a2312; --gap-bar: #f08a43;
+  --you-fg: #ff9bbd; --you-bg: #3f1727; --you-bar: #ff6fa3;
+  --na-fg: #8d7f88;  --na-bg: #2b2127;  --na-bar: #4a3c44;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
-.page { max-width: 1240px; margin-inline: auto; padding-block: 28px 56px;
+.page { max-width: 1320px; margin-inline: auto; padding-block: 28px 56px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; gap: 28px; }
+  display: grid; gap: 32px; }
+.page > * { min-width: 0; }
 a { color: var(--accent); text-underline-offset: 2px; }
+button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
 code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+h2 { margin: 0 0 4px; font-size: 1.15rem; font-weight: 650; font-stretch: 88%; }
+.sub { margin: 0 0 14px; color: var(--muted); font-size: 0.9rem; max-width: 70ch; text-wrap: pretty; }
 
 header h1 { margin: 0; font-size: clamp(1.9rem, 4.5vw, 2.7rem); font-weight: 700; font-stretch: 82%; line-height: 1.05; letter-spacing: -0.01em; text-wrap: balance; }
-header p { margin: 8px 0 0; color: var(--muted); max-width: 66ch; text-wrap: pretty; }
-.asof { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin-top: 10px; }
+.headline { margin: 10px 0 0; font-size: 1.05rem; max-width: 70ch; text-wrap: pretty; }
+.headline strong { font-variant-numeric: tabular-nums; }
+.asof { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
+.skipped { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
 
-/* pills */
-.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; line-height: 1.5; white-space: nowrap; border: 1px solid transparent; font-family: var(--font-body); }
+/* pills & glyph cells */
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
 .pill[data-s="ok"]  { color: var(--ok-fg);  background: var(--ok-bg); }
 .pill[data-s="pr"]  { color: var(--pr-fg);  background: var(--pr-bg); }
 .pill[data-s="gap"] { color: var(--gap-fg); background: var(--gap-bg); }
 .pill[data-s="you"] { color: var(--you-fg); background: var(--you-bg); }
 .pill[data-s="na"]  { color: var(--na-fg);  background: var(--na-bg); }
-.pill .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.pill[data-s="na"] .dot { background: transparent; border: 1.5px solid currentColor; }
+.glyph { display: inline-grid; place-items: center; width: 1.25em; height: 1.25em; border-radius: 50%; font-size: 0.8em; font-weight: 700; line-height: 1; background: currentColor; }
+.glyph > span { color: var(--bg); }
 .repo { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); white-space: nowrap; }
 
-/* summary */
-.summary { display: grid; gap: 0; border-top: 1px solid var(--rule); }
-.summary-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
-.summary-row .repo { font-size: 0.9rem; }
-.summary-row .count-btn { cursor: pointer; border: 0; padding: 0; background: none; font: inherit; }
-.summary-row .count-btn .pill { padding: 3px 11px; }
-.summary-row .count-btn:hover .pill { filter: brightness(0.96); }
-.summary-row .total { color: var(--muted); font-size: 0.85rem; margin-left: auto; }
+/* overview */
+.overview { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.bar-list { display: grid; gap: 2px; border-top: 1px solid var(--rule); }
+.bar-row { display: grid; grid-template-columns: minmax(0, 11.5rem) 1fr auto; gap: 12px; align-items: center; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--rule); padding: 8px 4px; cursor: pointer; }
+.bar-row:hover { background: var(--surface); }
+.bar-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 550; }
+.bar-row .name.mono { font-weight: 500; }
+.bar-row .num { color: var(--muted); font-size: 0.82rem; font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 4.2rem; text-align: right; }
+.stack { display: flex; height: 12px; border-radius: 3px; overflow: hidden; background: var(--na-bg); min-width: 0; }
+.stack i { display: block; height: 100%; }
+.stack i[data-s="ok"] { background: var(--ok-bar); } .stack i[data-s="pr"] { background: var(--pr-bar); }
+.stack i[data-s="you"] { background: var(--you-bar); } .stack i[data-s="gap"] { background: var(--gap-bar); }
+.stack i[data-s="na"] { background: var(--na-bar); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 12px; font-size: 0.82rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
 
 /* toolbar */
-.section-title { margin: 0 0 12px; font-size: 1.15rem; font-weight: 650; font-stretch: 88%; }
-.toolbar { display: grid; gap: 12px; margin-bottom: 8px; }
-.tools-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 0 0 12px; }
 .field { display: flex; align-items: center; gap: 8px; }
 .field label, .group-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
-.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 2px; background: var(--surface); }
-.seg button { border: 0; background: none; color: var(--fg); font: inherit; font-size: 0.85rem; padding: 4px 12px; border-radius: 999px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 600; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { cursor: pointer; border: 1px solid var(--rule); background: var(--bg); color: var(--fg); font: inherit; font-size: 0.82rem; border-radius: 999px; padding: 3px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.chip { cursor: pointer; border: 1px solid var(--rule); background: var(--bg); font-size: 0.82rem; border-radius: 999px; padding: 3px 11px; display: inline-flex; gap: 7px; align-items: center; }
 .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--surface); font-weight: 600; box-shadow: inset 0 0 0 1px var(--accent); }
-.chip .dot { width: 8px; height: 8px; border-radius: 50%; }
-.chip[data-s="ok"] .dot { background: var(--ok-fg); } .chip[data-s="pr"] .dot { background: var(--pr-fg); }
-.chip[data-s="gap"] .dot { background: var(--gap-fg); } .chip[data-s="you"] .dot { background: var(--you-fg); }
-.chip[data-s="na"] .dot { border: 1.5px solid var(--na-fg); }
 input[type="search"], select { font: inherit; font-size: 0.88rem; color: var(--fg); background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 6px 10px; min-width: 0; }
-input[type="search"] { width: min(260px, 100%); }
-.ghost { cursor: pointer; font: inherit; font-size: 0.85rem; color: var(--accent); background: none; border: 0; padding: 4px 6px; text-decoration: underline; text-underline-offset: 2px; }
-.dir-btn { cursor: pointer; border: 1px solid var(--rule); background: var(--bg); color: var(--fg); border-radius: 8px; padding: 5px 10px; font: inherit; font-size: 0.85rem; }
+input[type="search"] { width: min(220px, 100%); }
+.ghost { cursor: pointer; font-size: 0.85rem; color: var(--accent); background: none; border: 0; padding: 4px 6px; text-decoration: underline; text-underline-offset: 2px; }
 .result-count { color: var(--muted); font-size: 0.85rem; }
 
-/* matrix table: hairline rules, no boxes */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-thead th { text-align: left; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0; border-bottom: 1.5px solid var(--fg); }
-thead th button { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 6px; width: 100%; padding: 9px 12px 9px 0; cursor: pointer; }
-thead th button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; border-radius: 4px; }
-thead th .arrow { color: var(--accent); font-size: 0.8rem; min-width: 0.8em; }
-thead th.plain { padding: 9px 12px 9px 0; }
-tbody td { padding: 11px 12px 11px 0; vertical-align: top; border-bottom: 1px solid var(--rule); }
-tbody tr:hover td { background: color-mix(in srgb, var(--surface) 70%, transparent); }
-td.tool { font-weight: 650; }
-td.area { color: var(--muted); white-space: nowrap; }
-td .src { display: block; margin-top: 4px; color: var(--muted); font-family: var(--font-mono); font-size: 0.74rem; }
-td .links { display: flex; flex-wrap: wrap; gap: 4px 10px; }
-td .links a { font-size: 0.85rem; white-space: nowrap; }
+/* grid */
+.grid-wrap { overflow-x: auto; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+table.grid { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; }
+.grid th, .grid td { padding: 0; }
+.grid .corner, .grid .rowhead { position: sticky; left: 0; z-index: 2; background: var(--bg); }
+.grid .rowhead { text-align: left; font-weight: 500; border-bottom: 1px solid var(--rule); }
+.rowbtn { all: unset; box-sizing: border-box; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; width: 15.5rem; max-width: 52vw; padding: 5px 10px 5px 4px; cursor: pointer; }
+.rowbtn:hover { background: var(--surface); }
+.rowbtn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.rowbtn .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.9rem; }
+.rowbtn .n { color: var(--muted); font-size: 0.75rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rowbtn[aria-pressed="true"], .colbtn[aria-pressed="true"] { background: var(--surface); box-shadow: inset 0 0 0 2px var(--accent); }
+.area-row th { text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 650; padding: 14px 4px 4px; position: sticky; left: 0; background: var(--bg); }
+.colhead { vertical-align: bottom; border-bottom: 1.5px solid var(--fg); }
+.colbtn { all: unset; box-sizing: border-box; display: flex; justify-content: center; align-items: flex-end; width: 2.35rem; height: 10.5rem; padding: 4px 0 6px; cursor: pointer; }
+.colbtn:hover { background: var(--surface); }
+.colbtn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.colbtn span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; font-family: var(--font-mono); font-size: 0.78rem; max-height: 10rem; overflow: hidden; text-overflow: ellipsis; }
+.score td, .score th { font-size: 0.7rem; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; padding: 4px 0; border-bottom: 1px solid var(--rule); }
+.score th { text-align: left; font-weight: 500; padding-left: 4px; }
+.cellbox { border-bottom: 1px solid var(--rule); text-align: center; }
+.cell { all: unset; box-sizing: border-box; display: grid; place-items: center; width: 2.35rem; height: 2rem; cursor: pointer; font-size: 0.95rem; font-weight: 700; }
+.cell:hover { background: var(--surface); }
+.cell:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.cell[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--accent); }
+.cell[data-s="ok"] { color: var(--ok-fg); } .cell[data-s="pr"] { color: var(--pr-fg); }
+.cell[data-s="gap"] { color: var(--gap-fg); } .cell[data-s="you"] { color: var(--you-fg); } .cell[data-s="na"] { color: var(--na-fg); font-weight: 400; }
+.cell[data-s="gap"] .g, .cell[data-s="you"] .g, .cell[data-s="pr"] .g { display: grid; place-items: center; width: 1.45rem; height: 1.45rem; border-radius: 6px; }
+.cell[data-s="gap"] .g { background: var(--gap-bg); } .cell[data-s="you"] .g { background: var(--you-bg); } .cell[data-s="pr"] .g { background: var(--pr-bg); }
+.cell[data-s="ok"] .g { display: grid; place-items: center; width: 1.45rem; height: 1.45rem; border-radius: 6px; background: var(--ok-bg); }
+.cell.dim { opacity: 0.16; }
+.cell.blank { cursor: default; }
 .empty { padding: 28px 0; color: var(--muted); }
+
+/* detail */
+.detail { border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; background: var(--surface); min-height: 5rem; }
+.detail h3 { margin: 0 0 8px; font-size: 1.05rem; font-weight: 650; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.detail .state { margin: 8px 0; max-width: 75ch; }
+.detail dl { margin: 10px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 0.88rem; }
+.detail dt { color: var(--muted); } .detail dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.detail ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 0; }
+.detail li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 4px 14px; padding: 6px 0; border-top: 1px solid var(--rule); font-size: 0.9rem; }
+.detail li .who { font-weight: 550; overflow-wrap: anywhere; }
+.detail .hint { color: var(--muted); margin: 0; }
+.detail h4 { margin: 14px 0 0; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 
 /* prs */
 .pr-list { border-top: 1px solid var(--rule); }
-.pr-row { display: grid; grid-template-columns: 7.5rem 7rem 1fr auto; gap: 6px 14px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--rule); }
-.pr-row .num { font-family: var(--font-mono); font-size: 0.85rem; }
+.pr-row { display: grid; grid-template-columns: 13rem 1fr auto; gap: 6px 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--rule); }
+.pr-row .num { font-family: var(--font-mono); font-size: 0.85rem; overflow-wrap: anywhere; }
 .pr-row .what { min-width: 0; overflow-wrap: anywhere; }
 .pr-state { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
 .notes { color: var(--muted); font-size: 0.85rem; max-width: 80ch; text-wrap: pretty; margin: 0; }
 
-/* phone: each row becomes a stacked entry */
-@media (max-width: 880px) {
-  .table-wrap { overflow: visible; }
-  table, tbody, tr, td { display: block; width: 100%; }
-  thead { display: none; }
-  tbody tr { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
-  tbody td { border: 0; padding: 0; width: auto; }
-  tbody tr:hover td { background: none; }
-  td.tool { grid-column: 1; grid-row: 1; font-size: 1.02rem; }
-  td.status { grid-column: 2; grid-row: 1; justify-self: end; }
-  td.repoc { grid-column: 1; grid-row: 2; }
-  td.area { grid-column: 2; grid-row: 2; justify-self: end; }
-  td.std, td.state, td.linkc { grid-column: 1 / -1; }
-  td[data-label]:not(.tool):not(.status):not(.repoc):not(.area)::before { content: attr(data-label); display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin-bottom: 1px; }
-  td.linkc:empty { display: none; }
+@media (max-width: 900px) {
+  .overview { grid-template-columns: 1fr; gap: 28px; }
+  .bar-row { grid-template-columns: minmax(0, 9rem) 1fr auto; }
   .pr-row { grid-template-columns: 1fr auto; }
   .pr-row .what { grid-column: 1 / -1; grid-row: 2; }
-  .summary-row .total { margin-left: 0; width: 100%; }
+  .detail li { grid-template-columns: 1fr; }
+  .rowbtn { width: 11.5rem; }
 }
-@media (prefers-reduced-motion: no-preference) { .pill, .chip, .seg button { transition: filter .12s, background-color .12s; } }
+@media (prefers-reduced-motion: no-preference) { .cell, .chip, .bar-row { transition: background-color .12s, opacity .12s; } }
 </style>
 
 <div class="page">
   <header>
     <h1>Standards Matrix</h1>
-    <p>Where each studio repository stands against the testing & repository configuration standards. Sort by repository, tooling, area, or status; filter to what needs attention.</p>
+    <p class="headline" id="headline"></p>
     <div class="asof">As of <span id="asof"></span> · <a href="https://github.com/allonsy-studio/.github/blob/main/docs/testing.md">testing.md</a> · <a href="https://github.com/allonsy-studio/.github/blob/main/docs/repository-standards.md">repository-standards.md</a></div>
+    <div class="skipped" id="skipped"></div>
   </header>
 
-  <section aria-label="Summary by repository">
-    <div class="summary" id="summary"></div>
+  <section aria-label="Overview">
+    <div class="legend" id="legend"></div>
+    <div class="overview">
+      <div>
+        <h2>Most common gaps</h2>
+        <p class="sub">Tools where the most repositories miss the standard. Select one to see every repository's state.</p>
+        <div class="bar-list" id="toolBars"></div>
+      </div>
+      <div>
+        <h2>Repositories, least conforming first</h2>
+        <p class="sub">Each bar covers the checks that apply to the repository. Select one to see what it needs.</p>
+        <div class="bar-list" id="repoBars"></div>
+      </div>
+    </div>
   </section>
 
-  <section aria-label="Matrix">
-    <h2 class="section-title">Repository by tooling</h2>
+  <section aria-label="Grid">
+    <h2>Tooling by repository</h2>
+    <p class="sub">One cell per check. Select a cell for its state, a tool name for every repository, or a repository name for its to-do list. Arrow keys move between cells.</p>
     <div class="toolbar">
-      <div class="tools-row">
-        <div class="field"><span class="group-label" id="lbl-repo">Repository</span>
-          <div class="seg" role="group" aria-labelledby="lbl-repo" id="repoSeg"></div></div>
-        <div class="field"><label for="area">Area</label><select id="area"></select></div>
-        <div class="field"><label for="q">Search</label><input id="q" type="search" placeholder="Tool, rule, or state"></div>
-      </div>
-      <div class="tools-row">
-        <div class="field"><span class="group-label" id="lbl-status">Status</span>
-          <div class="chips" role="group" aria-labelledby="lbl-status" id="statusChips"></div></div>
-      </div>
-      <div class="tools-row">
-        <div class="field"><label for="sortKey">Sort by</label>
-          <select id="sortKey">
-            <option value="repo">Repository</option>
-            <option value="tool">Tooling</option>
-            <option value="area">Area</option>
-            <option value="status">Status</option>
-          </select>
-          <button class="dir-btn" id="dirBtn" type="button" aria-label="Sort direction">Ascending</button></div>
-        <button class="ghost" id="reset" type="button">Reset filters</button>
-        <span class="result-count" id="count" role="status" aria-live="polite"></span>
-      </div>
+      <div class="field"><span class="group-label" id="lbl-status">Show</span>
+        <div class="chips" role="group" aria-labelledby="lbl-status" id="statusChips"></div></div>
+      <div class="field"><label for="area">Area</label><select id="area"></select></div>
+      <div class="field"><label for="q">Search</label><input id="q" type="search" placeholder="Tool or repository"></div>
     </div>
+    <div class="toolbar">
+      <div class="field"><label for="rowSort">Rows</label>
+        <select id="rowSort">
+          <option value="area">By area</option>
+          <option value="tool">By tool name</option>
+          <option value="gaps">Most gaps first</option>
+        </select></div>
+      <div class="field"><label for="colSort">Columns</label>
+        <select id="colSort">
+          <option value="scan">Scan order</option>
+          <option value="name">By repository name</option>
+          <option value="worst">Least conforming first</option>
+          <option value="best">Most conforming first</option>
+        </select></div>
+      <button class="ghost" id="reset" type="button">Reset</button>
+      <span class="result-count" id="count" role="status" aria-live="polite"></span>
+    </div>
+    <div class="grid-wrap"><table class="grid" id="grid"></table></div>
+    <div class="empty" id="empty" hidden>No rows match these filters.</div>
+  </section>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th scope="col" data-key="repo"><button type="button">Repository <span class="arrow"></span></button></th>
-          <th scope="col" data-key="area"><button type="button">Area <span class="arrow"></span></button></th>
-          <th scope="col" data-key="tool"><button type="button">Tooling <span class="arrow"></span></button></th>
-          <th scope="col" class="plain">Standard</th>
-          <th scope="col" class="plain">Current state</th>
-          <th scope="col" data-key="status"><button type="button">Status <span class="arrow"></span></button></th>
-          <th scope="col" class="plain">Pull request</th>
-        </tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
-      <div class="empty" id="empty" hidden>No rows match these filters.</div>
-    </div>
+  <section aria-label="Detail">
+    <div class="detail" id="detail" aria-live="polite"></div>
   </section>
 
   <section aria-label="Pull requests">
-    <h2 class="section-title">Pull requests</h2>
+    <h2>Pull requests</h2>
     <div class="pr-list" id="prs"></div>
   </section>
 
-  <p class="notes">Status reads: <strong>Conforms</strong> meets the standard today. <strong>In open PR</strong> is fixed by a pull request that has not merged. <strong>Gap</strong> is a known miss with no PR. <strong>Needs you</strong> is a decision or a GitHub setting that cannot be checked from files. <strong>Not applicable</strong> means the repository has no such tooling. Rows are read from the repositories and their pull requests, not from a live feed: check the date above.</p>
+  <p class="notes">Read from each repository's default branch, not from a live feed: check the date above. <strong>Conforms</strong> meets the standard today. <strong>In open PR</strong> is fixed by a pull request that has not merged. <strong>Gap</strong> is a known miss. <strong>Needs you</strong> is a decision or a GitHub setting that no file shows. <strong>Not applicable</strong> means the repository has no such tooling, & does not count against it.</p>
 </div>
 
 <script>
 (function () {
   /* The scanner writes this object; scripts/build.js swaps the placeholder for it. */
   var DATA = /*DATA:start*/"__MATRIX_DATA__"/*DATA:end*/;
-  var REPOS = DATA.repos;
-  var STATUS = {
-    gap: { label: "Gap", rank: 0 }, you: { label: "Needs you", rank: 1 },
-    pr: { label: "In open PR", rank: 2 }, ok: { label: "Conforms", rank: 3 }, na: { label: "Not applicable", rank: 4 }
-  };
-  var AREAS = ["Runtime", "Packages", "Language", "Testing", "Build", "Lint", "Hooks", "Release", "CI", "Config", "Docs", "Settings", "Housekeeping"];
-  var ROWS = DATA.rows;
-  var PRS = DATA.prs;
 
-  var S = { key: "repo", dir: 1, repo: "", status: {}, area: "", q: "" };
+  var STATUS = {
+    gap: { label: "Gap", rank: 0, glyph: "✕" }, you: { label: "Needs you", rank: 1, glyph: "?" },
+    pr: { label: "In open PR", rank: 2, glyph: "↗" }, ok: { label: "Conforms", rank: 3, glyph: "✓" }, na: { label: "Not applicable", rank: 4, glyph: "·" }
+  };
+  var ORDER = ["gap", "you", "pr", "ok", "na"];
+  var AREAS = ["Runtime", "Packages", "Language", "Testing", "Build", "Lint", "Hooks", "Release", "CI", "Config", "Docs", "Settings", "Housekeeping"];
   var $ = function (id) { return document.getElementById(id); };
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-  function pill(s) { var p = el("span", "pill"); p.dataset.s = s; p.appendChild(el("span", "dot")); p.appendChild(document.createTextNode(STATUS[s].label)); return p; }
-  var areaRank = function (a) { return AREAS.indexOf(a); };
-  var repoRank = function (r) { return REPOS.indexOf(r); };
-  var cmp = function (a, b) { return a < b ? -1 : a > b ? 1 : 0; };
-
-  function sorted(list) {
-    var k = S.key, d = S.dir;
-    var ties = {
-      repo: function (a, b) { return cmp(repoRank(a.repo), repoRank(b.repo)) || cmp(areaRank(a.area), areaRank(b.area)) || a.tool.localeCompare(b.tool); },
-      tool: function (a, b) { return a.tool.localeCompare(b.tool) || cmp(repoRank(a.repo), repoRank(b.repo)); },
-      area: function (a, b) { return cmp(areaRank(a.area), areaRank(b.area)) || a.tool.localeCompare(b.tool) || cmp(repoRank(a.repo), repoRank(b.repo)); },
-      status: function (a, b) { return cmp(STATUS[a.status].rank, STATUS[b.status].rank) || cmp(repoRank(a.repo), repoRank(b.repo)) || a.tool.localeCompare(b.tool); }
-    };
-    return list.slice().sort(function (a, b) { return d * ties[k](a, b); });
+  function plural(n, one, many) { return n + " " + (n === 1 ? one : many || one + "s"); }
+  function tally(rows) { var c = { gap: 0, you: 0, pr: 0, ok: 0, na: 0 }; rows.forEach(function (r) { c[r.status] += 1; }); return c; }
+  function applicable(c) { return c.gap + c.you + c.pr + c.ok; }
+  function score(c) { var n = applicable(c); return n ? c.ok / n : 1; }
+  function pill(s) { var p = el("span", "pill", STATUS[s].label); p.dataset.s = s; return p; }
+  function stack(c, total) {
+    var bar = el("div", "stack");
+    ORDER.forEach(function (s) { if (!c[s]) return; var seg = document.createElement("i"); seg.dataset.s = s; seg.style.width = (c[s] / total * 100) + "%"; bar.appendChild(seg); });
+    return bar;
   }
 
-  function filtered() {
-    var q = S.q.trim().toLowerCase(), on = Object.keys(S.status).filter(function (s) { return S.status[s]; });
-    return ROWS.filter(function (r) {
-      if (S.repo && r.repo !== S.repo) return false;
-      if (S.area && r.area !== S.area) return false;
-      if (on.length && on.indexOf(r.status) < 0) return false;
-      if (q && (r.tool + " " + r.std + " " + r.state + " " + r.area + " " + r.repo).toLowerCase().indexOf(q) < 0) return false;
-      return true;
+  var repos = DATA.repos, rows = DATA.rows, byKey = {}, tools = [], toolIndex = {};
+  rows.forEach(function (r) {
+    byKey[r.tool + "||" + r.repo] = r;
+    if (!toolIndex[r.tool]) { toolIndex[r.tool] = { tool: r.tool, area: r.area, std: r.std, src: r.src, order: tools.length }; tools.push(toolIndex[r.tool]); }
+  });
+  var repoStats = {}, toolStats = {};
+  repos.forEach(function (rp) { repoStats[rp] = tally(rows.filter(function (r) { return r.repo === rp; })); });
+  tools.forEach(function (t) { toolStats[t.tool] = tally(rows.filter(function (r) { return r.tool === t.tool; })); });
+
+  var S = { rowSort: "area", colSort: "scan", area: "", q: "", status: {}, sel: null };
+
+  function renderHeader() {
+    var all = tally(rows), n = applicable(all);
+    var h = $("headline"); h.textContent = "";
+    var a = el("strong", "", plural(repos.length, "repository", "repositories")); h.appendChild(a);
+    h.appendChild(document.createTextNode(" scanned. "));
+    h.appendChild(el("strong", "", all.ok + " of " + n));
+    h.appendChild(document.createTextNode(" applicable checks conform; "));
+    h.appendChild(el("strong", "", String(all.gap)));
+    h.appendChild(document.createTextNode(" are gaps, " + all.pr + " are fixed in an open PR, & " + all.you + " need a decision from you."));
+    $("asof").textContent = DATA.asOf;
+    var sk = (DATA.skipped || []).map(function (s) { return s.repo + " (" + s.reason + ")"; });
+    $("skipped").textContent = sk.length ? "Not scanned: " + sk.join(", ") + "." : "";
+    var lg = $("legend"); lg.textContent = "";
+    ORDER.forEach(function (s) { var sp = el("span"); sp.appendChild(pill(s)); lg.appendChild(sp); });
+  }
+
+  function select(sel) { S.sel = sel; renderGrid(); renderDetail(); var d = $("detail"); if (d.getBoundingClientRect().bottom > window.innerHeight || d.getBoundingClientRect().top < 0) d.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+
+  function renderOverview() {
+    var tb = $("toolBars"); tb.textContent = "";
+    var ranked = tools.filter(function (t) { return toolStats[t.tool].gap > 0; }).sort(function (a, b) { return toolStats[b.tool].gap - toolStats[a.tool].gap || a.order - b.order; }).slice(0, 10);
+    ranked.forEach(function (t) {
+      var c = toolStats[t.tool], n = applicable(c);
+      var b = el("button", "bar-row"); b.type = "button";
+      b.setAttribute("aria-label", t.tool + ": " + c.gap + " of " + n + " repositories have a gap. Show detail.");
+      b.appendChild(el("span", "name", t.tool)); b.appendChild(stack(c, Math.max(n, 1))); b.appendChild(el("span", "num", c.gap + " of " + n));
+      b.addEventListener("click", function () { select({ kind: "tool", tool: t.tool }); });
+      tb.appendChild(b);
     });
-  }
-
-  function renderSummary() {
-    var box = $("summary"); box.textContent = "";
-    REPOS.forEach(function (repo) {
-      var row = el("div", "summary-row"); row.appendChild(el("span", "repo", repo));
-      var mine = ROWS.filter(function (r) { return r.repo === repo; });
-      Object.keys(STATUS).sort(function (a, b) { return STATUS[a].rank - STATUS[b].rank; }).forEach(function (s) {
-        var n = mine.filter(function (r) { return r.status === s; }).length; if (!n) return;
-        var b = el("button", "count-btn"); b.type = "button"; b.setAttribute("aria-label", n + " " + STATUS[s].label + " in " + repo + ": show these rows");
-        var p = pill(s); p.appendChild(document.createTextNode(" " + n)); b.appendChild(p);
-        b.addEventListener("click", function () { S.repo = repo; S.status = {}; S.status[s] = true; S.key = "status"; S.dir = 1; render(); $("rows").scrollIntoView({ block: "start" }); });
-        row.appendChild(b);
-      });
-      row.appendChild(el("span", "total", mine.length + " checks"));
-      box.appendChild(row);
+    if (!ranked.length) tb.appendChild(el("p", "empty", "No gaps."));
+    var rb = $("repoBars"); rb.textContent = "";
+    repos.slice().sort(function (a, b) { return score(repoStats[a]) - score(repoStats[b]) || a.localeCompare(b); }).forEach(function (rp) {
+      var c = repoStats[rp], n = applicable(c);
+      var b = el("button", "bar-row"); b.type = "button";
+      b.setAttribute("aria-label", rp + ": " + c.ok + " of " + n + " checks conform. Show detail.");
+      b.appendChild(el("span", "name mono", rp)); b.appendChild(stack(c, Math.max(n, 1))); b.appendChild(el("span", "num", c.ok + " of " + n));
+      b.addEventListener("click", function () { select({ kind: "repo", repo: rp }); });
+      rb.appendChild(b);
     });
   }
 
   function renderControls() {
-    var seg = $("repoSeg"); seg.textContent = "";
-    [["", "All"]].concat(REPOS.map(function (r) { return [r, r]; })).forEach(function (o) {
-      var b = el("button", "", o[1]); b.type = "button"; b.setAttribute("aria-pressed", String(S.repo === o[0]));
-      b.addEventListener("click", function () { S.repo = o[0]; render(); }); seg.appendChild(b);
-    });
     var chips = $("statusChips"); chips.textContent = "";
-    Object.keys(STATUS).sort(function (a, b) { return STATUS[a].rank - STATUS[b].rank; }).forEach(function (s) {
-      var c = el("button", "chip"); c.type = "button"; c.dataset.s = s; c.setAttribute("aria-pressed", String(!!S.status[s]));
-      c.appendChild(el("span", "dot")); c.appendChild(document.createTextNode(STATUS[s].label));
-      c.addEventListener("click", function () { S.status[s] = !S.status[s]; render(); }); chips.appendChild(c);
+    ORDER.forEach(function (s) {
+      var c = el("button", "chip"); c.type = "button"; c.setAttribute("aria-pressed", String(!!S.status[s]));
+      c.appendChild(pill(s));
+      c.addEventListener("click", function () { S.status[s] = !S.status[s]; renderGrid(); });
+      chips.appendChild(c);
     });
     var sel = $("area");
     if (!sel.options.length) {
       sel.appendChild(new Option("All areas", ""));
-      AREAS.forEach(function (a) { if (ROWS.some(function (r) { return r.area === a; })) sel.appendChild(new Option(a, a)); });
+      AREAS.forEach(function (a) { if (tools.some(function (t) { return t.area === a; })) sel.appendChild(new Option(a, a)); });
     }
-    sel.value = S.area; $("sortKey").value = S.key; $("q").value = S.q;
-    $("dirBtn").textContent = S.dir === 1 ? "Ascending" : "Descending";
-    document.querySelectorAll("thead th[data-key]").forEach(function (th) {
-      var active = th.dataset.key === S.key;
-      th.setAttribute("aria-sort", active ? (S.dir === 1 ? "ascending" : "descending") : "none");
-      th.querySelector(".arrow").textContent = active ? (S.dir === 1 ? "↑" : "↓") : "";
-    });
+    sel.value = S.area; $("rowSort").value = S.rowSort; $("colSort").value = S.colSort; $("q").value = S.q;
   }
 
-  function renderRows() {
-    var list = sorted(filtered()), tb = $("rows"); tb.textContent = "";
-    list.forEach(function (r) {
-      var tr = document.createElement("tr");
-      function td(cls, label) { var c = el("td", cls); if (label) c.dataset.label = label; tr.appendChild(c); return c; }
-      td("repoc").appendChild(el("span", "repo", r.repo));
-      td("area", "Area").textContent = r.area;
-      td("tool", "Tooling").textContent = r.tool;
-      td("std", "Standard").textContent = r.std;
-      var st = td("state", "Current state"); st.appendChild(document.createTextNode(r.state));
-      if (r.src) st.appendChild(el("span", "src", r.src));
-      td("status", "Status").appendChild(pill(r.status));
-      var lk = td("linkc", r.links.length ? "Pull request" : "");
-      if (r.links.length) { var w = el("div", "links"); r.links.forEach(function (l) { var a = el("a", "", l.t); a.href = l.u; a.target = "_blank"; a.rel = "noopener"; w.appendChild(a); }); lk.appendChild(w); }
-      tb.appendChild(tr);
+  function orderedRepos() {
+    var list = repos.slice();
+    if (S.colSort === "name") list.sort(function (a, b) { return a.localeCompare(b); });
+    else if (S.colSort === "worst") list.sort(function (a, b) { return score(repoStats[a]) - score(repoStats[b]) || a.localeCompare(b); });
+    else if (S.colSort === "best") list.sort(function (a, b) { return score(repoStats[b]) - score(repoStats[a]) || a.localeCompare(b); });
+    return list;
+  }
+
+  function orderedTools(cols) {
+    var on = ORDER.filter(function (s) { return S.status[s]; });
+    var q = S.q.trim().toLowerCase();
+    var list = tools.filter(function (t) {
+      if (S.area && t.area !== S.area) return false;
+      var matchesQuery = !q || t.tool.toLowerCase().indexOf(q) >= 0 || t.area.toLowerCase().indexOf(q) >= 0;
+      if (!matchesQuery && q) { if (!cols.some(function (rp) { return rp.toLowerCase().indexOf(q) >= 0; })) return false; }
+      if (on.length && !cols.some(function (rp) { var r = byKey[t.tool + "||" + rp]; return r && on.indexOf(r.status) >= 0; })) return false;
+      return true;
     });
+    if (S.rowSort === "tool") list.sort(function (a, b) { return a.tool.localeCompare(b.tool); });
+    else if (S.rowSort === "gaps") list.sort(function (a, b) { return toolStats[b.tool].gap - toolStats[a.tool].gap || a.order - b.order; });
+    else list.sort(function (a, b) { return AREAS.indexOf(a.area) - AREAS.indexOf(b.area) || a.order - b.order; });
+    return list;
+  }
+
+  function renderGrid() {
+    renderControls();
+    var q = S.q.trim().toLowerCase();
+    var cols = orderedRepos();
+    var visible = q ? cols.filter(function (rp) { return rp.toLowerCase().indexOf(q) >= 0; }) : cols;
+    var showCols = visible.length ? visible : cols;
+    var list = orderedTools(showCols);
+    var on = ORDER.filter(function (s) { return S.status[s]; });
+    var g = $("grid"); g.textContent = "";
+
+    var thead = document.createElement("thead"), hr = document.createElement("tr");
+    var corner = el("th", "corner"); corner.scope = "col"; hr.appendChild(corner);
+    showCols.forEach(function (rp) {
+      var th = el("th", "colhead"); th.scope = "col";
+      var b = el("button", "colbtn"); b.type = "button"; b.title = rp; b.setAttribute("aria-label", rp + ": see what it needs");
+      b.setAttribute("aria-pressed", String(!!(S.sel && S.sel.kind === "repo" && S.sel.repo === rp)));
+      b.appendChild(el("span", "", rp));
+      b.addEventListener("click", function () { select({ kind: "repo", repo: rp }); });
+      th.appendChild(b); hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    var sr = document.createElement("tr"); sr.className = "score";
+    var sh = el("th", "", "Conforming"); sh.scope = "row"; sh.className = "rowhead score-h"; sr.appendChild(sh);
+    showCols.forEach(function (rp) { var c = repoStats[rp]; var td = el("td", "", Math.round(score(c) * 100) + "%"); td.title = c.ok + " of " + applicable(c) + " applicable checks conform"; sr.appendChild(td); });
+    thead.appendChild(sr);
+    g.appendChild(thead);
+
+    var tbody = document.createElement("tbody"), lastArea = null;
+    list.forEach(function (t) {
+      if (S.rowSort === "area" && t.area !== lastArea) {
+        lastArea = t.area;
+        var ar = el("tr", "area-row"), ath = el("th", "", t.area); ath.colSpan = showCols.length + 1; ar.appendChild(ath); tbody.appendChild(ar);
+      }
+      var tr = document.createElement("tr");
+      var th = el("th", "rowhead"); th.scope = "row";
+      var rb = el("button", "rowbtn"); rb.type = "button";
+      var c = toolStats[t.tool];
+      rb.setAttribute("aria-pressed", String(!!(S.sel && S.sel.kind === "tool" && S.sel.tool === t.tool)));
+      rb.setAttribute("aria-label", t.tool + ": " + c.gap + " gaps. See every repository.");
+      var label = el("span", "t", t.tool); label.title = (S.rowSort === "area" ? "" : t.area + ": ") + t.tool;
+      rb.appendChild(label); rb.appendChild(el("span", "n", c.gap ? c.gap + " gap" + (c.gap === 1 ? "" : "s") : (S.rowSort === "area" ? "" : t.area)));
+      rb.addEventListener("click", function () { select({ kind: "tool", tool: t.tool }); });
+      th.appendChild(rb); tr.appendChild(th);
+      showCols.forEach(function (rp) {
+        var r = byKey[t.tool + "||" + rp];
+        var td = el("td", "cellbox"), b = el("button", "cell"); b.type = "button";
+        if (!r) { b.className = "cell blank dim"; b.disabled = true; b.setAttribute("aria-label", rp + ": " + t.tool + ": not tracked"); td.appendChild(b); tr.appendChild(td); return; }
+        b.dataset.s = r.status;
+        var gl = el("span", "g", STATUS[r.status].glyph); b.appendChild(gl);
+        b.setAttribute("aria-label", rp + ", " + t.tool + ": " + STATUS[r.status].label);
+        b.title = rp + " · " + t.tool + " · " + STATUS[r.status].label;
+        if (on.length && on.indexOf(r.status) < 0) b.classList.add("dim");
+        b.setAttribute("aria-pressed", String(!!(S.sel && S.sel.kind === "cell" && S.sel.tool === t.tool && S.sel.repo === rp)));
+        b.addEventListener("click", function () { select({ kind: "cell", tool: t.tool, repo: rp }); });
+        td.appendChild(b); tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    g.appendChild(tbody);
     $("empty").hidden = list.length > 0;
-    $("count").textContent = list.length + " of " + ROWS.length + " rows";
+    $("count").textContent = list.length + " of " + tools.length + " tools · " + showCols.length + " of " + repos.length + " repositories";
+    wireKeys();
+  }
+
+  /* Arrow keys move between the grid's buttons: one tab stop for the whole grid. */
+  var lastFocus = null;
+  function wireKeys() {
+    var matrix = [];
+    $("grid").querySelectorAll("tr").forEach(function (tr) { var b = Array.prototype.slice.call(tr.querySelectorAll("button:not([disabled])")); if (b.length) matrix.push({ tr: tr, buttons: tr.querySelectorAll("button") }); });
+    var all = $("grid").querySelectorAll("button");
+    var start = lastFocus && document.contains(lastFocus) ? lastFocus : all[0];
+    all.forEach(function (b) { b.tabIndex = b === start ? 0 : -1; b.addEventListener("focus", function () { if (lastFocus && lastFocus !== b) lastFocus.tabIndex = -1; b.tabIndex = 0; lastFocus = b; }); });
+    $("grid").onkeydown = function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      var tr = b.closest("tr"), cells = Array.prototype.slice.call(tr.querySelectorAll("button")), i = cells.indexOf(b);
+      var rowsList = Array.prototype.slice.call($("grid").querySelectorAll("tr")).filter(function (r) { return r.querySelector("button"); });
+      var ri = rowsList.indexOf(tr), next = null;
+      function at(r, c) { var rr = rowsList[r]; if (!rr) return null; var bs = rr.querySelectorAll("button"); return bs[Math.min(c, bs.length - 1)] || null; }
+      if (e.key === "ArrowRight") next = cells[i + 1] || null;
+      else if (e.key === "ArrowLeft") next = cells[i - 1] || null;
+      else if (e.key === "ArrowDown") next = at(ri + 1, i);
+      else if (e.key === "ArrowUp") next = at(ri - 1, i);
+      else if (e.key === "Home") next = cells[0];
+      else if (e.key === "End") next = cells[cells.length - 1];
+      if (next) { e.preventDefault(); if (next.disabled) return; next.focus(); }
+    };
+  }
+
+  function linksOf(r) {
+    var w = el("span", "links");
+    (r.links || []).forEach(function (l, i) { if (i) w.appendChild(document.createTextNode(" · ")); var a = el("a", "", l.t); a.href = l.u; a.target = "_blank"; a.rel = "noopener"; w.appendChild(a); });
+    return w;
+  }
+
+  function renderDetail() {
+    var d = $("detail"); d.textContent = ""; var s = S.sel;
+    if (!s) { d.appendChild(el("p", "hint", "Select a cell, a tool name, a repository name, or a bar above to see the detail here.")); return; }
+    if (s.kind === "cell") {
+      var r = byKey[s.tool + "||" + s.repo], t = toolIndex[s.tool];
+      var h = el("h3"); h.appendChild(el("span", "", s.tool)); h.appendChild(el("span", "repo", s.repo)); h.appendChild(pill(r.status)); d.appendChild(h);
+      d.appendChild(el("p", "state", r.state));
+      var dl = el("dl");
+      function row(k, v) { dl.appendChild(el("dt", "", k)); var dd = el("dd"); if (typeof v === "string") dd.textContent = v; else dd.appendChild(v); dl.appendChild(dd); }
+      row("Standard", t.std);
+      if (t.src) { var sc = el("span", "mono", t.src); row("Where", sc); }
+      if (r.links && r.links.length) row("Pull request", linksOf(r));
+      if (r.manual) row("Confirmed", r.verified ? "by you on " + r.verified : "not yet confirmed");
+      d.appendChild(dl);
+    } else if (s.kind === "tool") {
+      var t2 = toolIndex[s.tool], c = toolStats[s.tool];
+      var h2 = el("h3"); h2.appendChild(el("span", "", s.tool)); h2.appendChild(el("span", "repo", t2.area)); d.appendChild(h2);
+      d.appendChild(el("p", "state", t2.std));
+      d.appendChild(el("p", "hint", c.ok + " of " + applicable(c) + " repositories conform" + (c.na ? "; " + c.na + " do not use it." : ".")));
+      ORDER.forEach(function (st) {
+        var group = rows.filter(function (x) { return x.tool === s.tool && x.status === st; });
+        if (!group.length || st === "na") return;
+        d.appendChild(el("h4", "", STATUS[st].label + " (" + group.length + ")"));
+        var ul = el("ul");
+        group.forEach(function (x) { var li = el("li"); li.appendChild(el("span", "who mono", x.repo)); var sp = el("span", "", x.state); if (x.links && x.links.length) { sp.appendChild(document.createTextNode(" ")); sp.appendChild(linksOf(x)); } li.appendChild(sp); ul.appendChild(li); });
+        d.appendChild(ul);
+      });
+      var nas = rows.filter(function (x) { return x.tool === s.tool && x.status === "na"; }).map(function (x) { return x.repo; });
+      if (nas.length) { d.appendChild(el("h4", "", "Not applicable (" + nas.length + ")")); d.appendChild(el("p", "hint", nas.join(", "))); }
+    } else {
+      var c3 = repoStats[s.repo], n3 = applicable(c3);
+      var h3 = el("h3"); h3.appendChild(el("span", "repo", s.repo)); d.appendChild(h3);
+      d.appendChild(el("p", "state", c3.ok + " of " + n3 + " applicable checks conform (" + Math.round(score(c3) * 100) + "%)."));
+      var any = false;
+      ["gap", "you", "pr"].forEach(function (st) {
+        var group = rows.filter(function (x) { return x.repo === s.repo && x.status === st; });
+        if (!group.length) return; any = true;
+        d.appendChild(el("h4", "", (st === "gap" ? "To fix" : STATUS[st].label) + " (" + group.length + ")"));
+        var ul = el("ul");
+        group.forEach(function (x) { var li = el("li"); li.appendChild(el("span", "who", x.tool)); var sp = el("span", "", x.state); if (x.links && x.links.length) { sp.appendChild(document.createTextNode(" ")); sp.appendChild(linksOf(x)); } li.appendChild(sp); ul.appendChild(li); });
+        d.appendChild(ul);
+      });
+      if (!any) d.appendChild(el("p", "hint", "Nothing to fix."));
+    }
   }
 
   function renderPRs() {
     var box = $("prs"); box.textContent = "";
-    PRS.forEach(function (p) {
+    DATA.prs.forEach(function (p) {
       var row = el("div", "pr-row");
       var a = el("a", "num", p.repo + "#" + p.n); a.href = p.url; a.target = "_blank"; a.rel = "noopener"; row.appendChild(a);
-      row.appendChild(el("span", "repo", p.repo));
       row.appendChild(el("span", "what", p.what));
-      var s = el("span", "pr-state", p.state); if (p.open) s.style.color = "var(--pr-fg)"; row.appendChild(s);
+      var st = el("span", "pr-state", p.state); if (p.open) st.style.color = "var(--pr-fg)"; row.appendChild(st);
       box.appendChild(row);
     });
   }
 
-  function render() { renderControls(); renderRows(); }
+  $("area").addEventListener("change", function (e) { S.area = e.target.value; renderGrid(); });
+  $("rowSort").addEventListener("change", function (e) { S.rowSort = e.target.value; renderGrid(); });
+  $("colSort").addEventListener("change", function (e) { S.colSort = e.target.value; renderGrid(); });
+  $("q").addEventListener("input", function (e) { S.q = e.target.value; renderGrid(); });
+  $("reset").addEventListener("click", function () { S.area = ""; S.q = ""; S.status = {}; S.rowSort = "area"; S.colSort = "scan"; S.sel = null; renderGrid(); renderDetail(); });
 
-  document.querySelectorAll("thead th[data-key]").forEach(function (th) {
-    th.querySelector("button").addEventListener("click", function () {
-      if (S.key === th.dataset.key) S.dir = -S.dir; else { S.key = th.dataset.key; S.dir = 1; } render();
-    });
-  });
-  $("sortKey").addEventListener("change", function (e) { S.key = e.target.value; S.dir = 1; render(); });
-  $("dirBtn").addEventListener("click", function () { S.dir = -S.dir; render(); });
-  $("area").addEventListener("change", function (e) { S.area = e.target.value; render(); });
-  $("q").addEventListener("input", function (e) { S.q = e.target.value; renderRows(); });
-  $("reset").addEventListener("click", function () { S.repo = ""; S.status = {}; S.area = ""; S.q = ""; S.key = "repo"; S.dir = 1; render(); });
-
-  $("asof").textContent = DATA.asOf;
-  renderSummary(); renderPRs(); render();
+  renderHeader(); renderOverview(); renderGrid(); renderDetail(); renderPRs();
 })();
 </script>

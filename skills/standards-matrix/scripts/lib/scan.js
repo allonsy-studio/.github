@@ -30,10 +30,11 @@ function safely(check, repo) {
  * @param {{ repo: string, n: number, dir: string }[]} [input.prHeads] Checkouts of open pull request heads.
  * @param {object[]} [input.manual] Rows a scan cannot read: decisions & GitHub settings.
  * @param {PullRequest[]} [input.prs] Pull requests gathered from GitHub.
+ * @param {{ repo: string, reason: string }[]} [input.skipped] Repositories left out, with why.
  * @param {string} input.asOf Date in `YYYY-MM-DD` form.
  * @param {string} [input.baseline] Name of the org repository the others are compared with.
  */
-export function runScan({ repos, prHeads = [], manual = [], prs = [], asOf, baseline = ".github" }) {
+export function runScan({ repos, prHeads = [], manual = [], prs = [], skipped = [], asOf, baseline = ".github" }) {
 	const baseEntry = repos.find((r) => r.name === baseline);
 	const baseRepo = baseEntry ? makeRepo(baseEntry.name, baseEntry.dir) : null;
 	const wrap = (name, dir) => (name === baseline ? makeRepo(name, dir) : makeRepo(name, dir, baseRepo));
@@ -62,12 +63,12 @@ export function runScan({ repos, prHeads = [], manual = [], prs = [], asOf, base
 	}
 	for (const item of manual) {
 		for (const { name } of mains) {
-			const entry = item.repos?.[name];
+			const entry = item.repos?.[name] ?? item.default;
 			if (!entry) continue;
 			rows.push({ repo: name, area: item.area, tool: item.tool, std: item.std, src: item.src ?? "", status: entry.status ?? "you", state: entry.state, links: entry.links ?? [], manual: true, verified: entry.verified });
 		}
 	}
-	return { asOf, repos: mains.map((m) => m.name), rows, prs: pullRequests };
+	return { asOf, repos: mains.map((m) => m.name), skipped, rows, prs: pullRequests };
 }
 
 const keyOf = (row) => `${row.repo}\u0000${row.tool}`;

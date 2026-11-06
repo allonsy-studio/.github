@@ -5,8 +5,20 @@
 		"std": "No tool or threshold is chosen; none is required until one is.",
 		"src": "",
 		"repos": {
-			".github": { "status": "you", "state": "Undecided.", "verified": "2026-11-06" },
-			"webc-docs": { "status": "you", "state": "Undecided.", "verified": "2026-11-06" }
+			".github": {
+				"status": "you",
+				"state": "Undecided.",
+				"verified": "2026-11-06"
+			},
+			"webc-docs": {
+				"status": "you",
+				"state": "Undecided.",
+				"verified": "2026-11-06"
+			}
+		},
+		"default": {
+			"status": "you",
+			"state": "Undecided."
 		}
 	},
 	{
@@ -15,8 +27,20 @@
 		"std": "Both Node jobs are required status checks.",
 		"src": "GitHub branch protection",
 		"repos": {
-			".github": { "status": "you", "state": "Not verified: a GitHub setting.", "verified": "2026-11-06" },
-			"webc-docs": { "status": "you", "state": "Not verified: a GitHub setting.", "verified": "2026-11-06" }
+			".github": {
+				"status": "you",
+				"state": "Not verified: a GitHub setting.",
+				"verified": "2026-11-06"
+			},
+			"webc-docs": {
+				"status": "you",
+				"state": "Not verified: a GitHub setting.",
+				"verified": "2026-11-06"
+			}
+		},
+		"default": {
+			"status": "you",
+			"state": "Not verified: a GitHub setting."
 		}
 	},
 	{
@@ -25,7 +49,11 @@
 		"std": "No AI attribution on commits, PRs, or comments.",
 		"src": "AGENTS.md",
 		"repos": {
-			".github": { "status": "you", "state": "Review replies on the standards PR carried a Claude Code footer that the GitHub tool added; confirm they are removed.", "verified": "2026-11-06" }
+			".github": {
+				"status": "you",
+				"state": "Review replies on the standards PR carried a Claude Code footer that the GitHub tool added; confirm they are removed.",
+				"verified": "2026-11-06"
+			}
 		}
 	}
 ]

@@ -47,6 +47,20 @@ test("manual rows appear for the repositories they name & carry their flag", (t)
 	t.is(scan.rows.filter((r) => r.tool === "Required checks").length, 1);
 });
 
+test("a manual default applies to every repository the item does not name", (t) => {
+	const manual = [{ area: "Testing", tool: "Coverage", std: "x", repos: { alpha: { state: "Chosen." } }, default: { state: "Undecided." } }];
+	const scan = runScan({ repos: [{ name: "alpha", dir: tempRepo(BEFORE) }, { name: "beta", dir: tempRepo(BEFORE) }], manual, asOf: "2026-11-06" });
+	const state = (repo) => scan.rows.find((r) => r.repo === repo && r.tool === "Coverage").state;
+	t.is(state("alpha"), "Chosen.");
+	t.is(state("beta"), "Undecided.");
+});
+
+test("skipped repositories pass through with their reasons", (t) => {
+	const skipped = [{ repo: "forked", reason: "a fork" }];
+	t.deepEqual(runScan({ repos: [{ name: "example", dir: tempRepo(BEFORE) }], skipped, asOf: "2026-11-06" }).skipped, skipped);
+	t.deepEqual(runScan({ repos: [{ name: "example", dir: tempRepo(BEFORE) }], asOf: "2026-11-06" }).skipped, []);
+});
+
 test("the org repository is compared against nothing & the others against it", (t) => {
 	const hook = "#!/usr/bin/env sh\nexit 0\n";
 	const scan = runScan({

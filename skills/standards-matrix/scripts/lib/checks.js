@@ -3,6 +3,7 @@
  * Copyright (c) 2026 Allons-y Studio
  */
 
+import { posix } from "node:path";
 import { isFixture } from "./repo.js";
 
 /**
@@ -31,6 +32,23 @@ const tsSourceFiles = (repo) => repo.files().filter((f) => TS_FILE.test(f) && !f
 const hasTypeScript = (repo) => tsSourceFiles(repo).length > 0;
 const tsPackages = (repo) => repo.packages().filter((p) => repo.has(p.dir === "." ? "tsconfig.json" : `${p.dir}/tsconfig.json`));
 const workflow = (repo, name) => repo.read(`.github/workflows/${name}`) ?? "";
+const workflowNames = (repo) => repo.files().filter((f) => /^\.github\/workflows\/[^/]+\.ya?ml$/.test(f)).map((f) => f.split("/").pop());
+const allWorkflows = (repo) => workflowNames(repo).map((name) => workflow(repo, name)).join("\n");
+const runsStep = (text, step) => new RegExp(`(?:yarn|npm|pnpm)\\s+(?:run\\s+)?${step}\\b`).test(text);
+const hooksOf = (repo) => repo.files().filter((f) => /^\.husky\/[^/_]+$/.test(f)).map((f) => f.split("/").pop()).filter((n) => n !== "common.sh");
+
+/** Compiler options of a tsconfig, following relative `extends` chains. */
+function compilerOptions(repo, rel, depth = 0) {
+	const config = repo.json(rel);
+	if (!config) return null;
+	let options = { ...config.compilerOptions };
+	if (typeof config.extends === "string" && config.extends.startsWith(".") && depth < 3) {
+		const target = config.extends.endsWith(".json") ? config.extends : `${config.extends}.json`;
+		const parent = compilerOptions(repo, posix.normalize(posix.join(posix.dirname(rel), target)), depth + 1);
+		if (parent) options = { ...parent, ...options };
+	}
+	return options;
+}
 const joinList = (items, max = 4) => (items.length > max ? `${items.slice(0, max).join(", ")}, & ${items.length - max} more` : items.join(", "));
 const scriptsOf = (pkg) => pkg.json.scripts ?? {};
 const depsOf = (pkg) => ({ ...pkg.json.dependencies, ...pkg.json.devDependencies, ...pkg.json.peerDependencies, ...pkg.json.optionalDependencies });
@@ -54,7 +72,7 @@ export const CHECKS = [
 			const ci = workflow(repo, "ci.yml");
 			const problems = [];
 			if (nvmrc !== "26") problems.push(`.nvmrc is ${nvmrc ?? "missing"}`);
-			if (engines !== ">=24") problems.push(`engines.node is ${engines ?? "missing"}`);
+			if (!/^>=\s*24(\.\d+){0,2}$/.test(engines ?? "")) problems.push(`engines.node is ${engines ?? "missing"}`);
 			if (!/node-version:\s*["']?24\b/.test(ci)) problems.push("CI has no Node 24 job");
 			return problems.length ? gap(`${problems.join("; ")}.`) : ok(".nvmrc 26, engines >=24, CI matrix runs both.");
 		},
@@ -93,15 +111,19 @@ export const CHECKS = [
 		area: "Language",
 		tool: "TypeScript",
 		std: "Only for packages that benefit from strong typing; vanilla JS elsewhere. Strict, on NodeNext.",
-		src: "tsconfig.base.json",
+		src: "tsconfig.json",
 		run(repo) {
 			if (!hasTypeScript(repo)) return ok("No TypeScript source.");
-			const base = repo.json("tsconfig.base.json")?.compilerOptions ?? {};
-			const count = tsPackages(repo).length;
-			const problems = [];
-			if (base.strict !== true) problems.push("strict is off");
-			if (!/^nodenext$/i.test(base.module ?? "") || !/^nodenext$/i.test(base.moduleResolution ?? "")) problems.push("module & moduleResolution are not NodeNext");
-			return problems.length ? gap(`${problems.join("; ")} in tsconfig.base.json.`) : ok(`Strict TypeScript on NodeNext in ${count} package${count === 1 ? "" : "s"}.`);
+			const configs = tsPackages(repo).map((p) => (p.dir === "." ? "tsconfig.json" : `${p.dir}/tsconfig.json`));
+			if (!configs.length) return gap("TypeScript source without a tsconfig.json.");
+			const weak = [];
+			for (const rel of configs) {
+				const options = compilerOptions(repo, rel) ?? {};
+				const nodeNext = /^nodenext$/i.test(options.module ?? "") && /^nodenext$/i.test(options.moduleResolution ?? "");
+				if (options.strict !== true || !nodeNext) weak.push(rel.replace(/\/?tsconfig\.json$/, "") || ".");
+			}
+			if (weak.length) return gap(`${weak.length} of ${configs.length} TypeScript package${configs.length === 1 ? " is" : "s are"} not strict on NodeNext (${joinList(weak, 3)}).`);
+			return ok(`Strict TypeScript on NodeNext in ${configs.length} package${configs.length === 1 ? "" : "s"}.`);
 		},
 	},
 	{
@@ -114,8 +136,9 @@ export const CHECKS = [
 			const name = rootPkg(repo).name;
 			if (!name) return gap("The root package.json has no name.");
 			if (repo.name === ORG_REPO && name === ORG_ROOT_NAME) return ok(`${name}, recorded as the exception in the standards.`);
-			if (name.startsWith("@")) return gap(`${name} is scoped; only published packages use the @allons-y/ scope.`);
-			return ok(`${name}.`);
+			if (!name.startsWith("@")) return ok(`${name}.`);
+			if (rootPkg(repo).private !== true) return ok(`${name}: the root is the published package, so the scope fits.`);
+			return gap(`${name} is a private root with a scoped name; only published packages use the @allons-y/ scope.`);
 		},
 	},
 	{
@@ -207,7 +230,7 @@ export const CHECKS = [
 			const problems = [];
 			if (!repo.has("tsconfig.test.json")) problems.push("no root tsconfig.test.json");
 			if (!scriptsOf({ json: rootPkg(repo) }).typecheck) problems.push("no typecheck script");
-			if (!/yarn typecheck/.test(workflow(repo, "ci.yml"))) problems.push("no CI step");
+			if (!runsStep(allWorkflows(repo), "typecheck")) problems.push("no CI step");
 			return problems.length ? gap(sentence(problems)) : ok("Root tsconfig.test.json, yarn typecheck, and a CI step.");
 		},
 	},
@@ -267,7 +290,8 @@ export const CHECKS = [
 			const config = repo.read("eslint.config.js") ?? "";
 			const dev = rootPkg(repo).devDependencies ?? {};
 			const problems = [];
-			if (!/@allons-y\/opx-lint-/.test(config)) problems.push("eslint.config.js does not spread the opx-lint-* presets");
+			if (!config) problems.push("no eslint.config.js");
+			else if (!/@allons-y\/opx-lint-/.test(config)) problems.push("eslint.config.js does not spread the opx-lint-* presets");
 			if (!("typescript" in dev)) problems.push("typescript is not a dev dependency, so lint fails on a clean install");
 			return problems.length ? gap(`${problems.join("; ")}.`) : ok("opx presets with typescript installed.");
 		},
@@ -292,7 +316,10 @@ export const CHECKS = [
 		src: ".husky/post-commit",
 		run(repo) {
 			const own = repo.read(".husky/post-commit");
-			if (own == null) return gap("No .husky/post-commit.");
+			if (own == null) {
+				const hooks = hooksOf(repo);
+				return gap(hooks.length ? `No .husky/post-commit; it has ${joinList(hooks)} instead.` : "No .husky hooks.");
+			}
 			const base = repo.baseline?.read(".husky/post-commit");
 			if (base != null && base !== own) return gap("Differs from the baseline in the org repository.");
 			return ok(base == null ? "Baseline file." : "Identical to the org baseline.");
@@ -323,14 +350,21 @@ export const CHECKS = [
 		std: "Lint, build, typecheck, test, run on the .nvmrc version and on Node 24; both required.",
 		src: ".github/workflows/ci.yml",
 		run(repo) {
-			const ci = workflow(repo, "ci.yml");
-			if (!ci) return gap("No .github/workflows/ci.yml.");
+			const names = workflowNames(repo);
+			let file = "ci.yml";
+			if (!names.includes(file)) {
+				file = names.find((n) => /^(ci|test|tests|testing)\.ya?ml$/.test(n));
+				if (!file) return gap(names.length ? `No CI workflow that runs tests (workflows: ${joinList(names, 5)}).` : "No workflows.");
+			}
+			const ci = workflow(repo, file);
+			const everything = allWorkflows(repo);
 			const ts = hasTypeScript(repo);
 			const need = ["lint", "test", ...(ts ? ["build", "typecheck"] : [])];
-			const missing = need.filter((step) => !new RegExp(`yarn (run )?${step}\\b`).test(ci));
-			const matrix = /node-version:\s*["']?24\b/.test(ci) && /node-version-file:/.test(ci);
+			const missing = need.filter((step) => !runsStep(everything, step));
+			const matrix = /node-version:\s*\[?\s*["']?24\b/.test(ci) && /node-version-file:/.test(ci);
 			const problems = [];
-			if (missing.length) problems.push(`no ${joinList(missing)} step`);
+			if (file !== "ci.yml") problems.push(`the CI workflow is ${file}, not ci.yml`);
+			if (missing.length) problems.push(`no ${joinList(missing)} step in any workflow`);
 			if (!matrix) problems.push("no .nvmrc & Node 24 matrix");
 			if (problems.length) return gap(sentence(problems));
 			return ok(ts ? "Lint, build, typecheck, & test on both Node versions." : "Lint & test on both Node versions; build & typecheck are omitted because nothing builds.");
@@ -372,7 +406,7 @@ export const CHECKS = [
 		src: "AGENTS.md",
 		run(repo) {
 			const agents = repo.read("AGENTS.md");
-			if (agents == null) return gap("No AGENTS.md.");
+			if (agents == null) return gap(repo.has("CLAUDE.md") ? "No AGENTS.md; only CLAUDE.md." : "No AGENTS.md.");
 			if (!repo.baseline) return ok("Org file with Testing & Repository configuration sections.");
 			const missing = ["Stack", "Commands", "Layout", "Testing", "Source conventions", "Commits"].filter((h) => !new RegExp(`^## ${h}`, "m").test(agents));
 			if (!/allonsy-studio\/\.github\/blob\/main\/AGENTS\.md/.test(agents)) missing.unshift("link to the org file");
