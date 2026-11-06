@@ -67,11 +67,15 @@ Root scripts:
 | `lint`      | `opx lint`                                             | JS, TS, JSON, & Markdown                     |
 | `format`    | `opx lint --fix`                                       | Apply lint fixes                             |
 | `prepare`   | `husky`                                                | Install hooks                                |
-| `version-packages` | `opx release version && yarn install --mode update-lockfile` | Bump versions & refresh the lockfile |
+| `changeset` | `opx release add`                                      | Record a change for the next release         |
+| `version`   | `opx release version && yarn install --mode update-lockfile` | Bump versions & refresh the lockfile   |
 | `release`   | `yarn build && opx release publish`                    | Publish                                      |
 
-A repository that does not publish drops the last two. A single-package repository drops
+A repository that does not publish drops the last three. A single-package repository drops
 the `foreach` wrappers & points `build`, `ci`, & `test` at the tool directly.
+
+Contributors run the aliases, never `opx` directly. `yarn version` is Yarn's own command
+and ignores a script of that name, so the `version` script runs as `yarn run version`.
 
 ## Workspace `package.json`
 
@@ -160,11 +164,16 @@ which sets `"release": true` in `.opx/config.json`.
 | `.github/release.yml`      | The baseline above                                                                                |
 
 Continuous delivery uses [`changesets/action`](https://github.com/changesets/action) with
-`version: yarn version-packages` & `publish: yarn release`, plus `GITHUB_TOKEN` & `NPM_TOKEN`.
+`version: yarn run version` & `publish: yarn release`, plus `GITHUB_TOKEN` & `NPM_TOKEN`.
 The workflow's token must be allowed to create pull requests (Settings → Actions → General).
 
-`opx release` is at `0.1.0-beta.0`. Plain Changesets commands work on the same files where
-it is not adopted yet.
+A config that names `@changesets/changelog-github` needs that package as a dev dependency &
+a `GITHUB_TOKEN` wherever `yarn run version` runs. The starter config uses the default
+generator instead; [opx#41](https://github.com/allonsy-studio/opx/issues/41) tracks an
+opt-in for the custom format.
+
+`opx release` is in beta (`0.1.0-beta.2` at the last check). Plain Changesets commands work
+on the same files where it is not adopted yet.
 
 ## CI & automation
 
