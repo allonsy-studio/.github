@@ -23,7 +23,7 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 | `lint-staged` | lint-staged | It is configured & no `.husky/pre-commit` runs it | never |
 | `husky` | Husky | `.husky/post-commit` is missing (the state names the hooks it has instead) or differs from the baseline | never |
 | `opx-release` | opx release | A publishing repository lacks the plugin, `"release": true`, or the `changeset`, `version`, & `release` scripts | Nothing is published |
-| `ci` | ci.yml | There is no workflow that runs tests, the workflow is not named `ci.yml`, no workflow runs lint, test, (build & typecheck for TypeScript), or the CI workflow lacks the `.nvmrc` & Node 24 matrix | never |
+| `ci` | ci.yml | There is no workflow that runs tests, the workflow is not named `ci.yml`, no workflow runs lint, test, (build & typecheck for TypeScript), or the CI workflow lacks node 26 & node 24 jobs named `CI (node26)` & `CI (node24)` | never |
 | `pages` | Pages | A site exists & `pages.yml` does not call the shared workflow | It hosts the workflow, or there is no site |
 | `renovate` | Renovate | `renovate.json` is missing or differs from the baseline | never |
 | `agents` | AGENTS.md | Missing (a lone `CLAUDE.md` is noted), or (outside `.github`) missing the org link or a standard section | never |
