@@ -9,11 +9,23 @@ jobs:
     sync:
         runs-on: ubuntu-latest
         steps:
+            - name: Create GitHub App token
+              id: app-token
+              uses: actions/create-github-app-token@v3
+              with:
+                  app-id: ${{ secrets.APP_ID }}
+                  private-key: ${{ secrets.APP_PRIVATE_KEY }}
+                  owner: ${{ github.repository_owner }}
+                  permission-contents: write
+                  permission-pull-requests: write
+
             - uses: actions/checkout@v7
+              with:
+                  token: ${{ steps.app-token.outputs.token }}
             - id: weaver
               uses: allonsy-studio/actions-weaver@v4
               with:
-                  token: ${{ secrets.PAT_GITHUB }}
+                  token: ${{ steps.app-token.outputs.token }}
                   templates: templates
                   variables: '{"npm_org": "@allons-y"}'
             - run: echo '${{ steps.weaver.outputs.pull-requests }}'
