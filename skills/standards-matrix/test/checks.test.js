@@ -248,3 +248,30 @@ test("coverage accepts Jest's own reporter", (t) => {
 test("coverage is not applicable without a test script", (t) => {
 	t.is(runCheck("coverage", { "package.json": { scripts: {} } })[0], "na");
 });
+
+const QUEUED = "on:\n  pull_request:\n  merge_group:\njobs:\n  test:\n    runs-on: ubuntu-latest\n";
+
+test("merge-group is a gap when a required-check workflow skips the merge queue", (t) => {
+	const [status, state] = runCheck("merge-group", { ".github/workflows/testing.yml": QUEUED.replace("  merge_group:\n", "") });
+	t.is(status, "gap");
+	t.regex(state, /testing\.yml lacks a merge_group trigger/);
+});
+
+test("merge-group accepts workflows that run on merge_group", (t) => {
+	const [status, state] = runCheck("merge-group", { ".github/workflows/ci.yml": QUEUED, ".github/workflows/build.yml": QUEUED });
+	t.is(status, "ok");
+	t.regex(state, /build\.yml, ci\.yml run on merge_group/);
+});
+
+test("merge-group ignores workflows that do not provide a required check", (t) => {
+	t.is(runCheck("merge-group", { ".github/workflows/release.yml": "on:\n  push:\n" })[0], "na");
+	t.is(runCheck("merge-group", { ".github/workflows/linting.yml": "on:\n  pull_request:\n" })[0], "na");
+});
+
+test("codeowners wants a default owner", (t) => {
+	t.is(runCheck("codeowners", {})[0], "gap");
+	t.regex(runCheck("codeowners", { ".github/CODEOWNERS": "docs/ @someone\n" })[1], /no default `\*` owner/);
+	const [status, state] = runCheck("codeowners", { ".github/CODEOWNERS": "* @castastrophe\n" });
+	t.is(status, "ok");
+	t.regex(state, /\.github\/CODEOWNERS: \* @castastrophe/);
+});

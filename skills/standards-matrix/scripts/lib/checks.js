@@ -28,6 +28,9 @@ const ORG_ROOT_NAME = "@allons-y/core";
 /** Variables every environment provides, so `.env.example` need not list them. */
 const AMBIENT_ENV = new Set(["CI", "NODE_ENV", "HOME", "PATH", "TMPDIR", "TEMP", "TMP", "USER", "SHELL", "NO_COLOR", "FORCE_COLOR", "NODE_OPTIONS", "NODE_PATH", "PWD", "DEBUG"]);
 
+/** Workflow files that provide the required checks. */
+const CI_WORKFLOW = /^(ci|test|tests|testing|build)\.ya?ml$/;
+
 /** Dependencies that provide coverage: c8, Vitest's v8 provider, & Jest's built-in reporter. */
 const COVERAGE_TOOLS = ["c8", "@vitest/coverage-v8", "jest"];
 
@@ -399,6 +402,35 @@ export const CHECKS = [
 			if (!named) problems.push("the jobs are not named CI (node26) & CI (node24)");
 			if (problems.length) return gap(sentence(problems));
 			return ok(ts ? "Lint, build, typecheck, & test on both Node versions." : "Lint & test on both Node versions; build & typecheck are omitted because nothing builds.");
+		},
+	},
+	{
+		id: "merge-group",
+		area: "CI",
+		tool: "merge_group trigger",
+		std: "Each workflow that provides a required check also runs on merge_group.",
+		src: ".github/workflows/",
+		run(repo) {
+			const files = workflowNames(repo).filter((n) => CI_WORKFLOW.test(n));
+			const pr = files.filter((n) => /^\s*pull_request(_target)?:/m.test(workflow(repo, n)));
+			if (!pr.length) return na("No pull request workflow provides a required check.");
+			const missing = pr.filter((n) => !/^\s*merge_group:/m.test(workflow(repo, n)));
+			if (missing.length) return gap(`${joinList(missing)} ${missing.length > 1 ? "lack" : "lacks"} a merge_group trigger, so a queued pull request never gets its checks.`);
+			return ok(`${joinList(pr)} run${pr.length > 1 ? "" : "s"} on merge_group.`);
+		},
+	},
+	{
+		id: "codeowners",
+		area: "Config",
+		tool: "CODEOWNERS",
+		std: "A default owner (`* @castastrophe`) routes review.",
+		src: ".github/CODEOWNERS",
+		run(repo) {
+			const rel = [".github/CODEOWNERS", "CODEOWNERS", "docs/CODEOWNERS"].find((f) => repo.has(f));
+			if (!rel) return gap("No CODEOWNERS file.");
+			const owner = (repo.read(rel) ?? "").split("\n").map((l) => l.trim()).find((l) => /^\*\s+@/.test(l));
+			if (!owner) return gap(`${rel} has no default \`*\` owner.`);
+			return ok(`${rel}: ${owner.replace(/\s+/g, " ")}.`);
 		},
 	},
 	{
