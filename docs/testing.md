@@ -12,6 +12,7 @@ files & settings live in [repository-standards.md](repository-standards.md).
 | Ecosystem-defined                              | The host's recommended technique                                                                     | The tool a plugin extends documents a test approach: follow it over the two defaults |
 | Accessibility & rendered pages                 | [Cypress](https://www.cypress.io) & [cypress-axe](https://github.com/component-driven/cypress-axe)  | Any site or UI; WCAG 2.2 AA in light, dark, & forced-colors. See [`oss-docs-site` testing](../skills/oss-docs-site/references/testing.md) |
 | Types                                          | `tsc` through `yarn build` & `yarn typecheck`                                                        | Every TypeScript package; `typecheck` covers `src` & `test`               |
+| Coverage                                       | [c8](https://github.com/bcoe/c8) for AVA & `node:test`; `@vitest/coverage-v8` for Vitest; the host runner's own for ecosystem-defined tests | Every repository with a `test` script; CI reports it on each pull request |
 | Style & license headers                        | `opx lint`                                                                                           | Every repository; CI runs it first                                        |
 
 Python projects use pytest.
@@ -103,6 +104,23 @@ root: Yarn 4 resolves a workspace's binaries from its own dependencies, & only t
 `test` script puts the root's binaries on `PATH`. Declare `vitest` in each package that
 runs it if that form is wanted.
 
+## Coverage
+
+Every repository with a `test` script reports code coverage, & CI shows it on each pull
+request. [envoy](https://github.com/allonsy-studio/envoy) is the reference.
+
+| Part      | Rule                                                                                                   |
+| --------- | ------------------------------------------------------------------------------------------------------ |
+| Script    | A root `coverage` script runs every workspace's tests with coverage on                                 |
+| Tool      | AVA & `node:test`: `"coverage": "c8 yarn test"`. Vitest: `"coverage": "vitest run --coverage"` with `@vitest/coverage-v8`. Jest, where the host ecosystem uses it: `"coverage": "jest --coverage"` |
+| Reporters | `text` for the log & `cobertura`, which writes `coverage/cobertura-coverage.xml`                       |
+| Ignore    | `coverage/` in `.gitignore`                                                                            |
+| Report    | One sticky comment per pull request: [CodeCoverageSummary](https://github.com/irongut/CodeCoverageSummary) renders the XML, [sticky-pull-request-comment](https://github.com/marocchino/sticky-pull-request-comment) posts it |
+| Floor     | `fail_below_min: true` fails the check under a 50% line rate. A repository may raise the floor, never lower it |
+
+Only the Node 26 job runs `yarn coverage` & posts the comment; the Node 24 job runs
+`yarn test`. The [CI snippet](repository-standards.md#ci--automation) has the steps.
+
 ## What gets a test
 
 1. Every exported function or CLI flag: a test in the same PR.
@@ -122,11 +140,12 @@ The PR template's checklist asks for the same.
 5. TypeScript packages: add `tsconfig.test.json` (extends the base, `noEmit`, includes every
    `src` & `test`) & a `typecheck` script.
 6. Add `typecheck` & `test` to the CI job after `build`.
-7. Add the Testing section to the repository's `AGENTS.md`, linking this file.
+7. Add a `coverage` script, the coverage tool, & the CI steps from the [Coverage](#coverage) section.
+8. Add the Testing section to the repository's `AGENTS.md`, linking this file.
 
 ## Known gaps
 
 | Where                         | Gap                                                                                        |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
 | This repo's `skills/*/test/`  | The suites use `node:test`, not AVA                                                         |
-| Coverage                      | No tool or threshold is set anywhere; none is required until one is chosen                 |
+| Coverage                      | Reporting is uneven; the matrix lists each repository that lacks a part of it              |

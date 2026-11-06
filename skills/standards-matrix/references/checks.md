@@ -14,6 +14,7 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 | `internal-ranges` | Internal dependency ranges | A package depends on another local package with a `workspace:` range | No package depends on another |
 | `test-runner` | Test runner | A package runs `node:test`, or a TypeScript package does not run Vitest | No package defines a test script |
 | `test-layout` | Test layout | A folder is named `tests/` outside samples | No test folders |
+| `coverage` | Coverage | A package has a test script & the repository lacks a root `coverage` script, `c8`, `@vitest/coverage-v8`, or `jest`, a CI step that runs coverage, the `CodeCoverageSummary` & `sticky-pull-request-comment` steps, or a `coverage` line in `.gitignore` | No package defines a test script |
 | `license-header` | License header | A file under `src/`, `test/`, or `bin/` lacks an SPDX line in its first 400 characters, or nothing enforces it | No such files |
 | `typecheck` | Typecheck | TypeScript exists without `tsconfig.test.json`, a `typecheck` script, or a CI step | No TypeScript |
 | `a11y` | Accessibility audit | A `site/` or `docs/eleventy.config.js` exists without `cypress-axe` or a Cypress audit | No site |

@@ -108,6 +108,7 @@ Full rules in [`docs/testing.md`](docs/testing.md).
 - `describe` names the unit; `it` states the behavior in the present tense, lowercase,
   without "should".
 - New behavior & bug fixes ship with a test in the same PR.
+- Coverage is reported on every pull request (c8, or Vitest's v8 provider, with a 50% line floor).
 
 ## Repository configuration
 

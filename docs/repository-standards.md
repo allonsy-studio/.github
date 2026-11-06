@@ -19,7 +19,7 @@ note allows.
 | `.env.example`           | `.env.example`               | Lists every variable the repo reads; required only where it reads some |
 | `.github/renovate.json`  | `renovate.json`              | One-month release age, monthly lockfile refresh  |
 | `.github/release.yml`    | `release.yml`                | Changelog categories keyed on `type:` labels     |
-| `.gitignore`             | `.gitignore`                 | Add `_site` for repos that build an Eleventy site |
+| `.gitignore`             | `.gitignore`                 | Add `_site` for repos that build an Eleventy site, & `coverage` for every repo with tests |
 
 Nothing syncs these files. The Weaver workflow ([`sync.yaml`](../.github/workflows/sync.yaml))
 updates only the README sections from `templates/`, so a config change here needs a PR in
@@ -179,7 +179,7 @@ on the same files where it is not adopted yet.
 
 | File                          | Rule                                                                                         |
 | ----------------------------- | -------------------------------------------------------------------------------------------- |
-| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version: ${{ matrix.node }}` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test`. One job named `CI (node${{ matrix.node }})` over `node: [26, 24]`, so the checks are `CI (node26)` & `CI (node24)`; both are required |
+| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version: ${{ matrix.node }}` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test` (`yarn coverage` on the Node 26 job, with the coverage steps below). `permissions` add `pull-requests: write` for the coverage comment. One job named `CI (node${{ matrix.node }})` over `node: [26, 24]`, so the checks are `CI (node26)` & `CI (node24)`; both are required |
 | `.github/workflows/pages.yml` | Calls the org's reusable `pages.yml@main` with `output-dir`; grants `contents: write` & `pull-requests: write` |
 | `.github/renovate.json`       | The baseline above, with `reviewers` naming the maintainer                                   |
 
@@ -204,6 +204,36 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
+```
+
+Coverage steps replace the single test step. They run on pull requests from the Node 26
+job only; see [Coverage](testing.md#coverage) for the tools & the floor.
+
+```yaml
+      - name: Test
+        if: matrix.node != 26
+        run: yarn test
+
+      - name: Test with coverage
+        if: matrix.node == 26
+        run: yarn coverage
+
+      - name: Coverage summary
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        if: matrix.node == 26 && github.event_name == 'pull_request'
+        with:
+          filename: coverage/cobertura-coverage.xml
+          badge: true
+          fail_below_min: true
+          format: markdown
+          output: both
+
+      - name: Coverage comment
+        uses: marocchino/sticky-pull-request-comment@v3.0.4
+        if: matrix.node == 26 && github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
 ```
 
 ## Documentation

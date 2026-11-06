@@ -217,3 +217,34 @@ test("ci: literal job names count", (t) => {
 	const literal = CI_BOTH.replace("CI (node${{ matrix.node }})", "CI (node26)");
 	t.is(runCheck("ci", { ".github/workflows/ci.yml": literal })[0], "ok");
 });
+
+const COVERAGE_CI = `${CI_BOTH}      - run: yarn coverage\n      - uses: irongut/CodeCoverageSummary@v1.3.0\n      - uses: marocchino/sticky-pull-request-comment@v3.0.4\n`;
+const COVERAGE_FILES = {
+	"package.json": { scripts: { test: "ava", coverage: "c8 yarn test" }, devDependencies: { c8: "^12.0.0" } },
+	".gitignore": "node_modules\ncoverage\n",
+	".github/workflows/ci.yml": COVERAGE_CI,
+};
+
+test("coverage passes with the script, tool, CI report, & ignore", (t) => {
+	t.is(runCheck("coverage", COVERAGE_FILES)[0], "ok");
+});
+
+test("coverage accepts Vitest's v8 provider", (t) => {
+	const files = { ...COVERAGE_FILES, "package.json": { scripts: { test: "vitest run", coverage: "vitest run --coverage" }, devDependencies: { "@vitest/coverage-v8": "^4.0.0" } } };
+	t.is(runCheck("coverage", files)[0], "ok");
+});
+
+test("coverage lists what a repository with tests is missing", (t) => {
+	const [status, state] = runCheck("coverage", { "package.json": { scripts: { test: "ava" } }, ".github/workflows/ci.yml": CI_BOTH });
+	t.is(status, "gap");
+	for (const part of [/root coverage script/, /c8, @vitest\/coverage-v8, or jest/, /CI step runs coverage/, /summary step/, /comment step/, /not ignored/]) t.regex(state, part);
+});
+
+test("coverage accepts Jest's own reporter", (t) => {
+	const files = { ...COVERAGE_FILES, "package.json": { scripts: { test: "jest", coverage: "jest --coverage" }, devDependencies: { jest: "^30.0.0" } } };
+	t.is(runCheck("coverage", files)[0], "ok");
+});
+
+test("coverage is not applicable without a test script", (t) => {
+	t.is(runCheck("coverage", { "package.json": { scripts: {} } })[0], "na");
+});

@@ -28,6 +28,9 @@ const ORG_ROOT_NAME = "@allons-y/core";
 /** Variables every environment provides, so `.env.example` need not list them. */
 const AMBIENT_ENV = new Set(["CI", "NODE_ENV", "HOME", "PATH", "TMPDIR", "TEMP", "TMP", "USER", "SHELL", "NO_COLOR", "FORCE_COLOR", "NODE_OPTIONS", "NODE_PATH", "PWD", "DEBUG"]);
 
+/** Dependencies that provide coverage: c8, Vitest's v8 provider, & Jest's built-in reporter. */
+const COVERAGE_TOOLS = ["c8", "@vitest/coverage-v8", "jest"];
+
 const tsSourceFiles = (repo) => repo.files().filter((f) => TS_FILE.test(f) && !f.endsWith(".d.ts") && !isFixture(f));
 const hasTypeScript = (repo) => tsSourceFiles(repo).length > 0;
 const tsPackages = (repo) => repo.packages().filter((p) => repo.has(p.dir === "." ? "tsconfig.json" : `${p.dir}/tsconfig.json`));
@@ -209,6 +212,27 @@ export const CHECKS = [
 			if (wrong.length) return gap(`${wrong.length} folder${wrong.length === 1 ? " is" : "s are"} named tests/, not test/ (${joinList(wrong, 2)}).`);
 			const any = files.some((f) => /(^|\/)test\//.test(f));
 			return any ? ok("test/ folders beside the source.") : na("No test folders.");
+		},
+	},
+	{
+		id: "coverage",
+		area: "Testing",
+		tool: "Coverage",
+		std: "A coverage script, c8, @vitest/coverage-v8, or Jest, a CI step, a PR summary & comment, & coverage/ ignored.",
+		src: "package.json · ci.yml · .gitignore",
+		run(repo) {
+			const packages = repo.packages();
+			if (!packages.some((p) => scriptsOf(p).test)) return na("No package defines a test script.");
+			const ci = allWorkflows(repo);
+			const problems = [];
+			if (!scriptsOf({ json: rootPkg(repo) }).coverage) problems.push("no root coverage script");
+			if (!packages.some((p) => COVERAGE_TOOLS.some((tool) => depsOf(p)[tool]))) problems.push("no c8, @vitest/coverage-v8, or jest dependency");
+			if (!runsStep(ci, "coverage")) problems.push("no CI step runs coverage");
+			if (!/CodeCoverageSummary/.test(ci)) problems.push("no coverage summary step");
+			if (!/sticky-pull-request-comment/.test(ci)) problems.push("no coverage comment step");
+			if (!/^\/?coverage\/?\s*$/m.test(repo.read(".gitignore") ?? "")) problems.push("coverage/ is not ignored");
+			if (problems.length) return gap(sentence(problems));
+			return ok("Coverage script, tool, CI report, & ignore are in place.");
 		},
 	},
 	{
