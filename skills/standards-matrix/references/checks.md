@@ -21,7 +21,7 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 | `css` | CSS pipeline | never | No `postcss.config.js` |
 | `lint` | opx lint | `eslint.config.js` skips the `opx-lint-*` presets, or `typescript` is not a dev dependency | never |
 | `lint-staged` | lint-staged | It is configured & no `.husky/pre-commit` runs it | never |
-| `husky` | Husky | `.husky/post-commit` is missing (the state names the hooks it has instead) or differs from the baseline | never |
+| `husky` | Husky | The repository has no `.husky` hooks. The baseline `post-commit` & a repository's own hooks both pass; the state names which | never |
 | `opx-release` | opx release | A publishing repository lacks the plugin, `"release": true`, or the `changeset`, `version`, & `release` scripts | Nothing is published |
 | `ci` | ci.yml | There is no workflow that runs tests, the workflow is not named `ci.yml`, no workflow runs lint, test, (build & typecheck for TypeScript), or the CI workflow lacks the `.nvmrc` & Node 24 matrix | never |
 | `pages` | Pages | A site exists & `pages.yml` does not call the shared workflow | It hosts the workflow, or there is no site |

@@ -71,10 +71,10 @@ test("ci reports a repository with workflows but none that run tests", (t) => {
 	t.regex(state, /No CI workflow that runs tests \(workflows: release\.yml\)/);
 });
 
-test("husky names the hooks a repository has instead of post-commit", (t) => {
+test("husky accepts a repository's own hooks & names them", (t) => {
 	const [status, state] = runCheck("husky", { ".husky/pre-commit": "npx lint-staged\n", ".husky/commit-msg": "x\n", ".husky/common.sh": "x\n" });
-	t.is(status, "gap");
-	t.regex(state, /pre-commit, commit-msg|commit-msg, pre-commit/);
+	t.is(status, "ok");
+	t.regex(state, /Keeps its own hooks: (pre-commit, commit-msg|commit-msg, pre-commit)/);
 	t.notRegex(state, /common\.sh/);
 });
 
@@ -136,10 +136,14 @@ test("lint-staged is a gap only when no pre-commit hook runs it", (t) => {
 	t.is(runCheck("lint-staged", { "package.json": {} })[0], "ok");
 });
 
-test("husky compares the hook with the org baseline", (t) => {
+test("husky reports the baseline hook, a customized hook, or no hooks", (t) => {
 	const hook = "#!/usr/bin/env sh\nnpx --no-install opx lint || true\n";
-	t.is(runCheck("husky", { ".husky/post-commit": hook }, { baseline: { ".husky/post-commit": hook } })[0], "ok");
-	t.is(runCheck("husky", { ".husky/post-commit": hook + "echo hi\n" }, { baseline: { ".husky/post-commit": hook } })[0], "gap");
+	const same = runCheck("husky", { ".husky/post-commit": hook }, { baseline: { ".husky/post-commit": hook } });
+	t.is(same[0], "ok");
+	t.regex(same[1], /Identical to the org baseline/);
+	const changed = runCheck("husky", { ".husky/post-commit": hook + "echo hi\n" }, { baseline: { ".husky/post-commit": hook } });
+	t.is(changed[0], "ok");
+	t.regex(changed[1], /Keeps its own hooks: post-commit/);
 	t.is(runCheck("husky", {})[0], "gap");
 });
 

@@ -312,17 +312,15 @@ export const CHECKS = [
 		id: "husky",
 		area: "Hooks",
 		tool: "Husky",
-		std: "post-commit runs opx hooks & lint and never blocks a commit.",
+		std: "post-commit runs opx hooks & lint and never blocks a commit; a repository may keep its own hooks.",
 		src: ".husky/post-commit",
 		run(repo) {
+			const hooks = hooksOf(repo);
+			if (!hooks.length) return gap("No .husky hooks.");
 			const own = repo.read(".husky/post-commit");
-			if (own == null) {
-				const hooks = hooksOf(repo);
-				return gap(hooks.length ? `No .husky/post-commit; it has ${joinList(hooks)} instead.` : "No .husky hooks.");
-			}
 			const base = repo.baseline?.read(".husky/post-commit");
-			if (base != null && base !== own) return gap("Differs from the baseline in the org repository.");
-			return ok(base == null ? "Baseline file." : "Identical to the org baseline.");
+			if (own != null && (base == null || base === own)) return ok(base == null ? "Baseline file." : "Identical to the org baseline.");
+			return ok(`Keeps its own hooks: ${joinList(hooks)}.`);
 		},
 	},
 	{
