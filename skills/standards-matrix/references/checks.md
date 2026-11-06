@@ -28,7 +28,7 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 | `renovate` | Renovate | `renovate.json` is missing or differs from the baseline | never |
 | `agents` | AGENTS.md | Missing (a lone `CLAUDE.md` is noted), or (outside `.github`) missing the org link or a standard section | never |
 | `readme` | README & Weaver blocks | A relative contribution link has no target file | No Weaver blocks |
-| `env-example` | `.env.example` | It is missing, or lacks a variable read under `src/`, `test/`, or `bin/` (ambient ones such as `CI` are skipped) | never |
+| `env-example` | `.env.example` | The source reads a variable (under `src/`, `test/`, or `bin/`; ambient ones such as `CI` are skipped) & the file is missing or omits it | No variable is read & there is no file |
 
 Samples are paths under `templates/`, `evals/`, `fixtures/`, or `golden/`. They are skipped everywhere.
 

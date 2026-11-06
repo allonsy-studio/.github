@@ -16,7 +16,7 @@ note allows.
 | `.prettierrc`            | `.prettierrc`                | Tabs, width 4, print width 500                   |
 | `.opx/config.json`       | `.opx/config.json`           | Routes JS, JSON, & Markdown to one ESLint config; `opx enable release` adds `"release": true` |
 | `.husky/post-commit`     | `.husky/post-commit`         | Runs `opx` hooks & lint; never blocks a commit. A repository with its own hooks (`pre-commit`, `commit-msg`) keeps them |
-| `.env.example`           | `.env.example`               | Lists every variable the repo reads              |
+| `.env.example`           | `.env.example`               | Lists every variable the repo reads; required only where it reads some |
 | `.github/renovate.json`  | `renovate.json`              | One-month release age, monthly lockfile refresh  |
 | `.github/release.yml`    | `release.yml`                | Changelog categories keyed on `type:` labels     |
 | `.gitignore`             | `.gitignore`                 | Add `_site` for repos that build an Eleventy site |

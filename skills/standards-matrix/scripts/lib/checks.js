@@ -443,18 +443,19 @@ export const CHECKS = [
 		id: "env-example",
 		area: "Config",
 		tool: ".env.example",
-		std: "Lists every variable the repository reads.",
+		std: "Lists every variable the repository reads; required only where it reads some.",
 		src: ".env.example",
 		run(repo) {
 			const example = repo.read(".env.example");
-			if (example == null) return gap("No .env.example.");
 			const used = new Set();
 			for (const file of standardFiles(repo)) {
 				for (const match of (repo.read(file) ?? "").matchAll(/process\.env\.([A-Z][A-Z0-9_]*)/g)) if (!AMBIENT_ENV.has(match[1])) used.add(match[1]);
 			}
+			if (!used.size) return example == null ? na("No variables are read, so no .env.example is needed.") : ok("No variables are read.");
+			if (example == null) return gap(`No .env.example; the source reads ${joinList([...used])}.`);
 			const missing = [...used].filter((name) => !new RegExp(`\\b${name}\\b`).test(example));
 			if (missing.length) return gap(`.env.example does not list ${joinList(missing)}.`);
-			return ok(used.size ? `Lists ${joinList([...used])}.` : "No variables are read.");
+			return ok(`Lists ${joinList([...used])}.`);
 		},
 	},
 ];

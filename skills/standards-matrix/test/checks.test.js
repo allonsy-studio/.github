@@ -186,6 +186,17 @@ test("env-example flags variables the source reads but the file omits", (t) => {
 	t.is(runCheck("env-example", { ...files, ".env.example": "STUBS_DIR=\n" })[0], "ok");
 });
 
+test("env-example is not needed where no variable is read", (t) => {
+	t.is(runCheck("env-example", { "src/index.js": "export const x = 1;\n" })[0], "na");
+	t.is(runCheck("env-example", { "src/index.js": "export const x = 1;\n", ".env.example": "# none\n" })[0], "ok");
+});
+
+test("env-example flags a missing file when the source reads a variable", (t) => {
+	const [status, state] = runCheck("env-example", { "test/helpers.js": "export const update = process.env.UPDATE_GOLDEN;\n" });
+	t.is(status, "gap");
+	t.regex(state, /^No \.env\.example; the source reads UPDATE_GOLDEN/);
+});
+
 test("agents wants the org link & every standard section outside the org repository", (t) => {
 	const org = "https://github.com/allonsy-studio/.github/blob/main/AGENTS.md";
 	const sections = ["Stack", "Commands", "Layout", "Testing", "Source conventions", "Commits & attribution"].map((h) => `## ${h}\n`).join("\n");
