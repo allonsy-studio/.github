@@ -102,8 +102,8 @@ To build a project site with the studio brand, use [`skills/oss-docs-site/SKILL.
 
 Full rules in [`docs/testing.md`](docs/testing.md).
 
-- Vitest for web packages, AVA for lightweight plugins & CLIs, Cypress with axe for
-  rendered pages. The host ecosystem's own test technique wins when it has one.
+- Vitest for web & TypeScript packages, AVA for lightweight plain-JS plugins & CLIs,
+  Cypress with axe for rendered pages. The host ecosystem's own test technique wins when it has one.
 - Tests live in `test/` beside `src/`, as `<module>.test.ts`, with the license header.
 - `describe` names the unit; `it` states the behavior in the present tense, lowercase,
   without "should".
@@ -119,7 +119,8 @@ Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
 - Shared config files (`.nvmrc`, `.yarnrc.yml`, `.prettierrc`, `.opx/`, `.husky/`,
   `renovate.json`, `release.yml`) are copied unchanged from this repo.
 - CI runs lint, build, typecheck, then test.
-- Build with `opx-build-*` if one exists, else esbuild. Compile CSS with PostCSS.
+- Build with `opx-build-*` if one exists, else `tsc` for unbundled TypeScript or esbuild
+  for bundling. Compile CSS with PostCSS.
 - Releases go through `opx release` for any change a consumer would notice.
 
 ## Commits & pull requests
