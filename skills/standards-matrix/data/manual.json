@@ -2,17 +2,209 @@
 	{
 		"area": "Settings",
 		"tool": "Required checks",
-		"std": "Both Node jobs are required status checks.",
-		"src": "GitHub branch protection",
+		"std": "CI (node26) & CI (node24) are required status checks.",
+		"src": "Repository ruleset",
 		"repos": {
 			".github": {
-				"status": "you",
-				"state": "Not verified: a GitHub setting.",
+				"status": "ok",
+				"state": "Requires CI (node26) & CI (node24).",
+				"verified": "2026-11-06"
+			},
+			"actions-file-diff": {
+				"status": "gap",
+				"state": "Requires test, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"actions-weaver": {
+				"status": "gap",
+				"state": "Requires test, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"agent-skills": {
+				"status": "gap",
+				"state": "Requires Build docs site; Lint; Test, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"allonsy-studio.github.io": {
+				"status": "gap",
+				"state": "Requires no checks.",
+				"verified": "2026-11-06"
+			},
+			"course-kit": {
+				"status": "gap",
+				"state": "Requires test, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"dashly": {
+				"status": "gap",
+				"state": "Requires Lint; Test, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"eleventy-plugin-netlify-data-store": {
+				"status": "gap",
+				"state": "Requires Lint; Test \u2014 Node 22 on macos-latest; Test \u2014 Node 22 on ubuntu-latest; & more, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"envoy": {
+				"status": "ok",
+				"state": "Requires CI (node26) & CI (node24).",
+				"verified": "2026-11-06"
+			},
+			"glob-concat-cli": {
+				"status": "gap",
+				"state": "Requires coverage (24); lint (24); test (22); & more, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"link-checker": {
+				"status": "gap",
+				"state": "Requires test (24); test (lts/*), not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"markdown-it-anchor-sections": {
+				"status": "gap",
+				"state": "Requires build-validation, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"opx": {
+				"status": "gap",
+				"state": "Requires build; lint; smoke; & more, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"postcss-licensing": {
+				"status": "gap",
+				"state": "Requires test, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"stylelint-header": {
+				"status": "gap",
+				"state": "Requires Coverage reporting; Stylelint v17 | macos-latest | node v24; Stylelint v17 | ubuntu-latest | node v24; & more, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"template-actions": {
+				"status": "gap",
+				"state": "Requires test, not the Node jobs; rename the jobs first.",
 				"verified": "2026-11-06"
 			},
 			"webc-docs": {
-				"status": "you",
-				"state": "Not verified: a GitHub setting.",
+				"status": "ok",
+				"state": "Requires CI (node26) & CI (node24).",
+				"verified": "2026-11-06"
+			},
+			"webc-resources": {
+				"status": "gap",
+				"state": "Requires Lint, test, pack (Node 22); Lint, test, pack (Node 24), not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			},
+			"website": {
+				"status": "gap",
+				"state": "Requires Browser tests (Cypress \u2014 a11y + internal links); Unit tests (Vitest); build-validation, not the Node jobs; rename the jobs first.",
+				"verified": "2026-11-06"
+			}
+		},
+		"default": {
+			"status": "you",
+			"state": "Not verified: a GitHub setting."
+		}
+	},
+	{
+		"area": "Settings",
+		"tool": "Merge queue",
+		"std": "The Default ruleset has the merge queue on.",
+		"src": "Repository ruleset",
+		"repos": {
+			".github": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"actions-file-diff": {
+				"status": "gap",
+				"state": "No merge queue; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"actions-weaver": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"agent-skills": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"allonsy-studio.github.io": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"course-kit": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"dashly": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"eleventy-plugin-netlify-data-store": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"envoy": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"glob-concat-cli": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"link-checker": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"markdown-it-anchor-sections": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"opx": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"postcss-licensing": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"stylelint-header": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"template-actions": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"webc-docs": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"webc-resources": {
+				"status": "ok",
+				"state": "Merge queue on; signed commits not required yet, pending the queue signing test.",
+				"verified": "2026-11-06"
+			},
+			"website": {
+				"status": "gap",
+				"state": "No merge queue; signed commits not required yet, pending the queue signing test.",
 				"verified": "2026-11-06"
 			}
 		},

@@ -25,6 +25,8 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 | `husky` | Husky | The repository has no `.husky` hooks. The baseline `post-commit` & a repository's own hooks both pass; the state names which | never |
 | `opx-release` | opx release | A publishing repository lacks the plugin, `"release": true`, or the `changeset`, `version`, & `release` scripts | Nothing is published |
 | `ci` | ci.yml | There is no workflow that runs tests, the workflow is not named `ci.yml`, no workflow runs lint, test, (build & typecheck for TypeScript), or the CI workflow lacks node 26 & node 24 jobs named `CI (node26)` & `CI (node24)` | never |
+| `merge-group` | merge_group trigger | A `ci`, `test`, `tests`, `testing`, or `build` workflow runs on `pull_request` but not on `merge_group` | No such workflow runs on `pull_request` |
+| `codeowners` | CODEOWNERS | There is no `.github/CODEOWNERS` (or root, or `docs/`) file, or it has no default `*` owner | never |
 | `pages` | Pages | A site exists & `pages.yml` does not call the shared workflow | It hosts the workflow, or there is no site |
 | `renovate` | Renovate | `renovate.json` is missing or differs from the baseline | never |
 | `agents` | AGENTS.md | Missing (a lone `CLAUDE.md` is noted), or (outside `.github`) missing the org link or a standard section | never |

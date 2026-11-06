@@ -248,3 +248,37 @@ test("coverage accepts Jest's own reporter", (t) => {
 test("coverage is not applicable without a test script", (t) => {
 	t.is(runCheck("coverage", { "package.json": { scripts: {} } })[0], "na");
 });
+
+const QUEUED = "on:\n  pull_request:\n  merge_group:\njobs:\n  test:\n    runs-on: ubuntu-latest\n";
+
+test("merge-group is a gap when a required-check workflow skips the merge queue", (t) => {
+	const [status, state] = runCheck("merge-group", { ".github/workflows/testing.yml": QUEUED.replace("  merge_group:\n", "") });
+	t.is(status, "gap");
+	t.regex(state, /testing\.yml lacks a merge_group trigger/);
+});
+
+test("merge-group accepts workflows that run on merge_group", (t) => {
+	const [status, state] = runCheck("merge-group", { ".github/workflows/ci.yml": QUEUED, ".github/workflows/build.yml": QUEUED });
+	t.is(status, "ok");
+	t.regex(state, /build\.yml, ci\.yml run on merge_group/);
+});
+
+test("merge-group ignores workflows that do not provide a required check", (t) => {
+	t.is(runCheck("merge-group", { ".github/workflows/release.yml": "on:\n  push:\n" })[0], "na");
+	t.is(runCheck("merge-group", { ".github/workflows/linting.yml": "on:\n  pull_request:\n" })[0], "na");
+});
+
+test("codeowners wants a default owner", (t) => {
+	t.is(runCheck("codeowners", {})[0], "gap");
+	t.regex(runCheck("codeowners", { ".github/CODEOWNERS": "docs/ @someone\n" })[1], /no default `\*` owner/);
+	const [status, state] = runCheck("codeowners", { ".github/CODEOWNERS": "* @castastrophe\n" });
+	t.is(status, "ok");
+	t.regex(state, /\.github\/CODEOWNERS: \* @castastrophe/);
+});
+
+test("node reads the CI workflow even when it is not called ci.yml", (t) => {
+	const matrix = "jobs:\n  test:\n    strategy:\n      matrix:\n        node: [26, 24]\n";
+	const files = { ".nvmrc": "26\n", "package.json": { engines: { node: ">=24" } }, ".github/workflows/testing.yml": matrix };
+	t.is(runCheck("node", files)[0], "ok");
+	t.regex(runCheck("node", { ...files, ".github/workflows/testing.yml": "jobs:\n  test:\n    strategy:\n      matrix:\n        node: [26]\n" })[1], /CI has no Node 24 job/);
+});

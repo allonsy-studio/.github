@@ -17,6 +17,7 @@ note allows.
 | `.opx/config.json`       | `.opx/config.json`           | Routes JS, JSON, & Markdown to one ESLint config; `opx enable release` adds `"release": true` |
 | `.husky/post-commit`     | `.husky/post-commit`         | Runs `opx` hooks & lint; never blocks a commit. A repository with its own hooks (`pre-commit`, `commit-msg`) keeps them |
 | `.env.example`           | `.env.example`               | Lists every variable the repo reads; required only where it reads some |
+| `.github/CODEOWNERS`     | `.github/CODEOWNERS`         | One line, `* @castastrophe`; the ruleset requires code owner review |
 | `.github/renovate.json`  | `renovate.json`              | One-month release age, monthly lockfile refresh  |
 | `.github/release.yml`    | `release.yml`                | Changelog categories keyed on `type:` labels     |
 | `.gitignore`             | `.gitignore`                 | Add `_site` for repos that build an Eleventy site, & `coverage` for every repo with tests |
@@ -179,7 +180,7 @@ on the same files where it is not adopted yet.
 
 | File                          | Rule                                                                                         |
 | ----------------------------- | -------------------------------------------------------------------------------------------- |
-| `.github/workflows/ci.yml`    | On `pull_request` & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version: ${{ matrix.node }}` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test` (`yarn coverage` on the Node 26 job, with the coverage steps below). `permissions` add `pull-requests: write` for the coverage comment. One job named `CI (node${{ matrix.node }})` over `node: [26, 24]`, so the checks are `CI (node26)` & `CI (node24)`; both are required |
+| `.github/workflows/ci.yml`    | On `pull_request`, `merge_group`, & pushes to `main`. `permissions: contents: read`. Steps: checkout with `persist-credentials: false`, `corepack enable`, `setup-node` with `node-version: ${{ matrix.node }}` & `cache: yarn`, `yarn install --immutable`, `yarn lint`, `yarn build`, `yarn typecheck`, `yarn test` (`yarn coverage` on the Node 26 job, with the coverage steps below). `permissions` add `pull-requests: write` for the coverage comment. One job named `CI (node${{ matrix.node }})` over `node: [26, 24]`, so the checks are `CI (node26)` & `CI (node24)`; both are required |
 | `.github/workflows/pages.yml` | Calls the org's reusable `pages.yml@main` with `output-dir`; grants `contents: write` & `pull-requests: write` |
 | `.github/renovate.json`       | The baseline above, with `reviewers` naming the maintainer                                   |
 
@@ -247,11 +248,34 @@ job only; see [Coverage](testing.md#coverage) for the tools & the floor.
 The Commands table in `AGENTS.md` lists only commands that run from the repository root &
 that have been run.
 
-## Not covered
+## Branch protection
 
-GitHub-side settings (branch protection, required checks, merge options, Pages source)
-are not files. The one rule that depends on them: `CI (node26)` & `CI (node24)` are required
-status checks. Add the rest here once confirmed.
+Every repository carries one repository-level ruleset, named `Default`, that targets the
+default branch. Org-level rulesets are not used: the merge queue is available only on
+repository rulesets. Import it from the repository's Settings → Rules → Rulesets.
+
+| Rule                     | Setting                                                                                 |
+| ------------------------ | --------------------------------------------------------------------------------------- |
+| Deletion, force push     | Blocked (`deletion`, `non_fast_forward`)                                                |
+| Creation                 | Restricted to the bypass actors (`creation`)                                            |
+| History                  | Linear (`required_linear_history`)                                                      |
+| Commit signatures        | Required (`required_signatures`); queue & bot commits show "Verified"                   |
+| Pull request             | 1 approval, code owner review, stale approvals dismissed on push, last push approved, threads resolved, squash merge only |
+| Required status checks   | `CI (node26)` & `CI (node24)`, plus any check the repository's own workflows add; checks are not strict, so a branch need not be current |
+| Merge queue              | Squash, all green, up to 5 entries, 60 minute check timeout                             |
+| Bypass                   | Organization admins, for pull requests only                                             |
+
+The merge queue runs each required check on a `gh-readonly-queue/*` branch, so every
+workflow that provides a required check lists `merge_group:` under `on:`. Without it, a
+queued pull request waits for checks that never start. A workflow that provides no
+required check, such as a release or a Pages workflow, leaves it out.
+
+Changing a job's name changes the check's name: rename the job in a pull request, then
+update the ruleset's required checks, never the reverse, or the queue waits on a check
+that no longer exists.
+
+The ruleset & the secrets are GitHub settings, not files, so the matrix tracks them as
+manual rows. Pages source & merge options outside the ruleset are not covered yet.
 
 ## Adopting the standard
 
@@ -263,4 +287,6 @@ status checks. Add the rest here once confirmed.
 6. If the repo publishes, add `@allons-y/opx-release` & run `opx enable release`.
 7. Add `ci.yml` from the snippet above, which gives the `CI (node26)` & `CI (node24)` jobs, & `pages.yml`.
 8. Add `AGENTS.md` & link [testing.md](testing.md) from its Testing section.
-9. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.
+9. Add `.github/CODEOWNERS` & `merge_group:` to every workflow that provides a required check.
+10. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.
+11. Import the `Default` ruleset, then set `CI (node26)` & `CI (node24)` as required checks.
