@@ -34,9 +34,9 @@ each repository.
 | Linker            | `nodeLinker: node-modules`                | `.yarnrc.yml`                                      |
 | Module format     | ESM only; config & source files end in `.js`, never `.mjs` | `"type": "module"`                |
 | TypeScript        | 5, strict, `NodeNext`, only for packages that benefit from strong typing; everything else is vanilla JS | `tsconfig.base.json` |
-| Tests             | Vitest for web packages, AVA for lightweight plugins & CLIs; the host ecosystem's technique wins when it has one | [testing.md](testing.md) |
+| Tests             | Vitest for web & TypeScript packages, AVA for lightweight plain-JS plugins & CLIs; the host ecosystem's technique wins when it has one | [testing.md](testing.md) |
 | Lint & format     | `opx` with the `opx-lint-*` presets       | `eslint.config.js`, `.prettierrc`                  |
-| Build             | `@allons-y/opx-build-*` if one exists, else esbuild | [Build](#build)                          |
+| Build             | `@allons-y/opx-build-*` if one exists, else `tsc` for unbundled TypeScript or esbuild for bundling | [Build](#build) |
 | CSS               | PostCSS with autoprefixer and/or cssnano  | [CSS](#css)                                        |
 | Releases          | `opx release`, which wraps Changesets     | [Releases](#releases)                              |
 | Browserslist      | `defaults and fully supports es6-module`, `maintained node versions`, `not dead` | root `package.json` |
@@ -49,7 +49,7 @@ version still supported, & CI must pass on it.
 | Field             | Rule                                                                                  |
 | ----------------- | ------------------------------------------------------------------------------------- |
 | `private`         | `true` for a monorepo root                                                            |
-| `name`            | The repository name, unscoped: only published packages use the `@allons-y/` npm scope |
+| `name`            | The repository name, unscoped: only published packages use the `@allons-y/` npm scope. The one exception is this repo's `@allons-y/core`, kept as the signal that it is the foundation for the others & because it may be published later |
 | `workspaces`      | `packages/*`, `plugins/*`, & `site` as the repo needs                                 |
 | `license`         | Per the [licensing rules](../AGENTS.md#licensing)                                     |
 | `repository`      | `git+https://github.com/allonsy-studio/<repo>.git`                                    |
@@ -111,10 +111,11 @@ Imports keep the `.js` extension. Type-only imports use `import type`.
 | Order | Tool                       | Use when                                                                    |
 | ----- | -------------------------- | --------------------------------------------------------------------------- |
 | 1     | `@allons-y/opx-build-*`    | A plugin exists for the language. None is published yet; check npm under `@allons-y` |
-| 2     | [esbuild](https://esbuild.github.io) | No opx plugin exists: bundling & transpiling JS and TypeScript    |
+| 2     | `tsc`                      | No opx plugin exists & the TypeScript package ships unbundled: emits JS & declarations file for file |
+| 3     | [esbuild](https://esbuild.github.io) | No opx plugin exists & the package is bundled, in TypeScript or JS |
 
-Output goes to `dist/`, & `files` publishes only `dist`. A TypeScript package that ships
-types still runs `tsc` for the declaration files, because esbuild does not emit them.
+Output goes to `dist/`, & `files` publishes only `dist`. A bundled TypeScript package that
+ships types still runs `tsc` for the declaration files, because esbuild does not emit them.
 
 ## CSS
 
@@ -204,9 +205,3 @@ status checks. Add the rest here once confirmed.
 7. Add `ci.yml` with the Node 26 & Node 24 jobs, & `pages.yml`.
 8. Add `AGENTS.md` & link [testing.md](testing.md) from its Testing section.
 9. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.
-
-## Known gaps
-
-| Where     | Gap                                                                                         |
-| --------- | ------------------------------------------------------------------------------------------- |
-| This repo | The root `package.json` is named `@allons-y/core`, a scoped name for an unpublished package |
