@@ -39,6 +39,11 @@ const hasTypeScript = (repo) => tsSourceFiles(repo).length > 0;
 const tsPackages = (repo) => repo.packages().filter((p) => repo.has(p.dir === "." ? "tsconfig.json" : `${p.dir}/tsconfig.json`));
 const workflow = (repo, name) => repo.read(`.github/workflows/${name}`) ?? "";
 const workflowNames = (repo) => repo.files().filter((f) => /^\.github\/workflows\/[^/]+\.ya?ml$/.test(f)).map((f) => f.split("/").pop());
+/** The CI workflow: `ci.yml`, else the first of the usual test workflow names. */
+const ciWorkflowName = (repo) => {
+	const names = workflowNames(repo);
+	return names.includes("ci.yml") ? "ci.yml" : names.find((n) => /^(ci|test|tests|testing)\.ya?ml$/.test(n));
+};
 const allWorkflows = (repo) => workflowNames(repo).map((name) => workflow(repo, name)).join("\n");
 /** Node majors a workflow runs: a matrix list (`node: [26, 24]`) or explicit `node-version` values. */
 function nodeMajors(text) {
@@ -82,7 +87,7 @@ export const CHECKS = [
 		run(repo) {
 			const nvmrc = repo.read(".nvmrc")?.trim();
 			const engines = rootPkg(repo).engines?.node;
-			const ci = workflow(repo, "ci.yml");
+			const ci = workflow(repo, ciWorkflowName(repo) ?? "ci.yml");
 			const problems = [];
 			if (nvmrc !== "26") problems.push(`.nvmrc is ${nvmrc ?? "missing"}`);
 			if (!/^>=\s*24(\.\d+){0,2}$/.test(engines ?? "")) problems.push(`engines.node is ${engines ?? "missing"}`);
@@ -383,11 +388,8 @@ export const CHECKS = [
 		src: ".github/workflows/ci.yml",
 		run(repo) {
 			const names = workflowNames(repo);
-			let file = "ci.yml";
-			if (!names.includes(file)) {
-				file = names.find((n) => /^(ci|test|tests|testing)\.ya?ml$/.test(n));
-				if (!file) return gap(names.length ? `No CI workflow that runs tests (workflows: ${joinList(names, 5)}).` : "No workflows.");
-			}
+			const file = ciWorkflowName(repo);
+			if (!file) return gap(names.length ? `No CI workflow that runs tests (workflows: ${joinList(names, 5)}).` : "No workflows.");
 			const ci = workflow(repo, file);
 			const everything = allWorkflows(repo);
 			const ts = hasTypeScript(repo);

@@ -275,3 +275,10 @@ test("codeowners wants a default owner", (t) => {
 	t.is(status, "ok");
 	t.regex(state, /\.github\/CODEOWNERS: \* @castastrophe/);
 });
+
+test("node reads the CI workflow even when it is not called ci.yml", (t) => {
+	const matrix = "jobs:\n  test:\n    strategy:\n      matrix:\n        node: [26, 24]\n";
+	const files = { ".nvmrc": "26\n", "package.json": { engines: { node: ">=24" } }, ".github/workflows/testing.yml": matrix };
+	t.is(runCheck("node", files)[0], "ok");
+	t.regex(runCheck("node", { ...files, ".github/workflows/testing.yml": "jobs:\n  test:\n    strategy:\n      matrix:\n        node: [26]\n" })[1], /CI has no Node 24 job/);
+});
