@@ -48,9 +48,9 @@ test("manual rows appear for the repositories they name & carry their flag", (t)
 });
 
 test("a manual default applies to every repository the item does not name", (t) => {
-	const manual = [{ area: "Testing", tool: "Coverage", std: "x", repos: { alpha: { state: "Chosen." } }, default: { state: "Undecided." } }];
+	const manual = [{ area: "Testing", tool: "Branch protection", std: "x", repos: { alpha: { state: "Chosen." } }, default: { state: "Undecided." } }];
 	const scan = runScan({ repos: [{ name: "alpha", dir: tempRepo(BEFORE) }, { name: "beta", dir: tempRepo(BEFORE) }], manual, asOf: "2026-11-06" });
-	const state = (repo) => scan.rows.find((r) => r.repo === repo && r.tool === "Coverage").state;
+	const state = (repo) => scan.rows.find((r) => r.repo === repo && r.tool === "Branch protection").state;
 	t.is(state("alpha"), "Chosen.");
 	t.is(state("beta"), "Undecided.");
 });

@@ -1,27 +1,5 @@
 [
 	{
-		"area": "Testing",
-		"tool": "Coverage",
-		"std": "No tool or threshold is chosen; none is required until one is.",
-		"src": "",
-		"repos": {
-			".github": {
-				"status": "you",
-				"state": "Undecided.",
-				"verified": "2026-11-06"
-			},
-			"webc-docs": {
-				"status": "you",
-				"state": "Undecided.",
-				"verified": "2026-11-06"
-			}
-		},
-		"default": {
-			"status": "you",
-			"state": "Undecided."
-		}
-	},
-	{
 		"area": "Settings",
 		"tool": "Required checks",
 		"std": "Both Node jobs are required status checks.",
