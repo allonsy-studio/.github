@@ -21,9 +21,9 @@ Each row of the matrix comes from one check in `scripts/lib/checks.js`. A check 
 | `css` | CSS pipeline | never | No `postcss.config.js` |
 | `lint` | opx lint | `eslint.config.js` skips the `opx-lint-*` presets, or `typescript` is not a dev dependency | never |
 | `lint-staged` | lint-staged | It is configured & no `.husky/pre-commit` runs it | never |
-| `husky` | Husky | `.husky/post-commit` is missing (the state names the hooks it has instead) or differs from the baseline | never |
+| `husky` | Husky | The repository has no `.husky` hooks. The baseline `post-commit` & a repository's own hooks both pass; the state names which | never |
 | `opx-release` | opx release | A publishing repository lacks the plugin, `"release": true`, or the `changeset`, `version`, & `release` scripts | Nothing is published |
-| `ci` | ci.yml | There is no workflow that runs tests, the workflow is not named `ci.yml`, no workflow runs lint, test, (build & typecheck for TypeScript), or the CI workflow lacks the `.nvmrc` & Node 24 matrix | never |
+| `ci` | ci.yml | There is no workflow that runs tests, the workflow is not named `ci.yml`, no workflow runs lint, test, (build & typecheck for TypeScript), or the CI workflow lacks node 26 & node 24 jobs named `CI (node26)` & `CI (node24)` | never |
 | `pages` | Pages | A site exists & `pages.yml` does not call the shared workflow | It hosts the workflow, or there is no site |
 | `renovate` | Renovate | `renovate.json` is missing or differs from the baseline | never |
 | `agents` | AGENTS.md | Missing (a lone `CLAUDE.md` is noted), or (outside `.github`) missing the org link or a standard section | never |
@@ -35,6 +35,10 @@ Samples are paths under `templates/`, `evals/`, `fixtures/`, or `golden/`. They 
 ## Manual rows
 
 `data/manual.json` holds what no file shows. Each item: `area`, `tool`, `std`, optional `src`, `repos`: a map from repository name to `{ "status", "state", "verified", "links" }`, & an optional `default` entry that applies to every repository not named. `status` is `you` unless the maintainer has settled it. `verified` is the date the maintainer last confirmed the row.
+
+## Exemptions
+
+`data/exemptions.json` is an array of `{ "repo", "tool", "reason", "decided" }`. `tool` is a tool name from the table above (or a manual row) or `*` for every tool. The matching row becomes `na` with the state `Exempt: <reason>`. An entry that matches no row is listed in the scan as `unusedExemptions` & warned about.
 
 ## `prs.json`
 
@@ -48,6 +52,6 @@ An array, newest first:
 
 ## Scan output
 
-`scan.js` writes `{ asOf, repos, skipped, rows, prs, changes? }`, where `skipped` is `[{ repo, reason }]`. A row is `{ repo, area, tool, std, src, status, state, links, manual?, verified? }`. `status` is one of `gap`, `you`, `pr`, `ok`, `na`. `changes` appears when `--previous` is given: each entry is `{ repo, tool, from, to, state }`, where `from` or `to` is null for a row that appeared or vanished.
+`scan.js` writes `{ asOf, repos, skipped, rows, prs, changes?, unusedExemptions? }`, where `skipped` is `[{ repo, reason }]`. A row is `{ repo, area, tool, std, src, status, state, links, manual?, verified? }`. `status` is one of `gap`, `you`, `pr`, `ok`, `na`. `changes` appears when `--previous` is given: each entry is `{ repo, tool, from, to, state }`, where `from` or `to` is null for a row that appeared or vanished.
 
 `build.js` embeds the scan in `templates/matrix.html` between `/*DATA:start*/` & `/*DATA:end*/`, so a later run can read it back from the published page.

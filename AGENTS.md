@@ -117,7 +117,8 @@ Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
   with `.js` files (never `.mjs`). TypeScript only where strong typing pays off; vanilla JS
   elsewhere.
 - Shared config files (`.nvmrc`, `.yarnrc.yml`, `.prettierrc`, `.opx/`, `.husky/`,
-  `renovate.json`, `release.yml`) are copied unchanged from this repo.
+  `renovate.json`, `release.yml`) are copied unchanged from this repo, except `.husky/`
+  in a repository that keeps its own hooks.
 - CI runs lint, build, typecheck, then test.
 - Build with `opx-build-*` if one exists, else `tsc` for unbundled TypeScript or esbuild
   for bundling. Compile CSS with PostCSS.
