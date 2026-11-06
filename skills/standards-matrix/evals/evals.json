@@ -1,0 +1,33 @@
+{
+	"skill_name": "standards-matrix",
+	"evals": [
+		{
+			"id": 1,
+			"name": "refresh-both-repositories",
+			"prompt": "Refresh the standards matrix for .github and webc-docs and update the published page.",
+			"expected_output": "Checks out each repository's default branch & every open pull request head into new scratchpad folders, gathers pull request & CI state with the GitHub tools into prs.json, runs scripts/scan.js with --previous set to the published page, asks about each manual row that is older than 14 days, builds the page with scripts/build.js, reads the published artifact before republishing it with its url, & reports counts per repository, the rows that changed, & what the scan could not see.",
+			"files": [],
+			"expectations": [
+				"Runs scripts/scan.js on checkouts instead of copying statuses from the previous page",
+				"Marks a row as in an open pull request only when the pull request head passes the check",
+				"Asks the maintainer about the manual rows instead of keeping their old statuses",
+				"Reads the artifact before publishing & republishes with its url so the link is kept",
+				"Does not push, comment on, or edit either repository",
+				"Reports the rows whose status changed since the last scan",
+				"Adds no AI attribution footer to anything it posts or publishes"
+			]
+		},
+		{
+			"id": 2,
+			"name": "branch-protection-question",
+			"prompt": "Are both Node jobs required checks in branch protection on webc-docs? Put the answer in the matrix.",
+			"expected_output": "States that branch protection is a GitHub setting no file or scan shows, asks the maintainer instead of inferring it from the workflow file, & records the answer with today's date as the row's verified date in the manual rows.",
+			"files": [],
+			"expectations": [
+				"Does not infer required checks from ci.yml",
+				"Asks the maintainer for the setting",
+				"Records the answer with a verified date in the manual rows"
+			]
+		}
+	]
+}

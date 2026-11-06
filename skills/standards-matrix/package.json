@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "name": "@allons-y/skill-standards-matrix",
+  "version": "0.0.0",
+  "description": "Scan the studio repositories against the testing & repository configuration standards, then refresh the Standards Matrix page.",
+  "type": "module",
+  "skill": {
+    "category": "Documentation",
+    "runtime": "node",
+    "triggers": [
+      "refresh the standards matrix",
+      "update the standards matrix artifact",
+      "scan our repositories against the standards",
+      "which repositories still miss the testing standards",
+      "is webc-docs up to date with the org standards",
+      "what changed in the standards matrix since the last scan"
+    ]
+  },
+  "scripts": {
+    "test": "ava"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ]
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "ava": "^8.3.0"
+  },
+  "keywords": [
+    "standards",
+    "audit",
+    "repository-configuration"
+  ]
+}

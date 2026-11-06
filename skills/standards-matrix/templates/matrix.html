@@ -1,0 +1,344 @@
+<title>Standards Matrix</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: summary strip, one sortable matrix of repository x tooling, then the pull request list. */
+:root {
+  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --bg: #fbf8f9;
+  --surface: #f3edf0;
+  --fg: #231a1f;
+  --muted: #655760;
+  --rule: #e2d8dd;
+  --accent: #d22d6f;
+  --on-accent: #ffffff;
+  --focus: #1f91ad;
+  --ok-fg: #1b6a3a;   --ok-bg: #e0f3e7;
+  --pr-fg: #125b72;   --pr-bg: #dbeff5;
+  --gap-fg: #8a4300;  --gap-bg: #ffe7d1;
+  --you-fg: #a1174d;  --you-bg: #fbe0e9;
+  --na-fg: #655760;   --na-bg: #efe8ec;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #181116; --surface: #241b21; --fg: #f4edf0; --muted: #b7a8b0; --rule: #3b2e35;
+    --accent: #ff6fa3; --on-accent: #2a0d1a; --focus: #5fc3de;
+    --ok-fg: #86dba3;  --ok-bg: #153020;
+    --pr-fg: #84d3ea;  --pr-bg: #12323d;
+    --gap-fg: #ffb980; --gap-bg: #3a2312;
+    --you-fg: #ff9bbd; --you-bg: #3f1727;
+    --na-fg: #b7a8b0;  --na-bg: #2b2127;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #181116; --surface: #241b21; --fg: #f4edf0; --muted: #b7a8b0; --rule: #3b2e35;
+  --accent: #ff6fa3; --on-accent: #2a0d1a; --focus: #5fc3de;
+  --ok-fg: #86dba3;  --ok-bg: #153020;
+  --pr-fg: #84d3ea;  --pr-bg: #12323d;
+  --gap-fg: #ffb980; --gap-bg: #3a2312;
+  --you-fg: #ff9bbd; --you-bg: #3f1727;
+  --na-fg: #b7a8b0;  --na-bg: #2b2127;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.page { max-width: 1240px; margin-inline: auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+
+header h1 { margin: 0; font-size: clamp(1.9rem, 4.5vw, 2.7rem); font-weight: 700; font-stretch: 82%; line-height: 1.05; letter-spacing: -0.01em; text-wrap: balance; }
+header p { margin: 8px 0 0; color: var(--muted); max-width: 66ch; text-wrap: pretty; }
+.asof { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin-top: 10px; }
+
+/* pills */
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; line-height: 1.5; white-space: nowrap; border: 1px solid transparent; font-family: var(--font-body); }
+.pill[data-s="ok"]  { color: var(--ok-fg);  background: var(--ok-bg); }
+.pill[data-s="pr"]  { color: var(--pr-fg);  background: var(--pr-bg); }
+.pill[data-s="gap"] { color: var(--gap-fg); background: var(--gap-bg); }
+.pill[data-s="you"] { color: var(--you-fg); background: var(--you-bg); }
+.pill[data-s="na"]  { color: var(--na-fg);  background: var(--na-bg); }
+.pill .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill[data-s="na"] .dot { background: transparent; border: 1.5px solid currentColor; }
+.repo { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); white-space: nowrap; }
+
+/* summary */
+.summary { display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.summary-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.summary-row .repo { font-size: 0.9rem; }
+.summary-row .count-btn { cursor: pointer; border: 0; padding: 0; background: none; font: inherit; }
+.summary-row .count-btn .pill { padding: 3px 11px; }
+.summary-row .count-btn:hover .pill { filter: brightness(0.96); }
+.summary-row .total { color: var(--muted); font-size: 0.85rem; margin-left: auto; }
+
+/* toolbar */
+.section-title { margin: 0 0 12px; font-size: 1.15rem; font-weight: 650; font-stretch: 88%; }
+.toolbar { display: grid; gap: 12px; margin-bottom: 8px; }
+.tools-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.field { display: flex; align-items: center; gap: 8px; }
+.field label, .group-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 2px; background: var(--surface); }
+.seg button { border: 0; background: none; color: var(--fg); font: inherit; font-size: 0.85rem; padding: 4px 12px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { cursor: pointer; border: 1px solid var(--rule); background: var(--bg); color: var(--fg); font: inherit; font-size: 0.82rem; border-radius: 999px; padding: 3px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--surface); font-weight: 600; box-shadow: inset 0 0 0 1px var(--accent); }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+.chip[data-s="ok"] .dot { background: var(--ok-fg); } .chip[data-s="pr"] .dot { background: var(--pr-fg); }
+.chip[data-s="gap"] .dot { background: var(--gap-fg); } .chip[data-s="you"] .dot { background: var(--you-fg); }
+.chip[data-s="na"] .dot { border: 1.5px solid var(--na-fg); }
+input[type="search"], select { font: inherit; font-size: 0.88rem; color: var(--fg); background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 6px 10px; min-width: 0; }
+input[type="search"] { width: min(260px, 100%); }
+.ghost { cursor: pointer; font: inherit; font-size: 0.85rem; color: var(--accent); background: none; border: 0; padding: 4px 6px; text-decoration: underline; text-underline-offset: 2px; }
+.dir-btn { cursor: pointer; border: 1px solid var(--rule); background: var(--bg); color: var(--fg); border-radius: 8px; padding: 5px 10px; font: inherit; font-size: 0.85rem; }
+.result-count { color: var(--muted); font-size: 0.85rem; }
+
+/* matrix table: hairline rules, no boxes */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th { text-align: left; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0; border-bottom: 1.5px solid var(--fg); }
+thead th button { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 6px; width: 100%; padding: 9px 12px 9px 0; cursor: pointer; }
+thead th button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; border-radius: 4px; }
+thead th .arrow { color: var(--accent); font-size: 0.8rem; min-width: 0.8em; }
+thead th.plain { padding: 9px 12px 9px 0; }
+tbody td { padding: 11px 12px 11px 0; vertical-align: top; border-bottom: 1px solid var(--rule); }
+tbody tr:hover td { background: color-mix(in srgb, var(--surface) 70%, transparent); }
+td.tool { font-weight: 650; }
+td.area { color: var(--muted); white-space: nowrap; }
+td .src { display: block; margin-top: 4px; color: var(--muted); font-family: var(--font-mono); font-size: 0.74rem; }
+td .links { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+td .links a { font-size: 0.85rem; white-space: nowrap; }
+.empty { padding: 28px 0; color: var(--muted); }
+
+/* prs */
+.pr-list { border-top: 1px solid var(--rule); }
+.pr-row { display: grid; grid-template-columns: 7.5rem 7rem 1fr auto; gap: 6px 14px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.pr-row .num { font-family: var(--font-mono); font-size: 0.85rem; }
+.pr-row .what { min-width: 0; overflow-wrap: anywhere; }
+.pr-state { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+.notes { color: var(--muted); font-size: 0.85rem; max-width: 80ch; text-wrap: pretty; margin: 0; }
+
+/* phone: each row becomes a stacked entry */
+@media (max-width: 880px) {
+  .table-wrap { overflow: visible; }
+  table, tbody, tr, td { display: block; width: 100%; }
+  thead { display: none; }
+  tbody tr { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  tbody td { border: 0; padding: 0; width: auto; }
+  tbody tr:hover td { background: none; }
+  td.tool { grid-column: 1; grid-row: 1; font-size: 1.02rem; }
+  td.status { grid-column: 2; grid-row: 1; justify-self: end; }
+  td.repoc { grid-column: 1; grid-row: 2; }
+  td.area { grid-column: 2; grid-row: 2; justify-self: end; }
+  td.std, td.state, td.linkc { grid-column: 1 / -1; }
+  td[data-label]:not(.tool):not(.status):not(.repoc):not(.area)::before { content: attr(data-label); display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin-bottom: 1px; }
+  td.linkc:empty { display: none; }
+  .pr-row { grid-template-columns: 1fr auto; }
+  .pr-row .what { grid-column: 1 / -1; grid-row: 2; }
+  .summary-row .total { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) { .pill, .chip, .seg button { transition: filter .12s, background-color .12s; } }
+</style>
+
+<div class="page">
+  <header>
+    <h1>Standards Matrix</h1>
+    <p>Where each studio repository stands against the testing & repository configuration standards. Sort by repository, tooling, area, or status; filter to what needs attention.</p>
+    <div class="asof">As of <span id="asof"></span> · <a href="https://github.com/allonsy-studio/.github/blob/main/docs/testing.md">testing.md</a> · <a href="https://github.com/allonsy-studio/.github/blob/main/docs/repository-standards.md">repository-standards.md</a></div>
+  </header>
+
+  <section aria-label="Summary by repository">
+    <div class="summary" id="summary"></div>
+  </section>
+
+  <section aria-label="Matrix">
+    <h2 class="section-title">Repository by tooling</h2>
+    <div class="toolbar">
+      <div class="tools-row">
+        <div class="field"><span class="group-label" id="lbl-repo">Repository</span>
+          <div class="seg" role="group" aria-labelledby="lbl-repo" id="repoSeg"></div></div>
+        <div class="field"><label for="area">Area</label><select id="area"></select></div>
+        <div class="field"><label for="q">Search</label><input id="q" type="search" placeholder="Tool, rule, or state"></div>
+      </div>
+      <div class="tools-row">
+        <div class="field"><span class="group-label" id="lbl-status">Status</span>
+          <div class="chips" role="group" aria-labelledby="lbl-status" id="statusChips"></div></div>
+      </div>
+      <div class="tools-row">
+        <div class="field"><label for="sortKey">Sort by</label>
+          <select id="sortKey">
+            <option value="repo">Repository</option>
+            <option value="tool">Tooling</option>
+            <option value="area">Area</option>
+            <option value="status">Status</option>
+          </select>
+          <button class="dir-btn" id="dirBtn" type="button" aria-label="Sort direction">Ascending</button></div>
+        <button class="ghost" id="reset" type="button">Reset filters</button>
+        <span class="result-count" id="count" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th scope="col" data-key="repo"><button type="button">Repository <span class="arrow"></span></button></th>
+          <th scope="col" data-key="area"><button type="button">Area <span class="arrow"></span></button></th>
+          <th scope="col" data-key="tool"><button type="button">Tooling <span class="arrow"></span></button></th>
+          <th scope="col" class="plain">Standard</th>
+          <th scope="col" class="plain">Current state</th>
+          <th scope="col" data-key="status"><button type="button">Status <span class="arrow"></span></button></th>
+          <th scope="col" class="plain">Pull request</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>No rows match these filters.</div>
+    </div>
+  </section>
+
+  <section aria-label="Pull requests">
+    <h2 class="section-title">Pull requests</h2>
+    <div class="pr-list" id="prs"></div>
+  </section>
+
+  <p class="notes">Status reads: <strong>Conforms</strong> meets the standard today. <strong>In open PR</strong> is fixed by a pull request that has not merged. <strong>Gap</strong> is a known miss with no PR. <strong>Needs you</strong> is a decision or a GitHub setting that cannot be checked from files. <strong>Not applicable</strong> means the repository has no such tooling. Rows are read from the repositories and their pull requests, not from a live feed: check the date above.</p>
+</div>
+
+<script>
+(function () {
+  /* The scanner writes this object; scripts/build.js swaps the placeholder for it. */
+  var DATA = /*DATA:start*/"__MATRIX_DATA__"/*DATA:end*/;
+  var REPOS = DATA.repos;
+  var STATUS = {
+    gap: { label: "Gap", rank: 0 }, you: { label: "Needs you", rank: 1 },
+    pr: { label: "In open PR", rank: 2 }, ok: { label: "Conforms", rank: 3 }, na: { label: "Not applicable", rank: 4 }
+  };
+  var AREAS = ["Runtime", "Packages", "Language", "Testing", "Build", "Lint", "Hooks", "Release", "CI", "Config", "Docs", "Settings", "Housekeeping"];
+  var ROWS = DATA.rows;
+  var PRS = DATA.prs;
+
+  var S = { key: "repo", dir: 1, repo: "", status: {}, area: "", q: "" };
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function pill(s) { var p = el("span", "pill"); p.dataset.s = s; p.appendChild(el("span", "dot")); p.appendChild(document.createTextNode(STATUS[s].label)); return p; }
+  var areaRank = function (a) { return AREAS.indexOf(a); };
+  var repoRank = function (r) { return REPOS.indexOf(r); };
+  var cmp = function (a, b) { return a < b ? -1 : a > b ? 1 : 0; };
+
+  function sorted(list) {
+    var k = S.key, d = S.dir;
+    var ties = {
+      repo: function (a, b) { return cmp(repoRank(a.repo), repoRank(b.repo)) || cmp(areaRank(a.area), areaRank(b.area)) || a.tool.localeCompare(b.tool); },
+      tool: function (a, b) { return a.tool.localeCompare(b.tool) || cmp(repoRank(a.repo), repoRank(b.repo)); },
+      area: function (a, b) { return cmp(areaRank(a.area), areaRank(b.area)) || a.tool.localeCompare(b.tool) || cmp(repoRank(a.repo), repoRank(b.repo)); },
+      status: function (a, b) { return cmp(STATUS[a.status].rank, STATUS[b.status].rank) || cmp(repoRank(a.repo), repoRank(b.repo)) || a.tool.localeCompare(b.tool); }
+    };
+    return list.slice().sort(function (a, b) { return d * ties[k](a, b); });
+  }
+
+  function filtered() {
+    var q = S.q.trim().toLowerCase(), on = Object.keys(S.status).filter(function (s) { return S.status[s]; });
+    return ROWS.filter(function (r) {
+      if (S.repo && r.repo !== S.repo) return false;
+      if (S.area && r.area !== S.area) return false;
+      if (on.length && on.indexOf(r.status) < 0) return false;
+      if (q && (r.tool + " " + r.std + " " + r.state + " " + r.area + " " + r.repo).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+
+  function renderSummary() {
+    var box = $("summary"); box.textContent = "";
+    REPOS.forEach(function (repo) {
+      var row = el("div", "summary-row"); row.appendChild(el("span", "repo", repo));
+      var mine = ROWS.filter(function (r) { return r.repo === repo; });
+      Object.keys(STATUS).sort(function (a, b) { return STATUS[a].rank - STATUS[b].rank; }).forEach(function (s) {
+        var n = mine.filter(function (r) { return r.status === s; }).length; if (!n) return;
+        var b = el("button", "count-btn"); b.type = "button"; b.setAttribute("aria-label", n + " " + STATUS[s].label + " in " + repo + ": show these rows");
+        var p = pill(s); p.appendChild(document.createTextNode(" " + n)); b.appendChild(p);
+        b.addEventListener("click", function () { S.repo = repo; S.status = {}; S.status[s] = true; S.key = "status"; S.dir = 1; render(); $("rows").scrollIntoView({ block: "start" }); });
+        row.appendChild(b);
+      });
+      row.appendChild(el("span", "total", mine.length + " checks"));
+      box.appendChild(row);
+    });
+  }
+
+  function renderControls() {
+    var seg = $("repoSeg"); seg.textContent = "";
+    [["", "All"]].concat(REPOS.map(function (r) { return [r, r]; })).forEach(function (o) {
+      var b = el("button", "", o[1]); b.type = "button"; b.setAttribute("aria-pressed", String(S.repo === o[0]));
+      b.addEventListener("click", function () { S.repo = o[0]; render(); }); seg.appendChild(b);
+    });
+    var chips = $("statusChips"); chips.textContent = "";
+    Object.keys(STATUS).sort(function (a, b) { return STATUS[a].rank - STATUS[b].rank; }).forEach(function (s) {
+      var c = el("button", "chip"); c.type = "button"; c.dataset.s = s; c.setAttribute("aria-pressed", String(!!S.status[s]));
+      c.appendChild(el("span", "dot")); c.appendChild(document.createTextNode(STATUS[s].label));
+      c.addEventListener("click", function () { S.status[s] = !S.status[s]; render(); }); chips.appendChild(c);
+    });
+    var sel = $("area");
+    if (!sel.options.length) {
+      sel.appendChild(new Option("All areas", ""));
+      AREAS.forEach(function (a) { if (ROWS.some(function (r) { return r.area === a; })) sel.appendChild(new Option(a, a)); });
+    }
+    sel.value = S.area; $("sortKey").value = S.key; $("q").value = S.q;
+    $("dirBtn").textContent = S.dir === 1 ? "Ascending" : "Descending";
+    document.querySelectorAll("thead th[data-key]").forEach(function (th) {
+      var active = th.dataset.key === S.key;
+      th.setAttribute("aria-sort", active ? (S.dir === 1 ? "ascending" : "descending") : "none");
+      th.querySelector(".arrow").textContent = active ? (S.dir === 1 ? "↑" : "↓") : "";
+    });
+  }
+
+  function renderRows() {
+    var list = sorted(filtered()), tb = $("rows"); tb.textContent = "";
+    list.forEach(function (r) {
+      var tr = document.createElement("tr");
+      function td(cls, label) { var c = el("td", cls); if (label) c.dataset.label = label; tr.appendChild(c); return c; }
+      td("repoc").appendChild(el("span", "repo", r.repo));
+      td("area", "Area").textContent = r.area;
+      td("tool", "Tooling").textContent = r.tool;
+      td("std", "Standard").textContent = r.std;
+      var st = td("state", "Current state"); st.appendChild(document.createTextNode(r.state));
+      if (r.src) st.appendChild(el("span", "src", r.src));
+      td("status", "Status").appendChild(pill(r.status));
+      var lk = td("linkc", r.links.length ? "Pull request" : "");
+      if (r.links.length) { var w = el("div", "links"); r.links.forEach(function (l) { var a = el("a", "", l.t); a.href = l.u; a.target = "_blank"; a.rel = "noopener"; w.appendChild(a); }); lk.appendChild(w); }
+      tb.appendChild(tr);
+    });
+    $("empty").hidden = list.length > 0;
+    $("count").textContent = list.length + " of " + ROWS.length + " rows";
+  }
+
+  function renderPRs() {
+    var box = $("prs"); box.textContent = "";
+    PRS.forEach(function (p) {
+      var row = el("div", "pr-row");
+      var a = el("a", "num", p.repo + "#" + p.n); a.href = p.url; a.target = "_blank"; a.rel = "noopener"; row.appendChild(a);
+      row.appendChild(el("span", "repo", p.repo));
+      row.appendChild(el("span", "what", p.what));
+      var s = el("span", "pr-state", p.state); if (p.open) s.style.color = "var(--pr-fg)"; row.appendChild(s);
+      box.appendChild(row);
+    });
+  }
+
+  function render() { renderControls(); renderRows(); }
+
+  document.querySelectorAll("thead th[data-key]").forEach(function (th) {
+    th.querySelector("button").addEventListener("click", function () {
+      if (S.key === th.dataset.key) S.dir = -S.dir; else { S.key = th.dataset.key; S.dir = 1; } render();
+    });
+  });
+  $("sortKey").addEventListener("change", function (e) { S.key = e.target.value; S.dir = 1; render(); });
+  $("dirBtn").addEventListener("click", function () { S.dir = -S.dir; render(); });
+  $("area").addEventListener("change", function (e) { S.area = e.target.value; render(); });
+  $("q").addEventListener("input", function (e) { S.q = e.target.value; renderRows(); });
+  $("reset").addEventListener("click", function () { S.repo = ""; S.status = {}; S.area = ""; S.q = ""; S.key = "repo"; S.dir = 1; render(); });
+
+  $("asof").textContent = DATA.asOf;
+  renderSummary(); renderPRs(); render();
+})();
+</script>
