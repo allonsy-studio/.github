@@ -35,7 +35,7 @@ node scripts/build.js --data matrix.json --out matrix.html
 | `scripts/lib/checks.js` | One check per row |
 | `scripts/lib/scan.js` | The scan, the pull request overlay, the diff, & the page injection |
 | `scripts/lib/repo.js` | Read-only helpers over a checkout |
-| `templates/matrix.html` | The page: an overview, a tooling-by-repository grid, & a detail panel, with a placeholder for the scan |
+| `templates/matrix.html` | The page: a tooling-by-repository grid with a detail panel, & a placeholder for the scan |
 | `data/manual.json` | Rows a scan cannot read: decisions & GitHub settings |
 | `references/checks.md` | What each check decides, & the data formats |
 | `test/` | AVA tests for the checks & the scan |
