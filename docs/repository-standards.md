@@ -18,7 +18,7 @@ note allows.
 | `.husky/post-commit`     | `.husky/post-commit`         | Runs `opx` hooks & lint; never blocks a commit. A repository with its own hooks (`pre-commit`, `commit-msg`) keeps them |
 | `.env.example`           | `.env.example`               | Lists every variable the repo reads; required only where it reads some |
 | `.github/CODEOWNERS`     | `.github/CODEOWNERS`         | One line, `* @castastrophe`; the ruleset requires code owner review |
-| `.github/renovate.json`  | `renovate.json`              | One-month release age, monthly lockfile refresh  |
+| `.github/renovate.json`  | `renovate.json`              | One-month release age, monthly lockfile refresh, & `@changesets/cli` held below 3 |
 | `.github/release.yml`    | `release.yml`                | Changelog categories keyed on `type:` labels     |
 | `.gitignore`             | `.gitignore`                 | Add `_site` for repos that build an Eleventy site, & `coverage` for every repo with tests |
 
@@ -172,6 +172,11 @@ A config that names `@changesets/changelog-github` needs that package as a dev d
 a `GITHUB_TOKEN` wherever `yarn run version` runs. The starter config uses the default
 generator instead; [opx#41](https://github.com/allonsy-studio/opx/issues/41) tracks an
 opt-in for the custom format.
+
+Changesets CLI 3 & `changesets/action@v1` do not work together: the action reads `New tag:`
+lines that CLI 3 no longer prints, so a release gets no git tag or GitHub release. The baseline
+Renovate config holds `@changesets/cli` below 3. Move the CLI & the action to v2 together, in
+one pull request, then drop the rule in that repository.
 
 `opx release` is in beta (`0.1.0-beta.2` at the last check). Plain Changesets commands work
 on the same files where it is not adopted yet.
