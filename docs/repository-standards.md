@@ -18,7 +18,7 @@ note allows.
 | `.husky/post-commit`     | `.husky/post-commit`         | Runs `opx` hooks & lint; never blocks a commit. A repository with its own hooks (`pre-commit`, `commit-msg`) keeps them |
 | `.env.example`           | `.env.example`               | Lists every variable the repo reads; required only where it reads some |
 | `.github/CODEOWNERS`     | `.github/CODEOWNERS`         | One line, `* @castastrophe`; the ruleset requires code owner review |
-| `.github/renovate.json`  | `renovate.json`              | One-month release age, monthly lockfile refresh, & `@changesets/cli` held below 3 |
+| `.github/renovate.json`  | `renovate.json`              | One-month release age, monthly lockfile refresh, OSV vulnerability alerts, pinned action digests, & `@changesets/cli` held below 3 |
 | `.github/release.yml`    | `release.yml`                | Changelog categories keyed on `type:` labels     |
 | `.gitignore`             | `.gitignore`                 | Add `_site` for repos that build an Eleventy site, & `coverage` for every repo with tests |
 
