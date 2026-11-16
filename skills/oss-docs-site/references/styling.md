@@ -5,7 +5,7 @@ Defaults the Norn packages follow, & the rules for anything a project adds. They
 ## Type
 
 - 16px root, `rem` & `em` for everything else. No `px` type sizes: one root value rescales the page.
-- One body sans; `--norn-font-heading` follows it until set. Instrument Sans & Yellowtail are self-hosted by `@allons-y/webc-oss-site`; Yellowtail is a signature face for signing a name, never for headings (`references/typography-and-color.md`).
+- One body sans, Instrument Sans by default; `--norn-font-heading` follows it until set. Instrument Sans & Yellowtail are self-hosted by `@allons-y/webc-oss-site`; Yellowtail is the studio's signature face, for its wordmark & sign-off, never for headings (`references/typography-and-color.md`).
 - `text-wrap: balance` on headings, `text-wrap: pretty` on paragraphs & list items.
 - Headings: tight `line-height`, no margin.
 
