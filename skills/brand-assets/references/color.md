@@ -19,11 +19,11 @@ Brand colors tuned for dark surfaces fail on white. Measured on `#ffffff`:
 | Brand color | Ratio | Passing light value |
 | --- | --- | --- |
 | `#d22d6f` magenta | 4.83:1 | as is; dark counterpart `#ff7aa8` |
-| `#ff944d` orange | 2.19:1 | `#c4510a` |
-| `#1f91ad` teal | 3.68:1 | `#177a93` |
-| `#ffd36b` yellow | 1.42:1 | decorative only, or a deep gold |
+| `#ff944d` orange | 2.19:1 | `#b85e19` (4.51:1) |
+| `#1f91ad` teal | 3.68:1 | `#1f819a` (4.50:1) |
+| `#ffd36b` yellow | 1.42:1 | decorative only, or the deep gold `#93721c` (4.50:1) |
 
-Keep the brand value for dark mode & deepen only the light value.
+The passing values are what `deepen(color, "#ffffff", 4.5)` returns. Keep the brand value for dark mode & deepen only the light value.
 
 ## Deepening
 

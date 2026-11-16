@@ -13,8 +13,16 @@ describe("contrast", () => {
 	});
 
 	it("confirms the deepened brand values pass on white", () => {
-		assert.ok(contrast("#c4510a", "#ffffff") >= 4.5);
-		assert.ok(contrast("#177a93", "#ffffff") >= 4.5);
+		for (const [brand, passing] of [
+			["#ff944d", "#b85e19"],
+			["#1f91ad", "#1f819a"],
+			["#ffd36b", "#93721c"],
+		]) {
+			const result = deepen(brand, "#ffffff", 4.5);
+			assert.equal(result.hex, passing);
+			assert.ok(result.reached && contrast(result.hex, "#ffffff") >= 4.5);
+		}
+		assert.equal(deepen("#d22d6f", "#ffffff", 4.5).changed, false);
 	});
 
 	it("never rounds a ratio up for display", () => {

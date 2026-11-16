@@ -19,7 +19,7 @@
 			"id": 2,
 			"name": "accent-options-with-contrast",
 			"prompt": "Here's dashly's brand.json. Show me five accent options for the l & y using the studio palette, & make sure they pass contrast.",
-			"expected_output": "Uses variants.js with --accents built from the studio palette (#d22d6f, #ff944d, #1f91ad, #ffd36b plus one more), which deepens failing light values while keeping dark values; renders a contact sheet of the variants; reports the contrast table including the deepened values (for example orange to about #c4510a); asks which to keep. Never patches finished SVGs by hand.",
+			"expected_output": "Uses variants.js with --accents built from the studio palette (#d22d6f, #ff944d, #1f91ad, #ffd36b plus one more), which deepens failing light values while keeping dark values; renders a contact sheet of the variants; reports the contrast table including the deepened values (for example orange to about #b85e19); asks which to keep. Never patches finished SVGs by hand.",
 			"files": [
 				"test/fixtures/dashly.json"
 			],

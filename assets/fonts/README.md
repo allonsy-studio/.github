@@ -10,7 +10,7 @@ Self-hostable `woff2` files for studio projects. Each is a Latin subset.
 | `space-grotesk-var.woff2` | Space Grotesk | 300–700 (variable) | [OFL-1.1](https://openfontlicense.org) |
 | `yellowtail.woff2` | Yellowtail | 400 | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 
-The `oss-docs-site` scaffold copies all four files into each project site, so edit them here. PT Mono is the studio's locked monospace. Yellowtail is the studio's cursive/signature font: a script face for sparing display use as an accent, not body text. Instrument Sans & Yellowtail are for projects that override `--font-sans` or `--font-display`. Space Grotesk is the studio's first choice for project wordmarks: the `brand-assets` skill outlines it into each mark, so the scaffold does not copy it into sites.
+The `oss-docs-site` scaffold copies all four files into each project site, so edit them here. PT Mono is the studio's locked monospace. Yellowtail is the studio's signature face: a flourish for the studio layer only, never headings, tag lines, running text, or a wordmark. Instrument Sans is for projects that put it first in `--norn-font-body` (or `--norn-font-heading`); the `oss-docs-site` `typography-and-color` reference has the rule. Space Grotesk is the studio's first choice for project wordmarks: the `brand-assets` skill outlines it into each mark, so the scaffold does not copy it into sites.
 
 ```css
 @font-face {
