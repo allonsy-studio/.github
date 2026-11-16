@@ -307,6 +307,7 @@ organization owner.
 | Workflow token                    | Read-only by default                                                                        |
 | Fork pull request workflows       | Approval required for every outside contributor                                             |
 | Artifact & log retention          | 90 days                                                                                     |
+| Commit sign-off (DCO)             | Not required until a project has 3 outside contributors (see AGENTS.md)                     |
 
 A repository created from a template does not inherit the template's settings, so run the
 script on every new repository.

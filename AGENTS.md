@@ -137,6 +137,16 @@ each section in a line, or remove it when it's optional and empty.
 - Commit bodies: 1 to 2 sentences, or none for a small change.
 - Pull requests are squash-merged: the PR title becomes the commit subject & the commit
   messages its body, so the title must be a valid Conventional Commits subject.
+- No DCO or `Signed-off-by` requirement (app, CI check, or ruleset) until a project has at
+  least 3 outside contributors: people with merged commits who are neither organization
+  members nor bots. Check before proposing sign-off, & skip it when the count is lower:
+
+  ```sh
+  comm -23 \
+    <(gh api repos/allonsy-studio/<repo>/contributors --paginate --jq '.[] | select(.type == "User") | .login' | sort) \
+    <(gh api orgs/allonsy-studio/members --paginate --jq '.[].login' | sort)
+  ```
+
 - Cover what changed, the why when the title doesn't already say it, & anything someone
   must act on (a breaking change, a manual step).
 - Leave out environment or sandbox notes, after-merge process, file lists the diff already
