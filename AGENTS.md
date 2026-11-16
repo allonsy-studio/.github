@@ -135,6 +135,8 @@ each section in a line, or remove it when it's optional and empty.
 - PR descriptions: 1 to 3 sentences of prose by default, ~100 words at most. Lead with a
   verb; never open with "This PR".
 - Commit bodies: 1 to 2 sentences, or none for a small change.
+- Pull requests are squash-merged: the PR title becomes the commit subject & the commit
+  messages its body, so the title must be a valid Conventional Commits subject.
 - Cover what changed, the why when the title doesn't already say it, & anything someone
   must act on (a breaking change, a manual step).
 - Leave out environment or sandbox notes, after-merge process, file lists the diff already

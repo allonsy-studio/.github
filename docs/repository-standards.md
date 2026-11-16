@@ -280,7 +280,31 @@ update the ruleset's required checks, never the reverse, or the queue waits on a
 that no longer exists.
 
 The ruleset & the secrets are GitHub settings, not files, so the matrix tracks them as
-manual rows. Pages source & merge options outside the ruleset are not covered yet.
+manual rows. Pages source is not covered yet.
+
+## Repository settings
+
+GitHub settings outside the ruleset. [`settings/repo-defaults.json`](../settings/repo-defaults.json)
+holds the values, & [`settings/apply-repo-defaults.sh`](../settings/apply-repo-defaults.sh)
+applies them to one repository: a dry run unless `--apply`, run with `gh` signed in as an
+organization owner.
+
+| Setting                           | Value                                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------- |
+| Merge methods                     | Squash only: merge commits & rebase merging off                                             |
+| Squash commit message             | Pull request title & commit details, so the PR title must be a Conventional Commits subject |
+| Branch upkeep                     | Auto-merge on, update-branch suggestions on, head branches deleted after merge              |
+| Features                          | Issues on, wiki off                                                                         |
+| Private vulnerability reporting   | On                                                                                          |
+| Secret scanning & push protection | On for public repositories, where both are free; push protection needs secret scanning      |
+| Dependency graph & Dependabot     | Off: Renovate handles dependency updates                                                    |
+| Allowed actions                   | Set once for the organization (Settings → Actions → General) & inherited by every repository |
+| Workflow token                    | Read-only by default                                                                        |
+| Fork pull request workflows       | Approval required for every outside contributor                                             |
+| Artifact & log retention          | 90 days                                                                                     |
+
+A repository created from a template does not inherit the template's settings, so run the
+script on every new repository.
 
 ## Adopting the standard
 
@@ -295,3 +319,4 @@ manual rows. Pages source & merge options outside the ruleset are not covered ye
 9. Add `.github/CODEOWNERS` & `merge_group:` to every workflow that provides a required check.
 10. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.
 11. Import the `Default` ruleset, then set `CI (node26)` & `CI (node24)` as required checks.
+12. Run `settings/apply-repo-defaults.sh <repo>`, check the dry run, then rerun it with `--apply`.

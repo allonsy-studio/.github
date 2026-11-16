@@ -214,6 +214,119 @@
 		}
 	},
 	{
+		"area": "Settings",
+		"tool": "Merge options",
+		"std": "Squash merge only, with the pull request title & commit details as the commit message.",
+		"src": "Repository settings",
+		"repos": {
+			".github": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"actions-file-diff": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"actions-pr-auto-update": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"actions-weaver": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"agent-skills": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"allonsy-studio.github.io": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"course-kit": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"dashly": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"eleventy-plugin-netlify-data-store": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"envoy": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"glob-concat-cli": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"link-checker": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"markdown-it-anchor-sections": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"opx": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"postcss-licensing": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"stylelint-header": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"template-actions": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"template-course": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"webc-docs": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"webc-resources": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			},
+			"website": {
+				"status": "ok",
+				"state": "Squash only; PR title & commit details.",
+				"verified": "2026-11-16"
+			}
+		}
+	},
+	{
 		"area": "Housekeeping",
 		"tool": "Attribution footers",
 		"std": "No AI attribution on commits, PRs, or comments.",

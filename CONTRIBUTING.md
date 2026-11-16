@@ -65,6 +65,7 @@ A `BREAKING CHANGE:` footer or a `!` after the type (e.g. `feat!:`) triggers a m
 ### Pull request guidelines
 
 - Keep PRs focused: one logical change per PR is easiest to review.
+- Pull requests are squash-merged & the PR title becomes the commit subject, so write it as a Conventional Commits summary.
 - Reference the issue your PR addresses (`Closes #123`).
 - Make sure CI passes and there are no new warnings or accessibility regressions.
 - Be responsive to review feedback; we aim to be too.
