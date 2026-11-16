@@ -299,7 +299,7 @@ organization owner.
 | Merge methods                     | Squash only: merge commits & rebase merging off                                             |
 | Squash commit message             | Pull request title & commit details, so the PR title must be a Conventional Commits subject |
 | Branch upkeep                     | Auto-merge on, update-branch suggestions on, head branches deleted after merge              |
-| Features                          | Issues & projects on, wiki off; discussions only on large or potentially large projects   |
+| Features                          | Issues & projects on, wiki off; discussions on for Apache-2.0 & marked projects (below)   |
 | Private vulnerability reporting   | On                                                                                          |
 | Secret scanning & push protection | On for public repositories, where both are free; push protection needs secret scanning      |
 | Dependency graph & Dependabot     | Off: Renovate handles dependency updates                                                    |
@@ -310,6 +310,11 @@ organization owner.
 
 A repository created from a template does not inherit the template's settings, so run the
 script on every new repository.
+
+Discussions follow the license & a marker. Every Apache-2.0 repository has them on. Any other
+repository opts in by setting `"allons-y": { "discussions": true }` in its `package.json`, a
+judgment call for projects expected to draw questions. The script turns Discussions off for a
+repository that matches neither.
 
 ## Adopting the standard
 

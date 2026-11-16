@@ -13,6 +13,10 @@
 		"allow_update_branch": true,
 		"delete_branch_on_merge": true
 	},
+	"discussions": {
+		"$comment": "Discussions are on for these licenses and for any repository whose package.json sets \"allons-y\": { \"discussions\": true }. Off otherwise.",
+		"licenses": ["Apache-2.0"]
+	},
 	"public_repo": {
 		"security_and_analysis": {
 			"secret_scanning": { "status": "enabled" },

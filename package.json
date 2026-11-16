@@ -40,5 +40,8 @@
     "maintained node versions",
     "not dead"
   ],
-  "packageManager": "yarn@4.18.1"
+  "packageManager": "yarn@4.18.1",
+  "allons-y": {
+    "discussions": true
+  }
 }

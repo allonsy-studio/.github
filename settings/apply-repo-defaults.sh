@@ -23,7 +23,14 @@ run() { # method path [json]
 	echo "✓ $1 $2"
 }
 
-run PATCH "$R" "$(jq '.repo' "$DEFAULTS")"
+# Discussions: on for the licenses in repo-defaults.json and for a package.json marker, off otherwise.
+LICENSE="$(gh api "$R" --jq '.license.spdx_id // ""')"
+MARKER="$(gh api "$R/contents/package.json" --jq .content 2>/dev/null | base64 -d 2>/dev/null | jq -r '.["allons-y"].discussions // false' 2>/dev/null || true)"
+DISCUSSIONS=false
+if jq -e --arg l "$LICENSE" '.discussions.licenses | index($l)' "$DEFAULTS" >/dev/null || [ "$MARKER" = true ]; then
+	DISCUSSIONS=true
+fi
+run PATCH "$R" "$(jq --argjson d "$DISCUSSIONS" '.repo + {has_discussions: $d}' "$DEFAULTS")"
 # Secret scanning & push protection are free only on public repositories.
 if [ "$(gh api "$R" --jq .visibility)" = "public" ]; then
 	run PATCH "$R" "$(jq '.public_repo' "$DEFAULTS")"
