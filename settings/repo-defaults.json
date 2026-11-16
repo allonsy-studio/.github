@@ -2,6 +2,7 @@
 	"$comment": "Allons-y Studio repository settings outside the Default ruleset. Applied per repository by apply-repo-defaults.sh; see docs/repository-standards.md#repository-settings.",
 	"repo": {
 		"has_issues": true,
+		"has_projects": true,
 		"has_wiki": false,
 		"allow_merge_commit": false,
 		"allow_rebase_merge": false,

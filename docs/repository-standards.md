@@ -270,6 +270,11 @@ repository rulesets. Import it from the repository's Settings → Rules → Rule
 | Merge queue              | Squash, all green, up to 5 entries, 60 minute check timeout                             |
 | Bypass                   | Organization admins, for pull requests only                                             |
 
+A second repository ruleset, named `Release tags`, targets every tag & blocks deleting,
+moving, or force-pushing one, with organization admins as the only bypass. Action
+repositories exclude their floating major tags (`v[0-9]`, `v[0-9][0-9]`), which each release
+moves forward.
+
 The merge queue runs each required check on a `gh-readonly-queue/*` branch, so every
 workflow that provides a required check lists `merge_group:` under `on:`. Without it, a
 queued pull request waits for checks that never start. A workflow that provides no
@@ -294,7 +299,7 @@ organization owner.
 | Merge methods                     | Squash only: merge commits & rebase merging off                                             |
 | Squash commit message             | Pull request title & commit details, so the PR title must be a Conventional Commits subject |
 | Branch upkeep                     | Auto-merge on, update-branch suggestions on, head branches deleted after merge              |
-| Features                          | Issues on, wiki off                                                                         |
+| Features                          | Issues & projects on, wiki off; discussions only on large or potentially large projects   |
 | Private vulnerability reporting   | On                                                                                          |
 | Secret scanning & push protection | On for public repositories, where both are free; push protection needs secret scanning      |
 | Dependency graph & Dependabot     | Off: Renovate handles dependency updates                                                    |
