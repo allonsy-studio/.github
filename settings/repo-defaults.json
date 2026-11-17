@@ -1,0 +1,32 @@
+{
+	"$comment": "Allons-y Studio repository settings outside the Default ruleset. Applied per repository by apply-repo-defaults.sh; see docs/repository-standards.md#repository-settings.",
+	"repo": {
+		"has_issues": true,
+		"has_projects": true,
+		"has_wiki": false,
+		"allow_merge_commit": false,
+		"allow_rebase_merge": false,
+		"allow_squash_merge": true,
+		"squash_merge_commit_title": "PR_TITLE",
+		"squash_merge_commit_message": "COMMIT_MESSAGES",
+		"allow_auto_merge": true,
+		"allow_update_branch": true,
+		"delete_branch_on_merge": true
+	},
+	"discussions": {
+		"$comment": "Discussions are on for these licenses and for any repository whose package.json sets \"allons-y\": { \"discussions\": true }. Off otherwise.",
+		"licenses": ["Apache-2.0"]
+	},
+	"public_repo": {
+		"security_and_analysis": {
+			"secret_scanning": { "status": "enabled" },
+			"secret_scanning_push_protection": { "status": "enabled" }
+		}
+	},
+	"private_vulnerability_reporting": true,
+	"actions": {
+		"workflow": { "default_workflow_permissions": "read" },
+		"fork_pr_contributor_approval": { "approval_policy": "all_external_contributors" },
+		"artifact_and_log_retention": { "days": 90 }
+	}
+}
