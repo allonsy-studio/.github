@@ -18,10 +18,12 @@ Brand colors tuned for dark surfaces fail on white. Measured on `#ffffff`:
 
 | Brand color | Ratio | Passing light value |
 | --- | --- | --- |
-| `#d22d6f` magenta | 4.83:1 | as is; dark counterpart `#ff7aa8` |
-| `#ff944d` orange | 2.19:1 | `#c4510a` |
-| `#1f91ad` teal | 3.68:1 | `#177a93` |
-| `#ffd36b` yellow | 1.42:1 | decorative only, or a deep gold |
+| `#c92c6b` magenta | 5.17:1 | as is; dark counterpart `#eb84ad` |
+| `#ff9a56` orange | 2.09:1 | `#bb5c04` |
+| `#7bd1e6` cyan | 1.73:1 | `#258195` |
+| `#ffd36c` yellow | 1.42:1 | decorative only, or `#93721d` |
+
+The passing values are `deepen` output against `#ffffff`. On the studio's paper page, site text uses the design system's tuned text tier instead.
 
 Keep the brand value for dark mode & deepen only the light value.
 

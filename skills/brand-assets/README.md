@@ -27,13 +27,13 @@ node scripts/fonts.js docs/content/assets/fonts                 # families, axes
 node scripts/build.js concepts/*.json --out out/concepts         # one folder of SVGs per spec
 node scripts/sheet.js out/concepts                               # light & dark contact sheets
 node scripts/variants.js --spec final.json --token hot \
-  --accents "#d22d6f,#1f91ad" --out out/color                   # accent options, deepened to pass
+  --accents "#c92c6b,#7bd1e6" --out out/color                   # accent options, deepened to pass
 node scripts/contrast.js final.json                              # WCAG table; exits 1 on a miss
 node scripts/build.js final.json --out out/final --flat
 node scripts/export.js out/final --og --project .                # touch icon, .ico, Open Graph
 node scripts/wire.js out/final --repo . --dry-run                # then without --dry-run
 
-node scripts/export.js my-svgs --og --background "#d22d6f"       # rasters from hand-made SVGs
+node scripts/export.js my-svgs --og --background "#c92c6b"       # rasters from hand-made SVGs
 
 node scripts/family.js init --repo . --spec docs/brand.json      # Workspaces: propose package icons
 node scripts/family.js build family.json --out out/packages

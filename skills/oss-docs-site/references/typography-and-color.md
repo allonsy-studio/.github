@@ -6,13 +6,13 @@ A project may bring its own font families, but the monospace is the same everywh
 
 | Token | Rule |
 | --- | --- |
-| `--norn-font-body` | Default: the system UI stack from the patterns package. A project may put its own family in front of it |
+| `--norn-font-body` | Default: Instrument Sans, set by the OSS site theme (the system UI stack without it). A project may put its own family in front of it |
 | `--norn-font-heading` | Headings & the brand link; follows `--norn-font-body` until set |
 | `--norn-font-mono` | Locked: PT Mono, then the platform monospace fonts, set by the studio tokens. Do not override it |
 
-Yellowtail is the studio's signature face. It is a flourish only, a limited use: never headings, tag lines, or running text. The one use is the studio layer, which signs the studio name in the call to action title.
+Yellowtail is the studio's signature face. It is a flourish only, a limited use: never headings, tag lines, or running text. Its uses are the studio layer's: the "Allons-y" wordmark in the banner, the studio name the call to action signs, & the "Allons-y!" sign-off in the footer credit.
 
-`@allons-y/webc-oss-site` self-hosts the fonts & declares them, each with a metric-matched fallback face: PT Mono (preloaded in the head), Instrument Sans (regular & italic, 400 to 700), & Yellowtail. The plugin copies the files to `assets/fonts`, & a face downloads only when text uses it, so unused ones cost nothing. A project sets its fonts in `content/assets/styles/project.css`: put the bundled family first, as `--norn-font-body: "Instrument Sans", "Instrument Sans Fallback", ui-sans-serif, system-ui, sans-serif;`, or load another family there (`@font-face` or `@import`, with `font-display: swap`). No font request goes to another host. The project does not copy font files into the site, & a copy at `content/assets/fonts/` collides with the packaged one & fails the build.
+`@allons-y/webc-oss-site` self-hosts the fonts & declares them, each with a metric-matched fallback face. Instrument Sans (regular & italic, 400 to 700) & PT Mono are both preloaded in the head, plus Yellowtail. The theme sets Instrument Sans as the body face. A project that wants another family loads it in `content/assets/styles/project.css` and puts it first: `--norn-font-body: "Your Sans", "Instrument Sans", "Instrument Sans Fallback", system-ui, sans-serif;`. No font request goes to another host. The project does not copy font files into the site, & a copy at `content/assets/fonts/` collides with the packaged one & fails the build.
 
 ## Accent
 

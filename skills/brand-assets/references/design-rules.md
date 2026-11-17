@@ -80,4 +80,4 @@ Open a hit at `@fortawesome/fontawesome-free/svgs/solid/<name>.svg` to see the s
 | Ink-colored favicon tile | Disappears in dark tab bars |
 | Three dashes on the favicon | The third merges into the tile at 16 px |
 | Yellow dashes on an orange tile | Too little contrast to read |
-| Yellowtail for a wordmark | Reserved for signatures; never a wordmark |
+| Yellowtail for a project wordmark | Reserved for the studio's own wordmark & signatures; never a project wordmark |

@@ -75,12 +75,21 @@ Under a `## License` heading in the README, use the matching text:
 
 ## Brand & design
 
-| Role             | HSL                  | Hex       |
-| ---------------- | -------------------- | --------- |
-| Core brand color | `hsl(336, 65%, 50%)` | `#d22d6f` |
-| Brand color      | `hsl(24, 100%, 65%)` | `#ff944d` |
-| Brand color      | `hsl(192, 70%, 40%)` | `#1f91ad` |
-| Brand color      | `hsl(42, 100%, 71%)` | `#ffd36b` |
+The Allons-y Studio design system is the source for every value; this table is its brand kit.
+
+| Role                   | HSL                  | Hex       |
+| ---------------------- | -------------------- | --------- |
+| Core brand color       | `hsl(336, 64%, 48%)` | `#c92c6b` |
+| Brand color            | `hsl(24, 100%, 67%)` | `#ff9a56` |
+| Brand color            | `hsl(42, 100%, 71%)` | `#ffd36c` |
+| Brand color            | `hsl(192, 68%, 69%)` | `#7bd1e6` |
+| Ink: type & strokes    | `hsl(227, 21%, 25%)` | `#33394e` |
+| Slate: decorative      | `hsl(229, 9%, 46%)`  | `#6b6f80` |
+| Latte: borders & fills | `hsl(24, 19%, 71%)`  | `#c2b1a6` |
+| Cream: raised surfaces | `hsl(45, 33%, 91%)`  | `#efebdf` |
+| Paper: page            | `hsl(45, 50%, 97%)`  | `#fbf9f3` |
+
+Magenta is the one accent: spend it once per composition. The other brights are the four arcs of the mark, for decoration or as fills with ink text; as text, use the design system's tuned text values.
 
 Reach for existing components & styles first; add new ones only when the design
 genuinely needs them. Capitalize visually with `text-transform: uppercase` rather than
@@ -88,7 +97,7 @@ uppercasing the content in source.
 
 Styling defaults (detail in [`skills/oss-docs-site/references/styling.md`](skills/oss-docs-site/references/styling.md)):
 
-- Type: 16px root, `rem` & `em` units, one body sans plus one sparing display face, `text-wrap: balance` on headings & `pretty` on paragraphs.
+- Type: 16px root, `rem` & `em` units, Instrument Sans for body & headings, PT Mono for code, Yellowtail only for the studio wordmark & signing, `text-wrap: balance` on headings & `pretty` on paragraphs.
 - Spacing: a grid with one `gap` per context, not margins on each element.
 - Structure: cascade layers, & tags plus native attributes (`rel`, `role`, `aria-*`) over classes, variants as inherited custom properties read by `@container style()`; `data-*` only when nothing native fits.
 - Tokens named by role (`--accent`), not by hue.

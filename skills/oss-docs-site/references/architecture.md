@@ -42,7 +42,7 @@ The output directory is set in the config (`ELEVENTY_OUTPUT_DIR`, else `_site`),
 
 Locked by the packages: a project file named `oss-bar.webc`, `oss-cta.webc`, or `oss-credit.webc` collides with the packaged one & fails the build, & no page data removes the hook fills. The scaffold lists such a file under `lockedEdits` & exits with an error. Opting out is a setting: `"oss": false` under `oss-docs` in `package.json`. The config reads it with `ossEnabled` & passes `oss: false` to `ossProps`, so no banner, call to action, credit, studio CSS, or studio link is left.
 
-The banner comes before the header, with a four-color stripe on the header bar. The call to action closes `main`, directly above the footer, which holds the project lock-up (name, link columns, & the studio credit). Their SVGs & text are inlined into the packaged components when the package is built, so a site needs no network & no org checkout for them. `consulting@allons-y.studio` appears only in the call to action. Conduct & security links use the project's own `CODE_OF_CONDUCT.md` & `SECURITY.md` when it keeps them, & the org's otherwise.
+The banner, live text on ink, comes before the header, which sits on a latte hairline; the mark's four arcs run under the hero. The call to action closes `main`, directly above the footer, which holds the project lock-up (name, link columns, & the studio credit). The call to action's mark is inlined into its component when the package is built, so a site needs no network & no org checkout for it. `consulting@allons-y.studio` appears only in the call to action. Conduct & security links use the project's own `CODE_OF_CONDUCT.md` & `SECURITY.md` when it keeps them, & the org's otherwise.
 
 Brand colors, voice, & style: `AGENTS.md`.
 
