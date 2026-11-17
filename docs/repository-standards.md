@@ -324,6 +324,8 @@ is the reference: the logo or illustration on one side, the name large, a one-li
 - Upload it by hand under Settings → Social preview: GitHub has no API for it. The apply
   script reports whether one is set, & `usesCustomOpenGraphImage` in the GraphQL API
   answers the same for any repository.
+- When the logo, mascot, or preview source is missing, agents use the `/brand-assets` skill to
+  find or build it instead of improvising one.
 
 Discussions follow the license & a marker. Every Apache-2.0 repository has them on. Any other
 repository opts in by setting `"allons-y": { "discussions": true }` in its `package.json`, a

@@ -128,6 +128,8 @@ Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
   like [envoy's](https://github.com/allonsy-studio/envoy/blob/main/assets/envoy-social-preview.png),
   with the source at `assets/<repo>-social-preview.png`. GitHub has no API to upload it, so
   flag a missing one for the maintainer to upload under Settings → Social preview.
+  When a brand asset such as a logo, mascot, or preview is missing, use the `/brand-assets`
+  skill to find or build it before drafting a substitute.
 
 ## Commits & pull requests
 
