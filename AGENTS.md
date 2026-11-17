@@ -75,12 +75,21 @@ Under a `## License` heading in the README, use the matching text:
 
 ## Brand & design
 
-| Role             | HSL                  | Hex       |
-| ---------------- | -------------------- | --------- |
-| Core brand color | `hsl(336, 65%, 50%)` | `#d22d6f` |
-| Brand color      | `hsl(24, 100%, 65%)` | `#ff944d` |
-| Brand color      | `hsl(192, 70%, 40%)` | `#1f91ad` |
-| Brand color      | `hsl(42, 100%, 71%)` | `#ffd36b` |
+The Allons-y Studio design system is the source for every value; this table is its brand kit.
+
+| Role                   | HSL                  | Hex       |
+| ---------------------- | -------------------- | --------- |
+| Core brand color       | `hsl(336, 64%, 48%)` | `#c92c6b` |
+| Brand color            | `hsl(24, 100%, 67%)` | `#ff9a56` |
+| Brand color            | `hsl(42, 100%, 71%)` | `#ffd36c` |
+| Brand color            | `hsl(192, 68%, 69%)` | `#7bd1e6` |
+| Ink: type & strokes    | `hsl(227, 21%, 25%)` | `#33394e` |
+| Slate: decorative      | `hsl(229, 9%, 46%)`  | `#6b6f80` |
+| Latte: borders & fills | `hsl(24, 19%, 71%)`  | `#c2b1a6` |
+| Cream: raised surfaces | `hsl(45, 33%, 91%)`  | `#efebdf` |
+| Paper: page            | `hsl(45, 50%, 97%)`  | `#fbf9f3` |
+
+Magenta is the one accent: spend it once per composition. The other brights are the four arcs of the mark, for decoration or as fills with ink text; as text, use the design system's tuned text values.
 
 Reach for existing components & styles first; add new ones only when the design
 genuinely needs them. Capitalize visually with `text-transform: uppercase` rather than
@@ -88,7 +97,7 @@ uppercasing the content in source.
 
 Styling defaults (detail in [`skills/oss-docs-site/references/styling.md`](skills/oss-docs-site/references/styling.md)):
 
-- Type: 16px root, `rem` & `em` units, one body sans plus one sparing display face, `text-wrap: balance` on headings & `pretty` on paragraphs.
+- Type: 16px root, `rem` & `em` units, Instrument Sans for body & headings, PT Mono for code, Yellowtail only for the studio wordmark & signing, `text-wrap: balance` on headings & `pretty` on paragraphs.
 - Spacing: a grid with one `gap` per context, not margins on each element.
 - Structure: cascade layers, & tags plus native attributes (`rel`, `role`, `aria-*`) over classes, variants as inherited custom properties read by `@container style()`; `data-*` only when nothing native fits.
 - Tokens named by role (`--accent`), not by hue.
@@ -124,6 +133,12 @@ Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
 - Build with `opx-build-*` if one exists, else `tsc` for unbundled TypeScript or esbuild
   for bundling. Compile CSS with PostCSS.
 - Releases go through `opx release` for any change a consumer would notice.
+- Every public repository has a custom social preview: a 1280×640 PNG under 1 MB, laid out
+  like [envoy's](https://github.com/allonsy-studio/envoy/blob/main/assets/envoy-social-preview.png),
+  with the source at `assets/<repo>-social-preview.png`. GitHub has no API to upload it, so
+  flag a missing one for the maintainer to upload under Settings → Social preview.
+  When a brand asset such as a logo, mascot, or preview is missing, use the `/brand-assets`
+  skill to find or build it before drafting a substitute.
 
 ## Commits & pull requests
 
@@ -135,6 +150,18 @@ each section in a line, or remove it when it's optional and empty.
 - PR descriptions: 1 to 3 sentences of prose by default, ~100 words at most. Lead with a
   verb; never open with "This PR".
 - Commit bodies: 1 to 2 sentences, or none for a small change.
+- Pull requests are squash-merged: the PR title becomes the commit subject & the commit
+  messages its body, so the title must be a valid Conventional Commits subject.
+- No DCO or `Signed-off-by` requirement (app, CI check, or ruleset) until a project has at
+  least 3 outside contributors: people with merged commits who are neither organization
+  members nor bots. Check before proposing sign-off, & skip it when the count is lower:
+
+  ```sh
+  comm -23 \
+    <(gh api repos/allonsy-studio/<repo>/contributors --paginate --jq '.[] | select(.type == "User") | .login' | sort) \
+    <(gh api orgs/allonsy-studio/members --paginate --jq '.[].login' | sort)
+  ```
+
 - Cover what changed, the why when the title doesn't already say it, & anything someone
   must act on (a breaking change, a manual step).
 - Leave out environment or sandbox notes, after-merge process, file lists the diff already

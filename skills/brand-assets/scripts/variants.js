@@ -4,7 +4,7 @@
  *
  * Usage:
  *   node scripts/variants.js --spec <spec.json> --variants <variants.json> --out <dir> [--deepen]
- *   node scripts/variants.js --spec <spec.json> --token <palette name> --accents "#d22d6f,#1f91ad" --out <dir>
+ *   node scripts/variants.js --spec <spec.json> --token <palette name> --accents "#c92c6b,#7bd1e6" --out <dir>
  *
  * variants.json is an array of { "id", "label"?, "patch" }: each patch deep-merges into the spec (null deletes a key).
  * --accents makes one variant per color for that palette entry & always deepens.

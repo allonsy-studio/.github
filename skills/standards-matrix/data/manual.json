@@ -214,6 +214,50 @@
 		}
 	},
 	{
+		"area": "Settings",
+		"tool": "Merge options",
+		"std": "Squash merge only, with the pull request title & commit details as the commit message.",
+		"src": "Repository settings",
+		"default": {
+			"status": "ok",
+			"state": "Squash only; PR title & commit details.",
+			"verified": "2026-11-16"
+		}
+	},
+	{
+		"area": "Settings",
+		"tool": "Social preview",
+		"std": "A custom 1280×640 social preview on every public repository.",
+		"src": "Repository settings",
+		"repos": {
+			"envoy": {
+				"status": "ok",
+				"state": "Custom image set.",
+				"verified": "2026-11-16"
+			},
+			"glob-concat-cli": {
+				"status": "ok",
+				"state": "Custom image set.",
+				"verified": "2026-11-16"
+			},
+			"postcss-licensing": {
+				"status": "ok",
+				"state": "Custom image set.",
+				"verified": "2026-11-16"
+			},
+			"stylelint-header": {
+				"status": "ok",
+				"state": "Custom image set.",
+				"verified": "2026-11-16"
+			}
+		},
+		"default": {
+			"status": "gap",
+			"state": "No custom social preview; upload one under Settings → Social preview.",
+			"verified": "2026-11-16"
+		}
+	},
+	{
 		"area": "Housekeeping",
 		"tool": "Attribution footers",
 		"std": "No AI attribution on commits, PRs, or comments.",

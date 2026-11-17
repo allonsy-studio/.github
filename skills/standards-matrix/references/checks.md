@@ -37,7 +37,7 @@ Samples are paths under `templates/`, `evals/`, `fixtures/`, or `golden/`. They 
 
 ## Manual rows
 
-`data/manual.json` holds what no file shows. Each item: `area`, `tool`, `std`, optional `src`, `repos`: a map from repository name to `{ "status", "state", "verified", "links" }`, & an optional `default` entry that applies to every repository not named. `status` is `you` unless the maintainer has settled it. `verified` is the date the maintainer last confirmed the row.
+`data/manual.json` holds what no file shows. Each item: `area`, `tool`, `std`, optional `src`, `repos`: a map from repository name to `{ "status", "state", "verified", "links" }`, & an optional `default` entry that applies to every repository not named. A row where every repository matches needs only `default`; name a repository under `repos` only to override it. `status` is `you` unless the maintainer has settled it. `verified` is the date the maintainer last confirmed the row.
 
 ## Exemptions
 

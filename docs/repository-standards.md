@@ -270,6 +270,11 @@ repository rulesets. Import it from the repository's Settings → Rules → Rule
 | Merge queue              | Squash, all green, up to 5 entries, 60 minute check timeout                             |
 | Bypass                   | Organization admins, for pull requests only                                             |
 
+A second repository ruleset, named `Release tags`, targets every tag & blocks deleting,
+moving, or force-pushing one, with organization admins as the only bypass. Action
+repositories exclude their floating major tags (`v[0-9]`, `v[0-9][0-9]`), which each release
+moves forward.
+
 The merge queue runs each required check on a `gh-readonly-queue/*` branch, so every
 workflow that provides a required check lists `merge_group:` under `on:`. Without it, a
 queued pull request waits for checks that never start. A workflow that provides no
@@ -280,7 +285,52 @@ update the ruleset's required checks, never the reverse, or the queue waits on a
 that no longer exists.
 
 The ruleset & the secrets are GitHub settings, not files, so the matrix tracks them as
-manual rows. Pages source & merge options outside the ruleset are not covered yet.
+manual rows. Pages source is not covered yet.
+
+## Repository settings
+
+GitHub settings outside the ruleset. [`settings/repo-defaults.json`](../settings/repo-defaults.json)
+holds the values, & [`settings/apply-repo-defaults.sh`](../settings/apply-repo-defaults.sh)
+applies them to one repository: a dry run unless `--apply`, run with `gh` signed in as an
+organization owner.
+
+| Setting                           | Value                                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------- |
+| Merge methods                     | Squash only: merge commits & rebase merging off                                             |
+| Squash commit message             | Pull request title & commit details, so the PR title must be a Conventional Commits subject |
+| Branch upkeep                     | Auto-merge on, update-branch suggestions on, head branches deleted after merge              |
+| Features                          | Issues & projects on, wiki off; discussions on for Apache-2.0 & marked projects (below)     |
+| Social preview                    | Custom 1280×640 PNG on every public repository, kept at `assets/<repo>-social-preview.png`  |
+| Private vulnerability reporting   | On                                                                                          |
+| Secret scanning & push protection | On for public repositories, where both are free; push protection needs secret scanning      |
+| Dependency graph & Dependabot     | Off: Renovate handles dependency updates                                                    |
+| Allowed actions                   | Set once for the organization (Settings → Actions → General) & inherited by every repository |
+| Workflow token                    | Read-only by default                                                                        |
+| Fork pull request workflows       | Approval required for every outside contributor                                             |
+| Artifact & log retention          | 90 days                                                                                     |
+| Commit sign-off (DCO)             | Not required until a project has 3 outside contributors (see AGENTS.md)                     |
+
+A repository created from a template does not inherit the template's settings, so run the
+script on every new repository.
+
+Every public repository has a custom social preview, so a shared link shows the project &
+not only the owner's avatar. [Envoy's](https://github.com/allonsy-studio/envoy/blob/main/assets/envoy-social-preview.png)
+is the reference: the logo or illustration on one side, the name large, a one-line tagline,
+& the install command, on a solid background.
+
+- 1280×640 PNG under 1 MB (GitHub's [limits](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/customizing-your-repositorys-social-media-preview): at least 640×320, PNG, JPG, or GIF).
+- Keep text & the logo 40pt inside every edge so nothing crops, & meet WCAG AA contrast.
+- Commit the source to `assets/<repo>-social-preview.png`.
+- Upload it by hand under Settings → Social preview: GitHub has no API for it. The apply
+  script reports whether one is set, & `usesCustomOpenGraphImage` in the GraphQL API
+  answers the same for any repository.
+- When the logo, mascot, or preview source is missing, agents use the `/brand-assets` skill to
+  find or build it instead of improvising one.
+
+Discussions follow the license & a marker. Every Apache-2.0 repository has them on. Any other
+repository opts in by setting `"allons-y": { "discussions": true }` in its `package.json`, a
+judgment call for projects expected to draw questions. The script turns Discussions off for a
+repository that matches neither.
 
 ## Adopting the standard
 
@@ -295,3 +345,4 @@ manual rows. Pages source & merge options outside the ruleset are not covered ye
 9. Add `.github/CODEOWNERS` & `merge_group:` to every workflow that provides a required check.
 10. Run `yarn lint`, `yarn build`, `yarn typecheck`, & `yarn test`.
 11. Import the `Default` ruleset, then set `CI (node26)` & `CI (node24)` as required checks.
+12. Run `settings/apply-repo-defaults.sh <repo>`, check the dry run, then rerun it with `--apply`.
