@@ -299,8 +299,8 @@ organization owner.
 | Merge methods                     | Squash only: merge commits & rebase merging off                                             |
 | Squash commit message             | Pull request title & commit details, so the PR title must be a Conventional Commits subject |
 | Branch upkeep                     | Auto-merge on, update-branch suggestions on, head branches deleted after merge              |
-| Features                          | Issues & projects on, wiki off; discussions on for Apache-2.0 & marked projects (below)   |
-| Social preview                    | Custom 1280×640 PNG on every public repository, kept at `assets/<repo>-social-preview.png`|
+| Features                          | Issues & projects on, wiki off; discussions on for Apache-2.0 & marked projects (below)     |
+| Social preview                    | Custom 1280×640 PNG on every public repository, kept at `assets/<repo>-social-preview.png`  |
 | Private vulnerability reporting   | On                                                                                          |
 | Secret scanning & push protection | On for public repositories, where both are free; push protection needs secret scanning      |
 | Dependency graph & Dependabot     | Off: Renovate handles dependency updates                                                    |
