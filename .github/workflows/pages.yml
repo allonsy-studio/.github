@@ -65,7 +65,7 @@ jobs:
           echo "key=pages-site-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
           persist-credentials: false
@@ -74,7 +74,7 @@ jobs:
         run: corepack enable
 
       - name: Use Node LTS version
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: ${{ inputs.node-version-file }}
           cache: yarn
@@ -89,7 +89,7 @@ jobs:
         run: ${{ inputs.build-command }}
 
       - name: Save the site for the publish job
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ${{ inputs.output-dir }}
           key: ${{ steps.target.outputs.key }}
@@ -108,7 +108,7 @@ jobs:
     steps:
       # No checkout: this job never runs the project's code.
       - name: Restore the built site
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ${{ inputs.output-dir }}
           key: ${{ needs.build.outputs.key }}
