@@ -16,9 +16,9 @@ run() { # method path [json]
 		return
 	fi
 	if [ -n "${3:-}" ]; then
-		gh api -X "$1" "$2" --input - <<<"$3" >/dev/null
+		gh api -X "$1" "$2" --input - <<<"$3" >/dev/null || return 1
 	else
-		gh api -X "$1" "$2" >/dev/null
+		gh api -X "$1" "$2" >/dev/null || return 1
 	fi
 	echo "✓ $1 $2"
 }
@@ -33,7 +33,8 @@ fi
 run PATCH "$R" "$(jq --argjson d "$DISCUSSIONS" '.repo + {has_discussions: $d}' "$DEFAULTS")"
 # Secret scanning & push protection are free only on public repositories.
 if [ "$(gh api "$R" --jq .visibility)" = "public" ]; then
-	run PATCH "$R" "$(jq '.public_repo' "$DEFAULTS")"
+	# An org security configuration can lock these; warn and carry on.
+	run PATCH "$R" "$(jq '.public_repo' "$DEFAULTS")" || echo "! secret scanning is locked by an org security configuration: change it under the organization's Code security settings"
 fi
 [ "$(jq '.private_vulnerability_reporting' "$DEFAULTS")" = true ] && run PUT "$R/private-vulnerability-reporting"
 run PUT "$R/actions/permissions/workflow" "$(jq '.actions.workflow' "$DEFAULTS")"
