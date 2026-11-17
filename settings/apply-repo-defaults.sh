@@ -39,3 +39,9 @@ fi
 run PUT "$R/actions/permissions/workflow" "$(jq '.actions.workflow' "$DEFAULTS")"
 run PUT "$R/actions/permissions/fork-pr-contributor-approval" "$(jq '.actions.fork_pr_contributor_approval' "$DEFAULTS")"
 run PUT "$R/actions/permissions/artifact-and-log-retention" "$(jq '.actions.artifact_and_log_retention' "$DEFAULTS")"
+
+# A social preview has no API: report whether a public repository has one.
+if [ "$(gh api "$R" --jq .visibility)" = "public" ]; then
+	CUSTOM="$(gh api graphql -f query="query { repository(owner: \"$ORG\", name: \"$REPO\") { usesCustomOpenGraphImage } }" --jq .data.repository.usesCustomOpenGraphImage)"
+	[ "$CUSTOM" = true ] || echo "! no social preview: upload assets/$REPO-social-preview.png under Settings → Social preview"
+fi

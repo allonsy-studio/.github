@@ -300,6 +300,7 @@ organization owner.
 | Squash commit message             | Pull request title & commit details, so the PR title must be a Conventional Commits subject |
 | Branch upkeep                     | Auto-merge on, update-branch suggestions on, head branches deleted after merge              |
 | Features                          | Issues & projects on, wiki off; discussions on for Apache-2.0 & marked projects (below)   |
+| Social preview                    | Custom 1280×640 PNG on every public repository, kept at `assets/<repo>-social-preview.png`|
 | Private vulnerability reporting   | On                                                                                          |
 | Secret scanning & push protection | On for public repositories, where both are free; push protection needs secret scanning      |
 | Dependency graph & Dependabot     | Off: Renovate handles dependency updates                                                    |
@@ -311,6 +312,18 @@ organization owner.
 
 A repository created from a template does not inherit the template's settings, so run the
 script on every new repository.
+
+Every public repository has a custom social preview, so a shared link shows the project &
+not only the owner's avatar. [Envoy's](https://github.com/allonsy-studio/envoy/blob/main/assets/envoy-social-preview.png)
+is the reference: the logo or illustration on one side, the name large, a one-line tagline,
+& the install command, on a solid background.
+
+- 1280×640 PNG under 1 MB (GitHub's [limits](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/customizing-your-repositorys-social-media-preview): at least 640×320, PNG, JPG, or GIF).
+- Keep text & the logo 40pt inside every edge so nothing crops, & meet WCAG AA contrast.
+- Commit the source to `assets/<repo>-social-preview.png`.
+- Upload it by hand under Settings → Social preview: GitHub has no API for it. The apply
+  script reports whether one is set, & `usesCustomOpenGraphImage` in the GraphQL API
+  answers the same for any repository.
 
 Discussions follow the license & a marker. Every Apache-2.0 repository has them on. Any other
 repository opts in by setting `"allons-y": { "discussions": true }` in its `package.json`, a

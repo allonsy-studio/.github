@@ -124,6 +124,10 @@ Full rules in [`docs/repository-standards.md`](docs/repository-standards.md).
 - Build with `opx-build-*` if one exists, else `tsc` for unbundled TypeScript or esbuild
   for bundling. Compile CSS with PostCSS.
 - Releases go through `opx release` for any change a consumer would notice.
+- Every public repository has a custom social preview: a 1280×640 PNG under 1 MB, laid out
+  like [envoy's](https://github.com/allonsy-studio/envoy/blob/main/assets/envoy-social-preview.png),
+  with the source at `assets/<repo>-social-preview.png`. GitHub has no API to upload it, so
+  flag a missing one for the maintainer to upload under Settings → Social preview.
 
 ## Commits & pull requests
 
